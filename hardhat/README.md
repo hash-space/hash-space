@@ -1,15 +1,30 @@
-# Basic Sample Hardhat Project
+![Img](header.png)
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+# hackmoney hackathon gaming  contracts 
 
-Try running some of the following tasks:
+- Includes the contracts for registering the player profiles and their action .
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+
+
+## Hardhat Configuration
+
+
+We recommend installing `hh autocomplete` so you can use `hh` shorthand globally.
+
+`npm i -g hardhat-shorthand`
+
+https://hardhat.org/guides/shorthand.html
+
+## Usage
+
+Run `npm install` and then:
+
+- `hh compile` - to compile smart contract and generate typechain ts bindings
+- `hh test` - to run tests
+- `hh deploy` - to deploy to local network (see options for more)
+- `hh TABTAB` - to use autocomplete
+- `hh node` - to run a localhost node
+
+
+- Check `package.json` scripts for more options.
+- Use `.env.example` file and adapt it to you values and settings.
