@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          cd app &&
+          cd app && npm install &
           npm run build
       - uses: amondnet/vercel-action@v20 #deploy
         with:
