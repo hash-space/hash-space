@@ -1,68 +1,83 @@
 pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./interface/IPlayerProfile.sol";
+
+import "./interface/IAutopay.sol";
+
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract PlayerProfile is IPlayerProfile , Counters{
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
+import "usingtellor/contracts/UsingTellor.sol";
+
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+import "./utils/types.sol";
+
+contract PlayerProfile is  Counters , UsingTellor, safeMath {
     using index for Counters.counter;
+    using Types for types;
 
-        /**
-interfaces with the underlying tokens 
-defining the objects for interacting with the underlying token , token0 is generally gamefi token and underlyingToken ia token1.
-i think eventually this will go to the treasury with the mapping of the rewards and strategies being invested by the users.
- */
+    address payable treasury; // this address will be paying for oracle fees.
 
-    IERC20 token0;
-    IERC20 token1;
+    IAutopay  autopay; // address of tellor contract .
+    IWorldMap  worldmap;
 
-    // these are the actions possible for the user to be tracked by the oracle from the sensor . 
-    enum Actions {
-        Running,
-        Staying,
-        Sleeping
+    uint256 public queryFees; // setting fees for the payment of fees.
+
+    Types.PersonProfile User; //storing the details fo the structures  
+
+    constructor( string memory name, string  memory symbol , address payable _tellor , address payable treasury , address _worldMap)  UsingTellor(_tellor) {
+        autopay = IAutopay(_autopay);
+        tellorToken = IERC20(_tellorToken);
+        worldMap = IWorldMap(_worldMap);
+        tipAmount = _tipAmount;
+        
     }
-    struct PersonProfile {
-        uint256 personID; // user integrating
-        uint256 timeJoined;
-        address payable personalAccount;
-        incurredInterest _amount; // for determining the total interest incurred 
-        mapping(uint256 => ActionsperDay) _actions;
+    function _retrieveRandomNumber(uint256 _timestamp) internal  view returns(uint256) {
+    bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp));
+    bytes32 _queryId = keccak256(_queryData);
+    bytes memory _randomNumberBytes;
+    (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 10 minutes);
+    uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
+    return _randomNumber;
+  }
+ 
+    /**
+    profile creation and issuance of the NFT .
+     */
+
+    function registerProfile( uint256 
+    ) public returns(uint256)
+     {
+        User.personID = _user._personID;
+        User.timeJoined = block.timestamp;
+        User.lastQueried = block.timestamp;
+        User.personalAccount = _user.personalEOA;
+        User.lastPx = _retrieveRandomNumber(block.timestamp)
+       worldMap.totalPlayers(index.increment());
     }
 
-    struct ActionsPerDay {
-        uint256 sourceTokens; // generally logs the operation amount which generates the tokens .
-        uint256 SinkAmount; // this logs the operations for tjose that consume tokens
-        Actions _actions; // determines the operations that user has done , and based on that we will be adding  the notion 
-    }
 
-    // its the amount staked / gained by the user from the vault.
-    struct incurredInterest {
-        uint256 amountStaked;
-        uint256 stakingTimeperiod;
-        uint apy; // not sure we will be needing here.
-    }
-    // information about the profiles.
-    mapping(uint256 => PersonProfile) profiles;
+    /**
+    checks during the  movement of the user spaceship , does it pass the given planet in the vicinity ?
+     */
+    function _checkAnyPlanet() internal returns(bool) {
 
-
-    function registerProfile(
-        uint256 _personID,
-        address personalEOA
-    ) public {
-        require(msg.sender ==  personalEOA);
-        profile[index].personID = _personID;
-        profile[index].timeJoined = block.timestamp;
-        profile[index].personalAccount = personalEOA;
-        index.increment();
-    }
-    function registerInformation(uint256 index) public onlyOwner {
 
 
 
     }
 
 
+
+
+
+
+
+
+    function 
 
 
 
