@@ -1,5 +1,5 @@
 .container {
-  padding: 0 2rem;
+  padding: 0 0;
 }
 
 .main {
@@ -9,6 +9,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.main-p {
+  min-height: 100vh;
+  padding: 4rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
