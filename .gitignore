@@ -1,4 +1,5 @@
 **/node_modules
+.next
 
 hardhat/artifacts*
 hardhat/deployments
