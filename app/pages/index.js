@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../src/context/auth';
+import { factories } from '../src/generated/contract-types/index';
+import { getAddress } from '../src/helper/getAddress';
 
 export default function Home() {
   const [result, setResult] = useState({
@@ -29,6 +31,20 @@ export default function Home() {
     }
   };
 
+  const action1 = async () => {
+    const a = new factories.Greeter__factory();
+
+    const currentMsg = await a
+      .connect(ethersAppContext.signer)
+      .attach(getAddress(ethersAppContext.chainId, 'Greeter'))
+      .greet();
+    alert(currentMsg);
+    a.connect(ethersAppContext.signer)
+      .attach(getAddress(ethersAppContext.chainId, 'Greeter'))
+      .setGreeting(currentMsg + ',test')
+      .then((e) => console.log(e));
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -42,6 +58,7 @@ export default function Home() {
       <button onClick={authContext.login}>login</button>
       <button onClick={authContext.logout}>logout</button>
       <button onClick={signMessage}>sign message</button>
+      <button onClick={action1}>contract action</button>
       <p>account: {ethersAppContext.account}</p>
       <p>chain: {ethersAppContext.chainId}</p>
       <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>
