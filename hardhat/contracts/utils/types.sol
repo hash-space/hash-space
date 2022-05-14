@@ -7,12 +7,13 @@ struct PersonProfile {
         uint256 personID; // user integrating
         uint256 timeJoined;
         uint256 lastQueried;
-        mapping(uint256 => uint256) interestForPlanet; // for determining the total interest incurred  for the given planetID.
-        mapping(uint => mapping(uint => bool ))  planetOccupied; // determines the 
+        mapping(uint256 => uint256) interestForPlanet; // for determining the total staked amount from the planet it captured.
+        mapping(uint => mapping(uint => bool ))  planetOccupied; // tells the contracts that 
         uint256 lastPx;
         uint256 lastPy;
         uint256 stepsTaken; // total steps followed , for tracking purposes;
         uint256 fuelRemaining; // for every work , there will be money spend , so need to charge credits by using their 
+        address nftContract // ERC721 address bought by user.
     }
 
 
@@ -30,7 +31,9 @@ struct Planet {
     uint256 CenterY;
     uint256 radius;
     uint256 resources;
+    uint Id; // checking the given ID. 
     uint decayRate; // this determines the reduction of the resources after captured // might be used for superfluid streaming of the amounts
+    
 }
 
 

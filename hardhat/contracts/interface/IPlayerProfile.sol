@@ -1,37 +1,23 @@
-
-
+pragma solidity ^0.8.9;
 interface IPlayerProfile {
 
-/*
-
-struct PersonProfile {
-uint256 personID; // user integrating 
-uint256 walkingStats; // generally logs the operation amount which generates the tokens .
-uint256 utilisationStats; // this logs the operations for tjose that consume tokens 
-uint256  timeJoined;
-}
-
-*/
 
 
-/// @dev will be called by the wallet of the user having the sensor 
-/// @param personID  the id of the user 
-/// _
+function registerPerson(uint256 _personID, address _userAddress) external ;
 
-
-
-function registerPerson(uint256 personID) external ;
-
-/// @dev for fetching the parameters from the given playerID  (which then fetches via querying the oracle). 
+/// @dev updates the user position based on the frontend integration with the 
 /// @param  playerID the identifier of the player 
 
-function registerValues(uint256 playerID) external;
+function updateUserPosition(uint256 playerID, uint _stepChange , uint _timeQueried) external;
 
 
 
 
+function getUserPosition() external returns(uint[2] memory);
 
 
+
+function settleOnPlanet(uint playerID , uint planetId) external; 
 
 
 

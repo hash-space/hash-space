@@ -9,8 +9,6 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "./BasicNft.sol";
 import './ERC2981Interface.sol';
 
-import "hardhat/console.sol";
-
 contract BasicMarketplaceRoyalties is Ownable, ERC165, IERC2981Royalties {
 
     using Counters for Counters.Counter;

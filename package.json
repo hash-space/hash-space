@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "add": "^2.0.6",
+    "solidity-trigonometry": "https://github.com/mds1/solidity-trigonometry.git",
+    "yarn": "^1.22.18"
+  }
+}
