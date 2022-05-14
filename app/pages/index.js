@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
+import { useEthersAppContext } from 'eth-hooks/context';
+import { useAuthContext } from '../src/context/auth';
 
 export default function Home() {
   const [result, setResult] = useState({
@@ -18,6 +20,15 @@ export default function Home() {
     setResult({ hasResult, error, steps });
   }, []);
 
+  const ethersAppContext = useEthersAppContext();
+  const authContext = useAuthContext();
+
+  const signMessage = () => {
+    if (ethersAppContext.active) {
+      ethersAppContext.signer.signMessage('test').then((e) => alert(e));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -28,6 +39,12 @@ export default function Home() {
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
       </Head>
+      <button onClick={authContext.login}>login</button>
+      <button onClick={authContext.logout}>logout</button>
+      <button onClick={signMessage}>sign message</button>
+      <p>account: {ethersAppContext.account}</p>
+      <p>chain: {ethersAppContext.chainId}</p>
+      <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>
       {!result.hasResult && <MainView></MainView>}
       {result.hasResult && (
         <ResultView steps={result.steps} error={result.error}></ResultView>

@@ -1,5 +1,8 @@
 **/node_modules
 .next
+app/out
+hardhat/generated/*
+.env
 
 hardhat/artifacts*
 hardhat/deployments

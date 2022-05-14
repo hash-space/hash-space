@@ -1,6 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
+const withTM = require('next-transpile-modules')(['eth-hooks']);
 
-module.exports = nextConfig
+const withPlugins = require('next-compose-plugins');
+
+const nextConfig = {
+  modern: true,
+};
+
+module.exports = withPlugins([withTM], nextConfig);
