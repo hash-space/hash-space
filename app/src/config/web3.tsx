@@ -62,6 +62,21 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
     console.log('Failed to load config for web3 connector WalletConnect: ', e);
   }
 
+  try {
+    const CoinbaseWalletSDK = (await import('@coinbase/wallet-sdk')).default;
+    const coinbasewallet = {
+      package: CoinbaseWalletSDK,
+      options: {
+        appName: 'Web 3 Modal Demo',
+        infuraId: process.env.INFURA_ID,
+        rpc: {},
+      },
+    };
+    providerOptions.coinbasewallet = coinbasewallet;
+  } catch (e) {
+    console.log('Failed to load config for web3 connector coinbase: ', e);
+  }
+
   // === LOCALHOST STATIC
   try {
     if (LOCAL_PROVIDER) {

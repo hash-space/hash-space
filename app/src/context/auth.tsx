@@ -52,9 +52,7 @@ export const AuthContext: React.FC<IProps> = (props) => {
     if (createLoginConnector != null && ethersAppContext?.openModal != null) {
       const connector = createLoginConnector();
       if (connector) {
-        ethersAppContext.openModal(connector, () => {
-          alert('error');
-        });
+        ethersAppContext.openModal(connector);
       }
     }
   }, [createLoginConnector, ethersAppContext]);
