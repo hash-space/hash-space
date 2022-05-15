@@ -3,7 +3,7 @@ const {
   getCallbackUrl,
   findBestResult,
   formatData,
-} = require('./shared');
+} = require('../../src/api/shared');
 const url = require('url');
 
 export default async function handler(req, res) {
