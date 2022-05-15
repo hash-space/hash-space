@@ -6,6 +6,7 @@ import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../src/context/auth';
 import { factories } from '../src/generated/contract-types/index';
 import { getAddress } from '../src/helper/getAddress';
+import { PageWrapper } from '../src/components/PageWrapper';
 
 export default function Home() {
   const [result, setResult] = useState({
@@ -46,15 +47,7 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Steps app</title>
-        <meta name="description" content="Steps app" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
-      </Head>
+    <PageWrapper>
       <button onClick={authContext.login}>login</button>
       <button onClick={authContext.logout}>logout</button>
       <button onClick={signMessage}>sign message</button>
@@ -66,7 +59,7 @@ export default function Home() {
       {result.hasResult && (
         <ResultView steps={result.steps} error={result.error}></ResultView>
       )}
-    </div>
+    </PageWrapper>
   );
 }
 
