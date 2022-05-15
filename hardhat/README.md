@@ -1,19 +1,27 @@
-# Basic Sample Hardhat Project
+# Hardhat
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+## Setup
 
-Try running some of the following tasks:
+1. make sure to create a .env file from the .env.example template, contents of the file can be obtained in the team chat
 
-1. run the hardhat node
+## Scripts
+
+run the hardhat node
 
 ```
 npm run node
 ```
 
-2. deploy the contracct
+deploy the contract to hardhat node
 
 ```
 npm run deploy
+```
+
+deploy the contract to mumbai
+
+```
+npm run deploy:testnet
 ```
 
 clean compiled output (run this as needed)

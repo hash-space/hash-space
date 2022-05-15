@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "contracts:hardhat": "yarn shx rm -rf './src/generated/contracts-types' && yarn shx cp -r '../hardhat/generated/contract-types' './src/generated'",
     "export": "next build && next export"
   },
   "dependencies": {

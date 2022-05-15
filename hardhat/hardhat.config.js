@@ -2,6 +2,7 @@ require('@nomiclabs/hardhat-waffle');
 require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
+require('dotenv').config();
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
@@ -19,6 +20,10 @@ module.exports = {
     localhost: {
       url: 'http://localhost:8545',
     },
+    matic: {
+      url: 'https://rpc-mumbai.maticvigil.com',
+      accounts: [process.env.PRIVATE_KEY_MUMBAI],
+    },
   },
   namedAccounts: {
     deployer: 0,
@@ -33,7 +38,7 @@ module.exports = {
     deployments: './generated/deployments',
   },
   typechain: {
-    outDir: './generated/contract-types',
+    outDir: '../app/src/generated/contract-types',
     target: 'ethers-v5',
   },
 };
