@@ -1,68 +1,68 @@
-pragma solidity ^0.8.10;
+//SPDX-License-Identifier: Unlicense
+pragma solidity >=0.8.0 <0.9.0;
 
-import "../interface/IWorldMap.sol";
-import "../interface/IPlayerProfile.sol";
-import "usingtellor/contracts/UsingTellor.sol";
-import "../utils/types.sol";
+import "./PlanetFactory.sol";
 
-import "../"
+contract WorldMapCreator is PlanetFactory {
 
-
-contract WorldMap is UsingTellor {
-    using Types for types;
-    // just for mapping data structure (must be referred from the same storage )
-    Types.PersonalProfile[] Players;
-
-    Types.planets[] Planets;
-
-    Types.WorldMap WorldMap;
-
-
-
-
-    // game parameters
-
-    modifier onlyPlayerProfile() {
-        // require()
+    struct WorldMap {
+        uint256 worldIndex; // The ID for the world that was created
+        uint256 Length; // The vertical length of the world map
+        uint256 Breadth; // The breadth of the world map
     }
 
-    // initializing the game state with the planets.
-    mapping(uint256 => mapping(uint256 => planets)) gameState;
+    mapping(uint256 => WorldMap) public existingWorlds;
+    mapping(uint => uint[]) public planetsInWorld;
 
-    address[] playerRegistered;
+    uint planetIndex;
 
-    constructor(
-        address payable _tellorAddress,
-        uint256 length,
-        uint256 breadth
-    ) public UsingTellor(_tellorAddress) {
-        WorldMap.Length = length;
-        WorldMap.Breadth = breadth;
+    constructor() {
+        planetIndex = 0;
     }
 
-    function addPlayers(address _newAddr) external onlyPlayerProfile {
-        playerRegistered.push(_newAddr);
+    // function _initialiseWorld () {
+        // TODO: call _defineWorldMap and _addPlanets functions
+    // }
+
+    function _defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {
+        // TODO: consider having the world index randomly generated
+        require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
+        
+        WorldMap memory newWorldMap;
+        
+        newWorldMap = WorldMap({
+            worldIndex: _worldIndex,
+            Length: _length,
+            Breadth: _breadth
+            // PlanetsInWorld: 
+        });
+
+        existingWorlds[_worldIndex] = newWorldMap;
     }
 
-    function getDimensions()
-        external
-        view
-        returns (uint256 length, uint256 breadth)
-    {
-        length = WorldMap.Length;
-        breadth = WorldMap.breadth;
+    function _addPlanets(uint _numPlanets, uint256 _worldIndex) public {
+        
+        // TODO: consider defining numPlanets based on specified density or alternative function
+
+        for (uint i = 0; i < _numPlanets; i++) {
+            uint xCoord = _retrieveRandomNumber() % getWorldMap(_worldIndex).Breadth;
+            uint yCoord = _retrieveRandomNumber() % getWorldMap(_worldIndex).Length;
+            // Check whether above random number function works, given timestamp may not be changing?
+            uint planetType = 0; // temporarily only using one planet type
+            createPlanet(planetIndex, _worldIndex, xCoord, yCoord, planetType);
+            // TODO: add error handling for if planet already exists -> to re-generate random numbers and make another one
+            planetsInWorld[_worldIndex].push(planetIndex);
+            planetIndex += 1;
+        }        
     }
 
-
-
-
-    function addPlanets(uint ) external onlyOwner {
-
-
+    function getWorldMap(uint256 _selectedWorldIndex) public view returns(WorldMap memory) {
+        return existingWorlds[_selectedWorldIndex];
     }
 
-
-
+    function deleteWorld(uint256 _selectedWorldIndex) public { // TODO: make only owner /restricted
+        delete(existingWorlds[_selectedWorldIndex]);
+    }
 
 
 }
