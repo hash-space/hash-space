@@ -9,4 +9,6 @@ app/src/generated/*
 hardhat/artifacts*
 hardhat/deployments
 
+!.env.example
+
 **.DS_Store

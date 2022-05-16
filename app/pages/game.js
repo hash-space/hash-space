@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import { PageWrapper } from '../src/components/PageWrapper';
+import { Paper, CircularProgress } from '@mui/material';
 
 const LOCATION_POINTS_PER_STEP = 10;
 
@@ -31,15 +31,7 @@ export default function Game() {
   }, [steps]);
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Steps app</title>
-        <meta name="description" content="Steps app" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
-      </Head>
+    <PageWrapper>
       <p>
         Steps available:{' '}
         <input
@@ -48,8 +40,30 @@ export default function Game() {
           onChange={(e) => setSteps(e.target.value * 1)}></input>
       </p>
       <p>1 step = {LOCATION_POINTS_PER_STEP} location points </p>
-      <div ref={ref} style={{ height: '100vh' }}></div>
-    </div>
+
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <Paper style={{ padding: '10px' }}>
+          <div
+            style={{
+              display: 'block',
+              position: 'relative',
+            }}>
+            <div style={{ paddingTop: '40%' }}></div>
+            <div
+              ref={ref}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}>
+              <CircularProgress />
+            </div>
+          </div>
+        </Paper>
+      </div>
+    </PageWrapper>
   );
 }
 
@@ -114,10 +128,13 @@ const PLANET = [
 
 async function init(element) {
   const app = new PIXI.Application({
-    width: element.clientHeight,
+    width: element.clientWidth,
     height: element.clientHeight,
     backgroundColor: 0x696969,
     resolution: 1,
+  });
+  [...element.children].forEach((child) => {
+    element.removeChild(child);
   });
   element.appendChild(app.view);
   const { Viewport } = require('pixi-viewport');
