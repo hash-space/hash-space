@@ -20,7 +20,7 @@ contract PlanetFactory {
         uint worldMapIndex; // which world map does this planet belong to
         uint xCoord; // x-axis coordinate in respective world map
         uint yCoord; // y-axis coordinate in respective world map
-        uint planetType; 
+        uint planetType;
         uint balance; // The total value of tokens inside the planet
         // address walletAddress; // TODO: consider keeping the money elsewhere
         // (e.g. in a WorldMap wallet address), and just tracking the amounts here
@@ -28,10 +28,10 @@ contract PlanetFactory {
 
     // Create mapping of of planets
     mapping(uint => Planet) public existingPlanets;
-    
+
     // constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {}
     constructor() {
-    
+
         // Add one planet type
         PlanetCharacs memory newPlanetType1;
 
@@ -49,7 +49,7 @@ contract PlanetFactory {
 
     function createPlanet(uint _planetID, uint _worldMapIndex,
                 uint _xCoord, uint _yCoord, uint _planetType) public {
-       
+
         // TODO: add constraint for proximity to other planets
         // TODO: figure out how to generate the planet address? (if reqd)
 
@@ -94,6 +94,3 @@ contract PlanetFactory {
     // }
 
 }
-
-
-
