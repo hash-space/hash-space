@@ -40,6 +40,10 @@ contract Players {
         worldContract = IWorld(_worldAddress);
     }
 
+    /**
+        Creates the user profile of the user and mints a starship nft
+        and forwards $$ to the treasury
+     */
     function registerProfile() public
      {
         PersonProfile storage player = players[msg.sender];
@@ -53,7 +57,7 @@ contract Players {
 
         // buying the nft TODO: send money to treasury
         uint256 shipId = nftContract.mint(msg.sender);
-        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone
+        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone (just place them in a row a the top of the screen)
         // set the position of the ship
     }
 
