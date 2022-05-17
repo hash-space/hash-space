@@ -30,7 +30,7 @@ contract PlanetFactory {
     mapping(uint => Planet) public existingPlanets;
     
     // constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {}
-    constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {
+    constructor() {
 
         // Add one planet type
         PlanetCharacs memory newPlanetType1;
