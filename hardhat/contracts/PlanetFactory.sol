@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.0 <0.9.0;
 
-import "usingtellor/contracts/UsingTellor.sol";
+// import "usingtellor/contracts/UsingTellor.sol";
 
-// contract PlanetFactor is UsingTellor {
+// contract PlanetFactory is UsingTellor {
 contract PlanetFactory {
 
     // Define planet types
@@ -30,8 +30,8 @@ contract PlanetFactory {
     mapping(uint => Planet) public existingPlanets;
     
     // constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {}
-    constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {
-
+    constructor() {
+    
         // Add one planet type
         PlanetCharacs memory newPlanetType1;
 
