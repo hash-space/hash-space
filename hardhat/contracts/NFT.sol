@@ -6,7 +6,7 @@ import "./interfaces/IPlanet.sol";
 
 contract Starship is ERC721, IPlanet {
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+    Counters.Counter public tokenId;
 
     struct Location {
             uint x;
@@ -21,7 +21,7 @@ contract Starship is ERC721, IPlanet {
 
     function getLocation(
         uint256 _tokenId
-    ) public override returns (uint x, uint y) {
+    ) public override view returns (uint x, uint y) {
          Location memory location = shipLocation[_tokenId];
          return (location.x, location.y);
     }
@@ -46,9 +46,9 @@ contract Starship is ERC721, IPlanet {
         TOOD: secure, only allow calls from PlayerContract
      */
     function mint(address player) public override returns (uint256) {
-        _tokenIds.increment();
+        tokenId.increment();
 
-        uint256 newItemId = _tokenIds.current();
+        uint256 newItemId = tokenId.current();
         _mint(player, newItemId);
 
         return newItemId;

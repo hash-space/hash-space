@@ -18,7 +18,7 @@ contract Players {
 
     Counters.Counter indexPlayerIds;
 
-    mapping (address => PersonProfile) players;
+    mapping (address => PersonProfile) public players;
 
     IPlanet nftContract;
     IWorld worldContract;
@@ -69,14 +69,27 @@ contract Players {
 
     /**
         Move the ship to a new position
-        {planetId} the planet you want to reach
+        {_planetId} the planet you want to reach
+        {_shipId} the ship you are moving
      */
-    function moveShip(uint x, uint y, uint256 planetId, uint256 shipId) public {
-        // check distance used + update steps of user
+    function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
+        // TODO: calc distance used
 
+        // current location of the ship
+        (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
+
+        // update steps of user
+        players[msg.sender].stepsAvailable -= 100; // TODO: replace with distance
 
         // update ship position
-        nftContract.setLocation(shipId, msg.sender, x, y);
+        nftContract.setLocation(_shipId, msg.sender, x, y);
+
+        // check if we hit the jackpot
+        (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
+        if (xCoordShip == xCoordPlanet && yCoordShip == yCoordPlanet) {
+            // you hit the planet
+            // TODO: forward to vault contract
+        }
     }
 
 
