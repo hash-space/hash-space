@@ -1,9 +1,11 @@
 pragma solidity >=0.8.0 <0.9.0;
+
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
+import "./interfaces/IWorld.sol";
 
 
-contract PlayerProfile {
+contract Players {
     using Counters for Counters.Counter;
 
     struct PersonProfile {
@@ -19,6 +21,7 @@ contract PlayerProfile {
     mapping (address => PersonProfile) players;
 
     IPlanet nftContract;
+    IWorld worldContract;
 
     constructor () {
     }
@@ -28,6 +31,13 @@ contract PlayerProfile {
      */
     function setNftAddress(address _nftContractAddress) public {
         nftContract = IPlanet(_nftContractAddress);
+    }
+
+    /**
+        We set the Worldcontract Contract, this can also be done in the constructor
+     */
+    function setWorldAddress(address _worldAddress) public {
+        worldContract = IWorld(_worldAddress);
     }
 
     function registerProfile() public
