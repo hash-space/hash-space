@@ -3,7 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "usingtellor/contracts/UsingTellor.sol";
 
-// contract PlanetFactor is UsingTellor {
+// contract PlanetFactory is UsingTellor {
 contract PlanetFactory {
 
     // Define planet types
