@@ -8,21 +8,22 @@ contract Starship is ERC721, IPlanet {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
 
-    struct Location {
+    struct ShipData {
             uint x;
             uint y;
+            address owner;
     }
 
-
-    mapping (uint256 => Location) shipLocation;
+    // mapping tokenId to shipData
+    mapping (uint256 => ShipData) shipData;
 
     constructor() ERC721("Startship", "SHIP") public {
     }
 
     function getLocation(
         uint256 _tokenId
-    ) public override view returns (uint x, uint y) {
-         Location memory location = shipLocation[_tokenId];
+    ) public override returns (uint x, uint y) {
+         ShipData memory location = shipData[_tokenId];
          return (location.x, location.y);
     }
 
@@ -36,14 +37,14 @@ contract Starship is ERC721, IPlanet {
         uint y
     ) public override {
         require(ownerOf(_tokenId) == _ownerAddress, "not allowed to update");
-        Location memory location;
+        ShipData memory location;
         location.x = x;
         location.y = y;
-        shipLocation[_tokenId] = location;
+        shipData[_tokenId] = location;
     }
 
     /**
-        TOOD: secure, only allow calls from PlayerContract
+        TODO: secure, only allow calls from PlayerContract
      */
     function mint(address player) public override returns (uint256) {
         tokenId.increment();
@@ -52,5 +53,28 @@ contract Starship is ERC721, IPlanet {
         _mint(player, newItemId);
 
         return newItemId;
+    }
+
+    /**
+        Returns all ships in the game
+     */
+    function getShips() public view returns(ShipData[] memory) {
+        ShipData[] memory ships = new ShipData[](tokenId.current());
+        for (uint j = 1; j < tokenId.current(); j++) {
+            ShipData memory ship = shipData[j];
+            ships[j] = ship;
+        }
+        return ships;
+    }
+
+    /**
+        To allow transfer of ships
+     */
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override {
+        shipData[tokenId].owner = to;
     }
 }
