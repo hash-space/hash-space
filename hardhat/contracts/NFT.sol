@@ -4,6 +4,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
 
+import "hardhat/console.sol";
+
+
 contract Starship is ERC721, IPlanet {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
@@ -12,6 +15,7 @@ contract Starship is ERC721, IPlanet {
             uint x;
             uint y;
             address owner;
+            uint id;
     }
 
     // mapping tokenId to shipData
@@ -37,11 +41,8 @@ contract Starship is ERC721, IPlanet {
         uint y
     ) public override {
         require(ownerOf(_tokenId) == _ownerAddress, "not allowed to update");
-        ShipData memory location;
-        location.x = x;
-        location.y = y;
-        location.owner = address(0);
-        shipData[_tokenId] = location;
+        shipData[_tokenId].x = x;
+        shipData[_tokenId].y = y;
     }
 
     /**
@@ -60,8 +61,9 @@ contract Starship is ERC721, IPlanet {
         Returns all ships in the game
      */
     function getShips() public view returns(ShipData[] memory) {
-        ShipData[] memory ships = new ShipData[](tokenId.current());
-        for (uint j = 1; j < tokenId.current(); j++) {
+        uint tokenCount = tokenId.current() + 1;
+        ShipData[] memory ships = new ShipData[](tokenCount);
+        for (uint j = 0; j < tokenCount; j++) {
             ShipData memory ship = shipData[j];
             ships[j] = ship;
         }
@@ -77,5 +79,6 @@ contract Starship is ERC721, IPlanet {
         uint256 tokenId
     ) internal override {
         shipData[tokenId].owner = to;
+        shipData[tokenId].id = tokenId;
     }
 }
