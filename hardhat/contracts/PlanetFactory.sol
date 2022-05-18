@@ -2,7 +2,9 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 // import "usingtellor/contracts/UsingTellor.sol";
+import "./DeFI/interfaces/IVault.sol";
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // contract PlanetFactory is UsingTellor {
 contract PlanetFactory {
 
@@ -13,6 +15,8 @@ contract PlanetFactory {
         string image_link;
     }
     PlanetCharacs[] public planetTypes;
+
+    address vaultWrapper;
 
     // Define planet information
     struct Planet {
@@ -47,6 +51,11 @@ contract PlanetFactory {
     }
 
 
+    function setVaultWrapper(address newVaultWrapper) external onlyOwner  {
+        vaultWrapper = newVaultWrapper;
+    } 
+
+
     function createPlanet(uint _planetID, uint _worldMapIndex,
                 uint _xCoord, uint _yCoord, uint _planetType) public {
 
@@ -76,6 +85,7 @@ contract PlanetFactory {
     function retrieveTokens(uint _id) public {
         // TODO: add require statement that ship location is at planet
         // then, send all tokens to msg.sender
+
     }
 
     function _retrieveRandomNumber() public view returns (uint256) {
@@ -85,12 +95,7 @@ contract PlanetFactory {
 
     // TODO: figure out how to deploy with Tellor, then use this as random number function
     // function _retrieveRandomNumber(uint256 _timestamp) internal view returns(uint256) {
-    //     bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp));
-    //     bytes32 _queryId = keccak256(_queryData);
-    //     bytes memory _randomNumberBytes;
-    //     (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 10 minutes);
-    //     uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
-    //     return _randomNumber;
+  
     // }
 
 }
