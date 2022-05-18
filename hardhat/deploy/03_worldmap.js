@@ -1,11 +1,10 @@
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  console.log(deployer);
-  await deploy('Greeter', {
+  await deploy('WorldMapCreator', {
     from: deployer,
-    args: ['test'],
+    args: [],
     log: true,
   });
 };
-module.exports.tags = ['Greeter'];
+module.exports.tags = ['WorldMapCreator'];

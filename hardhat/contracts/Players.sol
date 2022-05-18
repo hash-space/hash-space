@@ -1,9 +1,11 @@
 pragma solidity >=0.8.0 <0.9.0;
+
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
+import "./interfaces/IWorld.sol";
 
 
-contract PlayerProfile {
+contract Players {
     using Counters for Counters.Counter;
 
     struct PersonProfile {
@@ -16,9 +18,10 @@ contract PlayerProfile {
 
     Counters.Counter indexPlayerIds;
 
-    mapping (address => PersonProfile) players;
+    mapping (address => PersonProfile) public players;
 
     IPlanet nftContract;
+    IWorld worldContract;
 
     constructor () {
     }
@@ -30,6 +33,17 @@ contract PlayerProfile {
         nftContract = IPlanet(_nftContractAddress);
     }
 
+    /**
+        We set the Worldcontract Contract, this can also be done in the constructor
+     */
+    function setWorldAddress(address _worldAddress) public {
+        worldContract = IWorld(_worldAddress);
+    }
+
+    /**
+        Creates the user profile of the user and mints a starship nft
+        and forwards $$ to the treasury
+     */
     function registerProfile() public
      {
         PersonProfile storage player = players[msg.sender];
@@ -43,7 +57,7 @@ contract PlayerProfile {
 
         // buying the nft TODO: send money to treasury
         uint256 shipId = nftContract.mint(msg.sender);
-        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone
+        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone (just place them in a row a the top of the screen)
         // set the position of the ship
     }
 
@@ -59,14 +73,27 @@ contract PlayerProfile {
 
     /**
         Move the ship to a new position
-        {planetId} the planet you want to reach
+        {_planetId} the planet you want to reach
+        {_shipId} the ship you are moving
      */
-    function moveShip(uint x, uint y, uint256 planetId, uint256 shipId) public {
-        // check distance used + update steps of user
+    function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
+        // TODO: calc distance used
 
+        // current location of the ship
+        (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
+
+        // update steps of user
+        players[msg.sender].stepsAvailable -= 100; // TODO: replace with distance
 
         // update ship position
-        nftContract.setLocation(shipId, msg.sender, x, y);
+        nftContract.setLocation(_shipId, msg.sender, x, y);
+
+        // check if we hit the jackpot
+        (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
+        if (xCoordShip == xCoordPlanet && yCoordShip == yCoordPlanet) {
+            // you hit the planet
+            // TODO: forward to vault contract
+        }
     }
 
 
