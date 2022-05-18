@@ -5,21 +5,21 @@ const { solidity } = require('ethereum-waffle');
 use(solidity);
 
 describe('Player', function () {
-  let sharShip;
+  let starShip;
   let player;
   let world;
   const worldId = 1;
 
-  it('should deploy sharShip', async function () {
+  it('should deploy starShip', async function () {
     const YourContract = await ethers.getContractFactory('Starship');
 
-    sharShip = await YourContract.deploy();
+    starShip = await YourContract.deploy();
   });
   it('should deploy Players', async function () {
     const YourContract = await ethers.getContractFactory('Players');
 
     player = await YourContract.deploy();
-    await player.setNftAddress(sharShip.address);
+    await player.setNftAddress(starShip.address);
   });
   it('should deploy World', async function () {
     const YourContract = await ethers.getContractFactory('WorldMapCreator');
@@ -32,7 +32,7 @@ describe('Player', function () {
   it('user should be able to register', async function () {
     await player.registerProfile();
     const [owner] = await ethers.getSigners();
-    expect(await sharShip.balanceOf(owner.address)).be.equal(1);
+    expect(await starShip.balanceOf(owner.address)).be.equal(1);
   });
 
   it('user should be able to sync steps', async function () {
@@ -65,9 +65,9 @@ describe('Player', function () {
     // act
     await world.manualCreatePlanet(worldId, 100, 100, 22);
     const planetId = await world.planetIndex();
-    const shipId = await sharShip.tokenId();
+    const shipId = await starShip.tokenId();
     await player.moveShip(newX, newY, planetId, shipId, worldId);
-    const newLocationOfShip = await sharShip.getLocation(shipId);
+    const newLocationOfShip = await starShip.getLocation(shipId);
 
     // assert
     expect(newLocationOfShip.x).to.eq(newX);
