@@ -1,10 +1,15 @@
+//SPDX-License-Identifier: Unlicense
+
 pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract PlayerProfile {
+contract PlayerProfile is Ownable {
     using Counters for Counters.Counter;
+
+    uint256 constant public NFTPRICE = 0.01 ether;
 
     struct PersonProfile {
             uint256 playerId;
@@ -30,7 +35,7 @@ contract PlayerProfile {
         nftContract = IPlanet(_nftContractAddress);
     }
 
-    function registerProfile() public
+    function registerProfile() public payable
      {
         PersonProfile storage player = players[msg.sender];
         require(player.playerId == 0, "you already signed up");
@@ -41,7 +46,8 @@ contract PlayerProfile {
         player.stepsAvailable = 0;
         player.totalStepsTaken = 0;
 
-        // buying the nft TODO: send money to treasury
+        // buying the nft TODO: send money to treasury. Implemented in withdraw function
+        require(msg.value == NFTPRICE, "Not enought/too much ether sent");
         uint256 shipId = nftContract.mint(msg.sender);
         nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone
         // set the position of the ship
@@ -81,6 +87,17 @@ contract PlayerProfile {
         } else if (y != 0) {
             z = 1;
         }
+    }
+
+    
+    function withdraw() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No ether left to withdraw");
+
+        (bool success, ) = payable(owner()).call{value: balance}("");
+
+        require(success, "Transfer failed.");
+    
     }
 
 
