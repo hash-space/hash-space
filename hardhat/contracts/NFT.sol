@@ -22,7 +22,7 @@ contract Starship is ERC721, IPlanet {
 
     function getLocation(
         uint256 _tokenId
-    ) public override returns (uint x, uint y) {
+    ) public override view returns (uint x, uint y) {
          ShipData memory location = shipData[_tokenId];
          return (location.x, location.y);
     }
@@ -40,6 +40,7 @@ contract Starship is ERC721, IPlanet {
         ShipData memory location;
         location.x = x;
         location.y = y;
+        location.owner = address(0);
         shipData[_tokenId] = location;
     }
 
