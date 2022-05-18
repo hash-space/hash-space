@@ -10,7 +10,7 @@ describe('Player', function () {
   let world;
   const worldId = 1;
 
-  it('should deploy sharShip', async function () {
+  it('should deploy starship', async function () {
     const YourContract = await ethers.getContractFactory('Starship');
 
     sharShip = await YourContract.deploy();
