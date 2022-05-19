@@ -8,7 +8,7 @@ env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
 
 jobs:
-  hardhat:
+  sanity_check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,15 +18,8 @@ jobs:
       - run: |
           npm install
           npm run test
-          npm run compile
+          npm run deploy:testnet
         working-directory: ./hardhat
-  app:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
       - run: |
           npm install
           npm run build
