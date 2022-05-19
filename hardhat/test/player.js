@@ -59,8 +59,6 @@ describe('Player', function () {
     expect(stepsResult.stepsAvailable).to.eq(9100);
   });
 
-
-
   it('user can move ship', async function () {
     // arrange
     const newX = 400;
@@ -80,7 +78,7 @@ describe('Player', function () {
 
   it('moving ship substracts correct number of steps', async function () {
     // movement during previous test is from (1,1) => (400, 450)
-    // this is 588 steps, so testing appropriate subtraction here 
+    // this is 600.6 steps, so testing appropriate subtraction here 
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
     expect(stepsResult.totalStepsTaken).to.eq(9100);
