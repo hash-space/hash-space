@@ -1,7 +1,17 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  useReducer,
+} from 'react';
 import { useEthersAppContext, EthersModalConnector } from 'eth-hooks/context';
 import { ICoreOptions } from 'web3modal';
 import { useSnackbar } from 'notistack';
+import { useLoadAppContracts } from '../config/contract';
+import { asEthersAdaptor } from 'eth-hooks/functions';
+import { useEthersAdaptorFromProviderOrSigners } from 'eth-hooks';
+import { useConnectAppContracts } from '../config/contract';
 
 const _AuthContext = React.createContext<IAuthProps>(
   undefined as unknown as IAuthProps
@@ -84,6 +94,17 @@ export const AuthContext: React.FC<IProps> = (props) => {
       );
     }
   }, [ethersAppContext.chainId, networks]);
+
+  useLoadAppContracts();
+  useConnectAppContracts(asEthersAdaptor(ethersAppContext));
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  useEffect(() => {
+    console.log('force update');
+    setTimeout(() => {
+      forceUpdate();
+    }, 1000);
+  }, [ethersAppContext.provider, ethersAppContext.chainId]);
 
   return (
     <_AuthContext.Provider value={{ login, logout }}>

@@ -20,6 +20,8 @@ export const NETWORKS: Readonly<Record<TNetworkNames, TNetworkInfo>> = {
     color: '#666666',
     chainId: 31337,
     blockExplorer: '',
+    price: 1,
+    gasPrice: 1100000000,
     url: 'http://' + hostname + ':8545',
   },
   mumbai: {
