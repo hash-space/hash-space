@@ -79,6 +79,24 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
     console.log('Failed to load config for web3 connector coinbase: ', e);
   }
 
+  // try {
+  //   const WalletConnectProvider = (
+  //     await import('@walletconnect/ethereum-provider')
+  //   ).default;
+  //   const walletConnectEthereum = {
+  //     package: WalletConnectProvider,
+  //     options: {
+  //       bridge: 'https://polygon.bridge.walletconnect.org',
+  //       infuraId: process.env.INFURA_ID,
+  //       rpc: {},
+  //     },
+  //   };
+  //   providerOptions.walletconnect = walletConnectEthereum;
+  // } catch (e) {
+  //   console.log('Failed to load config for web3 connector WalletConnect: ', e);
+  // }
+
+
   // === LOCALHOST STATIC
   try {
     if (LOCAL_PROVIDER) {
