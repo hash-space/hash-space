@@ -3,12 +3,13 @@ import { EthersAppContext } from 'eth-hooks/context';
 import { AuthContext } from '../src/context/auth';
 import { StateContext } from '../src/context/state';
 import { SnackbarProvider } from 'notistack';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import Head from 'next/head';
 import { ContractsAppContext } from '../src/config/contract';
 
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
       main: '#424242',
     },
@@ -21,6 +22,7 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <ContractsAppContext>
         <EthersAppContext>
           <SnackbarProvider maxSnack={3}>

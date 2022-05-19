@@ -14,6 +14,7 @@ import {
   useConnectAppContracts,
   useLoadAppContracts,
 } from '../src/config/contract';
+import { Typography } from '@mui/material';
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
@@ -45,14 +46,16 @@ function MainView() {
   const { playerState, playerRegister } = useStateContext();
   return (
     <main className={styles.main}>
-      <div>{JSON.stringify(playerState)}</div>
-      <button onClick={authContext.login}>login</button>
-      <button onClick={authContext.logout}>logout</button>
-      <button onClick={playerRegister}>register</button>
+      <Typography variant="h6" component="div">
+        <div>{JSON.stringify(playerState)}</div>
+        <button onClick={authContext.login}>login</button>
+        <button onClick={authContext.logout}>logout</button>
+        <button onClick={playerRegister}>register</button>
 
-      <p>account: {ethersAppContext.account}</p>
-      <p>chain: {ethersAppContext.chainId}</p>
-      <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>
+        <p>account: {ethersAppContext.account}</p>
+        <p>chain: {ethersAppContext.chainId}</p>
+        <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>
+      </Typography>
     </main>
   );
 }
