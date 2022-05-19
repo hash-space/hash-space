@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   contractsContextFactory,
   createConnectorForHardhatContract,
@@ -52,7 +51,7 @@ export const {
 } = contractsContextFactory<
   /* the contractNames (keys) in config output */
   keyof TAppConnectorList,
-  /* the type of the config output  */
+  // @ts-ignore
   TAppConnectorList,
   /* A type that infers the value of each contractName: contract pair*/
   TTypedContract<keyof TAppConnectorList, TAppConnectorList>
