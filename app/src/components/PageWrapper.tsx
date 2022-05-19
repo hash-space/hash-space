@@ -7,10 +7,7 @@ interface IProps {
 
 export function PageWrapper(props: IProps) {
   return (
-    <Container
-      maxWidth={false}
-      disableGutters
-      sx={{ backgroundColor: '#fafafa', minHeight: '100vh' }}>
+    <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh' }}>
       <HeaderBar />
       {props.children}
     </Container>

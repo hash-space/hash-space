@@ -4,17 +4,22 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
 
+import "hardhat/console.sol";
+
+
 contract Starship is ERC721, IPlanet {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
 
-    struct Location {
+    struct ShipData {
             uint x;
             uint y;
+            address owner;
+            uint id;
     }
 
-
-    mapping (uint256 => Location) shipLocation;
+    // mapping tokenId to shipData
+    mapping (uint256 => ShipData) shipData;
 
     constructor() ERC721("Startship", "SHIP") public {
     }
@@ -22,7 +27,7 @@ contract Starship is ERC721, IPlanet {
     function getLocation(
         uint256 _tokenId
     ) public override view returns (uint x, uint y) {
-         Location memory location = shipLocation[_tokenId];
+         ShipData memory location = shipData[_tokenId];
          return (location.x, location.y);
     }
 
@@ -36,14 +41,12 @@ contract Starship is ERC721, IPlanet {
         uint y
     ) public override {
         require(ownerOf(_tokenId) == _ownerAddress, "not allowed to update");
-        Location memory location;
-        location.x = x;
-        location.y = y;
-        shipLocation[_tokenId] = location;
+        shipData[_tokenId].x = x;
+        shipData[_tokenId].y = y;
     }
 
     /**
-        TOOD: secure, only allow calls from PlayerContract
+        TODO: secure, only allow calls from PlayerContract
      */
     function mint(address player) public override returns (uint256) {
         tokenId.increment();
@@ -52,5 +55,30 @@ contract Starship is ERC721, IPlanet {
         _mint(player, newItemId);
 
         return newItemId;
+    }
+
+    /**
+        Returns all ships in the game
+     */
+    function getShips() public view returns(ShipData[] memory) {
+        uint tokenCount = tokenId.current() + 1;
+        ShipData[] memory ships = new ShipData[](tokenCount);
+        for (uint j = 0; j < tokenCount; j++) {
+            ShipData memory ship = shipData[j];
+            ships[j] = ship;
+        }
+        return ships;
+    }
+
+    /**
+        To allow transfer of ships
+     */
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override {
+        shipData[tokenId].owner = to;
+        shipData[tokenId].id = tokenId;
     }
 }

@@ -2,6 +2,7 @@ require('@nomiclabs/hardhat-waffle');
 require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
+require('hardhat-deploy-ethers');
 require('dotenv').config();
 
 // You need to export an object to set up your config
@@ -21,7 +22,7 @@ module.exports = {
       url: 'http://localhost:8545',
     },
     matic: {
-      url: 'https://rpc-mumbai.maticvigil.com',
+      url: 'https://matic-mumbai.chainstacklabs.com',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
     },
   },

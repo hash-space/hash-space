@@ -1,7 +1,17 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  useReducer,
+} from 'react';
 import { useEthersAppContext, EthersModalConnector } from 'eth-hooks/context';
 import { ICoreOptions } from 'web3modal';
 import { useSnackbar } from 'notistack';
+import { useLoadAppContracts } from '../config/contract';
+import { asEthersAdaptor } from 'eth-hooks/functions';
+import { useEthersAdaptorFromProviderOrSigners } from 'eth-hooks';
+import { useConnectAppContracts } from '../config/contract';
 
 const _AuthContext = React.createContext<IAuthProps>(
   undefined as unknown as IAuthProps
@@ -72,6 +82,7 @@ export const AuthContext: React.FC<IProps> = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  // throw error if connected to the wrong chain
   useEffect(() => {
     if (
       networks.length > 0 &&
@@ -84,6 +95,32 @@ export const AuthContext: React.FC<IProps> = (props) => {
       );
     }
   }, [ethersAppContext.chainId, networks]);
+
+  // auto connect to provider if cached to avoid relogin
+  useEffect(() => {
+    if (
+      !ethersAppContext.active &&
+      createLoginConnector &&
+      localStorage.getItem('WEB3_CONNECT_CACHED_PROVIDER')
+    ) {
+      let connector = createLoginConnector(undefined);
+      if (connector) {
+        ethersAppContext.activate(connector);
+      }
+    }
+  }, [web3Config]);
+
+  // load contract
+  useLoadAppContracts();
+  useConnectAppContracts(asEthersAdaptor(ethersAppContext));
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  useEffect(() => {
+    console.log('force update');
+    setTimeout(() => {
+      forceUpdate();
+    }, 1000);
+  }, [ethersAppContext.provider, ethersAppContext.chainId]);
 
   return (
     <_AuthContext.Provider value={{ login, logout }}>

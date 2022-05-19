@@ -51,7 +51,7 @@ contract Players {
         indexPlayerIds.increment();
         player.playerId = indexPlayerIds.current();
         player.timeJoined = block.timestamp;
-        player.lastQueried = block.timestamp;
+        player.lastQueried = block.timestamp - (60*60*12); // give the user 12 hour window, so that he does not sign up with zero steps
         player.stepsAvailable = 0;
         player.totalStepsTaken = 0;
 
@@ -69,6 +69,7 @@ contract Players {
         require(player.playerId != 0, "you need to be registered");
         player.totalStepsTaken += steps;
         player.stepsAvailable += steps;
+        player.lastQueried = block.timestamp;
     }
 
     /**

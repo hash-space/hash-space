@@ -73,4 +73,48 @@ describe('Player', function () {
     expect(newLocationOfShip.x).to.eq(newX);
     expect(newLocationOfShip.y).to.eq(newY);
   });
+
+  it('user can list ships', async function () {
+    const [owner, addr1] = await ethers.getSigners();
+    await hre.network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [addr1.address],
+    });
+    const signer = await ethers.getSigner(addr1.address);
+    await player.connect(signer).registerProfile();
+
+    // act
+    const ships = await starShip.getShips();
+
+    // assert
+    expect(ships.length).to.eq(3);
+    expect(ships[1].owner).to.eq(owner.address);
+    expect(ships[1].x).to.eq(400);
+    expect(ships[1].y).to.eq(450);
+    expect(ships[2].owner).to.eq(addr1.address);
+    expect(ships[2].x).to.eq(10);
+    expect(ships[2].y).to.eq(10);
+  });
+
+  it('user can transfer ownership of ship', async function () {
+    const [owner, addr1] = await ethers.getSigners();
+    await hre.network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [addr1.address],
+    });
+
+    // act (transfer ownership from owner to addr1)
+    let ships = await starShip.getShips();
+    await starShip.transferFrom(owner.address, addr1.address, ships[1].id);
+    ships = await starShip.getShips();
+
+    // assert
+    expect(ships.length).to.eq(3);
+    expect(ships[1].owner).to.eq(addr1.address);
+    expect(ships[1].x).to.eq(400);
+    expect(ships[1].y).to.eq(450);
+    expect(ships[2].owner).to.eq(addr1.address);
+    expect(ships[2].x).to.eq(10);
+    expect(ships[2].y).to.eq(10);
+  });
 });
