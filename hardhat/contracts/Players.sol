@@ -78,13 +78,17 @@ contract Players {
         {_shipId} the ship you are moving
      */
     function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
-        // TODO: calc distance used
 
         // current location of the ship
         (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
 
+        // calculate distance moved
+        uint travelX = get_abs_diff(xCoordShip, x);
+        uint travelY = get_abs_diff(yCoordShip, y);
+        uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
+        
         // update steps of user
-        players[msg.sender].stepsAvailable -= 100; // TODO: replace with distance
+        players[msg.sender].stepsAvailable -= travelDistance;
 
         // update ship position
         nftContract.setLocation(_shipId, msg.sender, x, y);
@@ -95,6 +99,14 @@ contract Players {
             // you hit the planet
             // TODO: forward to vault contract
         }
+    }
+
+    function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
+        return val1 > val2 ? val1 - val2 : val2 - val1;
+    }
+
+    function abs(int x) private pure returns (int) {
+        return x >= 0 ? x : -x;
     }
 
 
