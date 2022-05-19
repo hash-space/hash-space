@@ -20,7 +20,7 @@ function MainView() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
 
-  const { playerContract, shipsContract } = useStateContext();
+  const { playerContract, shipsContract, worldContract } = useStateContext();
   return (
     <main className={styles.main}>
       <SyncStepDialog />
@@ -34,7 +34,8 @@ function MainView() {
           {shipsContract.ships.map((ship) => (
             <li key={ship.id}>
               <div>
-                id: {ship.id}, owner: {ship.owner}, x: {ship.x}, y: {ship.y}
+                id: {ship.id}, owner: {ship.owner}, x: {ship.x}, y: {ship.y},
+                isMine: {ship.isMine ? 'yes' : 'no'}
               </div>
               <Link
                 href={{
@@ -47,9 +48,21 @@ function MainView() {
           ))}
         </ul>
         <hr></hr>
-        <button onClick={authContext.login}>login</button>
-        <button onClick={authContext.logout}>logout</button>
-        <button onClick={playerContract.playerRegister}>register</button>
+        <h1>planets</h1>
+        <ul>
+          {worldContract.planets.map((planet) => (
+            <li key={planet.id}>
+              <div>
+                id: {planet.id}, mapId: {planet.worldMapIndex}, x: {planet.x},
+                y: {planet.y}, type; {planet.planetType}
+              </div>
+            </li>
+          ))}
+        </ul>
+        <hr></hr>
+        {!playerContract.playerState.isSignedUp && (
+          <button onClick={playerContract.playerRegister}>register</button>
+        )}
         <button
           onClick={() => {
             location.href =

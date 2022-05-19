@@ -24,11 +24,21 @@ interface IShip {
   y: number;
   owner: string;
   id: number;
+  isMine: boolean;
+}
+
+interface IPlanet {
+  id: number;
+  worldMapIndex: number;
+  x: number;
+  y: number;
+  planetType: number;
 }
 
 interface IContextProps {
   playerContract: ReturnType<typeof usePlayerContract>;
   shipsContract: ReturnType<typeof useNftContract>;
+  worldContract: ReturnType<typeof useWorldContract>;
 }
 
 export function useStateContext() {
@@ -38,9 +48,10 @@ export function useStateContext() {
 export const StateContext: React.FC<IProps> = (props) => {
   const playerContract = usePlayerContract();
   const shipsContract = useNftContract();
+  const worldContract = useWorldContract();
 
   return (
-    <_Context.Provider value={{ playerContract, shipsContract }}>
+    <_Context.Provider value={{ playerContract, shipsContract, worldContract }}>
       {props.children}
     </_Context.Provider>
   );
@@ -66,10 +77,10 @@ function usePlayerContract() {
   useEffect(() => {
     if (playerObject) {
       setPlayerState({
-        lastQueried: parseInt(ethers.utils.formatUnits(playerObject[2], 0)),
-        playerId: parseInt(ethers.utils.formatUnits(playerObject[0], 0)),
-        stepsAvailable: parseInt(ethers.utils.formatUnits(playerObject[3], 0)),
-        isSignedUp: parseInt(ethers.utils.formatUnits(playerObject[0], 0)) > 0,
+        lastQueried: parseNumber(playerObject[2]),
+        playerId: parseNumber(playerObject[0]),
+        stepsAvailable: parseNumber(playerObject[3]),
+        isSignedUp: parseNumber(playerObject[0]) > 0,
       });
     }
   }, [playerObject]);
@@ -133,6 +144,36 @@ function useNftContract() {
 
   return {
     ships,
+    connected: !!contract,
+  };
+}
+
+function useWorldContract() {
+  const ethersAppContext = useEthersAppContext();
+  const [planets, setPlanets] = useState<IPlanet[]>([]);
+
+  const contract = useAppContracts('WorldMapCreator', ethersAppContext.chainId);
+
+  const [list] = useContractReader(contract, contract?.getPlanets, [1]);
+
+  useEffect(() => {
+    if (list) {
+      setPlanets(
+        list
+          .map((planet) => ({
+            id: parseNumber(planet[0]),
+            worldMapIndex: parseNumber(planet[1]),
+            x: parseNumber(planet[2]),
+            y: parseNumber(planet[3]),
+            planetType: parseNumber(planet[4]),
+          }))
+          .filter((planet) => planet.id > 0)
+      );
+    }
+  }, [list, ethersAppContext.account]);
+
+  return {
+    planets,
     connected: !!contract,
   };
 }
