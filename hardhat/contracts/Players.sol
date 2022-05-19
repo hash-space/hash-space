@@ -87,8 +87,11 @@ contract Players {
         uint travelY = get_abs_diff(yCoordShip, y);
         uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
         
+        // check enough steps available
+        require(players[msg.sender].stepsAvailable > travelDistance * 10, "Not enough steps available to move there");
+
         // update steps of user
-        players[msg.sender].stepsAvailable -= travelDistance;
+        players[msg.sender].stepsAvailable -= travelDistance * 10;
 
         // update ship position
         nftContract.setLocation(_shipId, msg.sender, x, y);
