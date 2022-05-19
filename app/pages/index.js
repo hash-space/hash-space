@@ -15,7 +15,7 @@ import {
   useLoadAppContracts,
 } from '../src/config/contract';
 import { Typography } from '@mui/material';
-
+import SyncStepDialog from '../src/components/SyncStepDialog';
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
   return (
@@ -43,15 +43,22 @@ function MainView() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
 
-  const { playerState, playerRegister } = useStateContext();
+  const { playerContract } = useStateContext();
   return (
     <main className={styles.main}>
+      <SyncStepDialog />
       <Typography variant="h6" component="div">
-        <div>{JSON.stringify(playerState)}</div>
+        <div>{JSON.stringify(playerContract.playerState)}</div>
         <button onClick={authContext.login}>login</button>
         <button onClick={authContext.logout}>logout</button>
-        <button onClick={playerRegister}>register</button>
-
+        <button onClick={playerContract.playerRegister}>register</button>
+        <button
+          onClick={() => {
+            location.href =
+              '/api/auth?lastSync=' + playerContract.playerState.lastQueried;
+          }}>
+          sync steps
+        </button>
         <p>account: {ethersAppContext.account}</p>
         <p>chain: {ethersAppContext.chainId}</p>
         <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>

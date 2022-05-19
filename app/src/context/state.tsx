@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
 import * as ethers from 'ethers';
+import history from '../helper/history';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -19,8 +20,7 @@ interface IPlayerState {
 }
 
 interface IContextProps {
-  playerState: IPlayerState;
-  playerRegister: () => void;
+  playerContract: ReturnType<typeof usePlayerContract>;
 }
 
 export function useStateContext() {
@@ -28,10 +28,18 @@ export function useStateContext() {
 }
 
 export const StateContext: React.FC<IProps> = (props) => {
-  const { playerState, playerRegister } = usePlayerContract();
+  const playerContract = usePlayerContract();
+
+  // for url query params for step sync
+  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+  React.useEffect(() => {
+    history.listen(() => {
+      forceUpdate();
+    });
+  }, []);
 
   return (
-    <_Context.Provider value={{ playerState, playerRegister }}>
+    <_Context.Provider value={{ playerContract }}>
       {props.children}
     </_Context.Provider>
   );
@@ -69,5 +77,17 @@ function usePlayerContract() {
     playersContract.registerProfile();
   }, [playersContract, ethersAppContext.account]);
 
-  return { playerState, playerRegister };
+  const playerSyncSteps = useCallback(
+    (steps: number) => {
+      playersContract.syncSteps(steps);
+    },
+    [playersContract, ethersAppContext.account]
+  );
+
+  return {
+    playerState,
+    playerRegister,
+    playerSyncSteps,
+    connected: !!playersContract,
+  };
 }

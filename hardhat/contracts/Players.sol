@@ -69,6 +69,7 @@ contract Players {
         require(player.playerId != 0, "you need to be registered");
         player.totalStepsTaken += steps;
         player.stepsAvailable += steps;
+        player.lastQueried = block.timestamp;
     }
 
     /**

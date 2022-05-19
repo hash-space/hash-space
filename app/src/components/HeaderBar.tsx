@@ -29,7 +29,7 @@ export default function HeadBar() {
             <Chip
               avatar={
                 <Avatar style={{ width: '50px', borderRadius: '16px' }}>
-                  {stateContext.playerState.stepsAvailable}
+                  {stateContext.playerContract.playerState.stepsAvailable}
                 </Avatar>
               }
               label="Steps"
