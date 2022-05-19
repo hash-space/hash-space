@@ -70,6 +70,12 @@ function MainView() {
           }}>
           sync steps
         </button>
+        <Link
+          href={{
+            pathname: '/game',
+          }}>
+          <button>to to game</button>
+        </Link>
         <p>account: {ethersAppContext.account}</p>
         <p>chain: {ethersAppContext.chainId}</p>
         <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>
