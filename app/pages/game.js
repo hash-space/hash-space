@@ -83,32 +83,44 @@ const SHIPS = [
 
 const PLANET = [
   {
-    x: 0,
-    y: 0,
+    x: 10,
+    y: 50,
+    id: 1,
+    size: 0.5,
+  },
+  {
+    x: 750,
+    y: 600,
+    id: 1,
+    size: 0.5,
+  },
+  {
+    x: 350,
+    y: 650,
+    id: 1,
+    size: 0.5,
+  },
+  {
+    x: 50,
+    y: 350,
+    id: 1,
+    size: 0.5,
+  },
+  {
+    x: 700,
+    y: 800,
+    id: 1,
+    size: 0.5,
+  },
+  {
+    x: 450,
+    y: 700,
     id: 1,
     size: 0.5,
   },
   {
     x: 200,
-    y: 200,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 400,
-    y: 500,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 500,
-    y: 500,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 500,
-    y: 500,
+    y: 300,
     id: 1,
     size: 0.5,
   },
@@ -119,8 +131,8 @@ const PLANET = [
     size: 0.5,
   },
   {
-    x: 700,
-    y: 500,
+    x: 750,
+    y: 950,
     id: 1,
     size: 0.5,
   },
@@ -148,7 +160,7 @@ async function init(element) {
   viewport.drag().pinch().wheel().decelerate();
 
   const ship = await PIXI.Texture.fromURL('/procedural-pixel-art.png');
-  const planet = await PIXI.Texture.fromURL('/planet.png');
+  const planet = await PIXI.Texture.fromURL('/planetTeal.png');
   const context = { asset: { ship, planet }, app };
 
   const mainContainer = new PIXI.Container();
