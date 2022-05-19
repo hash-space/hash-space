@@ -5,7 +5,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts();
   const starship = await deploy('Starship', {
     from: deployer,
-    args: ['deployer'],
+    args: [],
     log: true,
   });
 
