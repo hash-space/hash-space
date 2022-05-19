@@ -17,6 +17,7 @@ contract Players {
     }
 
     Counters.Counter indexPlayerIds;
+    Counters.Counter public indexStartingPosition;
 
     mapping (address => PersonProfile) public players;
 
@@ -57,8 +58,8 @@ contract Players {
 
         // buying the nft TODO: send money to treasury
         uint256 shipId = nftContract.mint(msg.sender);
-        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone (just place them in a row a the top of the screen)
-        // set the position of the ship
+        (uint startingX, uint startingY) = determineStartingPosition();
+        nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
 
     /**
@@ -121,5 +122,22 @@ contract Players {
         }
     }
 
+    function determineStartingPosition() public returns(uint x, uint y) {
 
+        indexStartingPosition.increment();
+        uint positionIndex = indexStartingPosition.current();
+
+        uint startingX = positionIndex % 10;
+        uint startingY = (positionIndex / 10) + 1;
+
+        if (positionIndex == 100) {
+            indexStartingPosition.reset();
+        }
+
+        return (startingX, startingY);
+    }
+
+    function incrementPositionCounter() public {
+        indexStartingPosition.increment();
+    }
 }
