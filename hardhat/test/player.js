@@ -116,7 +116,7 @@ describe('Player', function () {
     // increment counter to 6
     i = 0;
     while (i < 6) {
-      await player3.incrementPositionCounter();
+      await player3.determineStartingPosition();
       i += 1;
     }
 
