@@ -1,6 +1,6 @@
 const { ethers } = require('hardhat');
 const { use, expect } = require('chai');
-const { solidity } = require('ethereum-waffle');
+const { solidity, MockProvider } = require('ethereum-waffle');
 
 use(solidity);
 
@@ -9,6 +9,7 @@ describe('Player', function () {
   let player;
   let world;
   const worldId = 1;
+  const [alice, bob, charlie, david] = new MockProvider().getWallets();
 
   it('should deploy starShip', async function () {
     const YourContract = await ethers.getContractFactory('Starship');
@@ -33,6 +34,7 @@ describe('Player', function () {
     await player.registerProfile();
     const [owner] = await ethers.getSigners();
     expect(await starShip.balanceOf(owner.address)).be.equal(1);
+    
   });
 
   it('user should be able to sync steps', async function () {
@@ -73,4 +75,95 @@ describe('Player', function () {
     expect(newLocationOfShip.x).to.eq(newX);
     expect(newLocationOfShip.y).to.eq(newY);
   });
+
+  it('multiple starships should start in the correct locations', async function () {
+    let starShip2;
+    let player2;
+    let starShip3;
+    let player3;
+    let starShip4;
+    let player4;
+
+    // create new player and starthip
+    const PlayerContract = await ethers.getContractFactory('Players');
+    PlayerContract.connect(alice);
+    player2 = await PlayerContract.deploy();
+    
+    StarshipContract = await ethers.getContractFactory('Starship');
+    StarshipContract.connect(alice);
+    starShip2 = await StarshipContract.deploy();
+
+    await player2.setNftAddress(starShip2.address);
+    await player2.setWorldAddress(world.address);
+    await player2.registerProfile();
+
+    // get location
+    const shipId2 = await starShip2.tokenId();
+    const startingLocation = await starShip2.getLocation(shipId2);
+
+    // assert first ship
+    expect(startingLocation.x).to.eq(1);
+    expect(startingLocation.y).to.eq(1);
+
+    // create second starship
+    PlayerContract.connect(bob);
+    player3 = await PlayerContract.deploy();
+    StarshipContract.connect(bob);
+    starShip3 = await StarshipContract.deploy();
+    await player3.setNftAddress(starShip3.address);
+    await player3.setWorldAddress(world.address);
+
+    // increment counter to 6
+    i = 0;
+    while (i < 6) {
+      await player3.incrementPositionCounter();
+      i += 1;
+    }
+
+    const counter = await player3.indexStartingPosition();
+    expect(counter).to.eq(6);
+
+    await player3.registerProfile();
+
+     // get location
+     const shipId3 = await starShip3.tokenId();
+     const startingLocation3 = await starShip3.getLocation(shipId3);
+ 
+     // assert second ship
+     expect(startingLocation3.x).to.eq(7);
+     expect(startingLocation3.y).to.eq(1);
+
+
+    // create third starship
+    PlayerContract.connect(charlie);
+    player4 = await PlayerContract.deploy();
+    StarshipContract.connect(charlie);
+    starShip4 = await StarshipContract.deploy();
+    await player4.setNftAddress(starShip4.address);
+    await player4.setWorldAddress(world.address);
+
+    // increment counter to 27
+    i = 0;
+    while (i < 27) {
+      await player4.incrementPositionCounter();
+      i += 1;
+    }
+
+    const counter2 = await player4.indexStartingPosition();
+    expect(counter2).to.eq(27);
+
+    await player4.registerProfile();
+
+      // get location
+      const shipId4 = await starShip4.tokenId();
+      const startingLocation4 = await starShip4.getLocation(shipId4);
+
+      // assert third ship
+      expect(startingLocation4.x).to.eq(8);
+      expect(startingLocation4.y).to.eq(3);
+  });
+
+  // TODO: add test for once > 100 players
+
+
 });
