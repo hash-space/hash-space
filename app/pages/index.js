@@ -43,12 +43,17 @@ function MainView() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
 
-  const { playerContract } = useStateContext();
+  const { playerContract, shipsContract } = useStateContext();
   return (
     <main className={styles.main}>
       <SyncStepDialog />
       <Typography variant="h6" component="div">
+        <h1>user</h1>
         <div>{JSON.stringify(playerContract.playerState)}</div>
+        <hr></hr>
+        <h1>ships</h1>
+        <div>{JSON.stringify(shipsContract.ships)}</div>
+        <hr></hr>
         <button onClick={authContext.login}>login</button>
         <button onClick={authContext.logout}>logout</button>
         <button onClick={playerContract.playerRegister}>register</button>

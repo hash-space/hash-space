@@ -52,9 +52,12 @@ export default function SyncStepDialog() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose} variant="secondary">
+            Close
+          </Button>
           {playerContract.connected && !isError && (
             <Button
+              variant="primary"
               onClick={() => {
                 playerContract.playerSyncSteps(steps);
                 handleClose();

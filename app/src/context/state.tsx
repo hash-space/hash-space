@@ -19,8 +19,16 @@ interface IPlayerState {
   isSignedUp: boolean;
 }
 
+interface IShip {
+  x: number;
+  y: number;
+  owner: string;
+  id: number;
+}
+
 interface IContextProps {
   playerContract: ReturnType<typeof usePlayerContract>;
+  shipsContract: ReturnType<typeof useNftContract>;
 }
 
 export function useStateContext() {
@@ -29,9 +37,10 @@ export function useStateContext() {
 
 export const StateContext: React.FC<IProps> = (props) => {
   const playerContract = usePlayerContract();
+  const shipsContract = useNftContract();
 
   return (
-    <_Context.Provider value={{ playerContract }}>
+    <_Context.Provider value={{ playerContract, shipsContract }}>
       {props.children}
     </_Context.Provider>
   );
@@ -82,4 +91,37 @@ function usePlayerContract() {
     playerSyncSteps,
     connected: !!playersContract,
   };
+}
+
+function useNftContract() {
+  const ethersAppContext = useEthersAppContext();
+  const [ships, setShips] = useState<IShip[]>([]);
+
+  const contract = useAppContracts('Starship', ethersAppContext.chainId);
+
+  const [shipList] = useContractReader(contract, contract?.getShips, []);
+
+  useEffect(() => {
+    if (shipList) {
+      setShips(
+        shipList
+          .map((ship) => ({
+            x: parseNumber(ship[0]),
+            y: parseNumber(ship[1]),
+            owner: ship[2],
+            id: parseNumber(ship[3]),
+          }))
+          .filter((ship) => ship.id > 0)
+      );
+    }
+  }, [shipList]);
+
+  return {
+    ships,
+    connected: !!contract,
+  };
+}
+
+function parseNumber(value: ethers.ethers.BigNumberish) {
+  return parseInt(ethers.utils.formatUnits(value, 0));
 }
