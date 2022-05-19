@@ -78,13 +78,20 @@ contract Players {
         {_shipId} the ship you are moving
      */
     function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
-        // TODO: calc distance used
 
         // current location of the ship
         (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
 
+        // calculate distance moved
+        uint travelX = get_abs_diff(xCoordShip, x);
+        uint travelY = get_abs_diff(yCoordShip, y);
+        uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
+        
+        // check enough steps available
+        require(players[msg.sender].stepsAvailable > travelDistance * 10, "Not enough steps available to move there");
+
         // update steps of user
-        players[msg.sender].stepsAvailable -= 100; // TODO: replace with distance
+        players[msg.sender].stepsAvailable -= travelDistance * 10;
 
         // update ship position
         nftContract.setLocation(_shipId, msg.sender, x, y);
@@ -97,6 +104,9 @@ contract Players {
         }
     }
 
+    function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
+        return val1 > val2 ? val1 - val2 : val2 - val1;
+    }
 
     function sqrt(uint y) internal pure returns (uint z) {
         if (y > 3) {

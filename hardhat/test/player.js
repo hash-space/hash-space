@@ -47,14 +47,14 @@ describe('Player', function () {
   });
 
   it('user should be able to accumulate steps', async function () {
-    const res = await player.syncSteps(200);
+    const res = await player.syncSteps(2000);
     await res.wait();
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
 
     // assert
-    expect(stepsResult.totalStepsTaken).to.eq(300);
-    expect(stepsResult.stepsAvailable).to.eq(300);
+    expect(stepsResult.totalStepsTaken).to.eq(2100);
+    expect(stepsResult.stepsAvailable).to.eq(2100);
   });
 
   it('user can move ship', async function () {
@@ -72,6 +72,16 @@ describe('Player', function () {
     // assert
     expect(newLocationOfShip.x).to.eq(newX);
     expect(newLocationOfShip.y).to.eq(newY);
+  });
+
+  it('moving ship substracts correct number of steps', async function () {
+    // movement during previous test is from (10,10) => (400, 450)
+    // this is 588 steps, so testing appropriate subtraction here 
+    const [owner] = await ethers.getSigners();
+    const stepsResult = await player.players(owner.address);
+    expect(stepsResult.totalStepsTaken).to.eq(2100);
+    expect(stepsResult.stepsAvailable).to.eq(1513);
+    // TODO: consider amending to account for rounding error 
   });
 
   it('user can list ships', async function () {
