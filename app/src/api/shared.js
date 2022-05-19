@@ -38,9 +38,7 @@ export function formatData(bucket) {
   };
 }
 
-async function getStepData(dataSourceId) {
-  const startDate = new Date();
-  startDate.setUTCHours(0, 0, 0, 0);
+async function getStepData(dataSourceId, startTimestamp) {
   const res = await fitness.users.dataset.aggregate({
     userId: 'me',
     requestBody: {
@@ -53,18 +51,18 @@ async function getStepData(dataSourceId) {
         durationMillis: 3600000,
       },
       endTimeMillis: new Date().getTime(),
-      startTimeMillis: startDate.getTime(),
+      startTimeMillis: startTimestamp * 1000,
     },
   });
   return res.data;
 }
 
-export async function findBestResult() {
+export async function findBestResult(startTimestamp) {
   const dataSourceIds = await getDataSourceIds();
   let todaysSteps = 0;
   let result;
   for (const id of dataSourceIds) {
-    const res = await getStepData(id);
+    const res = await getStepData(id, startTimestamp);
     const resFormatted = formatData(res.bucket);
     if (resFormatted.totalStepsToday > todaysSteps) {
       result = res;

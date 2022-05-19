@@ -10,10 +10,12 @@ import {
 } from '@mui/material';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../context/auth';
+import { useStateContext } from '../context/state';
 
 export default function HeadBar() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
+  const stateContext = useStateContext();
 
   return (
     <AppBar position="static">
@@ -27,7 +29,7 @@ export default function HeadBar() {
             <Chip
               avatar={
                 <Avatar style={{ width: '50px', borderRadius: '16px' }}>
-                  10000
+                  {stateContext.playerContract.playerState.stepsAvailable}
                 </Avatar>
               }
               label="Steps"
