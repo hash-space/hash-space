@@ -4,12 +4,15 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
 
+import "./interfaces/IPlanetFactory.sol";
+
 contract WorldMapCreator is IWorld {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
         uint256 Length; // The vertical length of the world map
         uint256 Breadth; // The breadth of the world map
+       // uint planetsInWorld;
     }
 
     mapping(uint256 => WorldMap) public existingWorlds;
@@ -18,7 +21,6 @@ contract WorldMapCreator is IWorld {
     uint planetIndex;
 
     PlanetFactory _planetFactory;
-
     constructor() {
         planetIndex = 0;
         _planetFactory = new PlanetFactory();
@@ -38,8 +40,8 @@ contract WorldMapCreator is IWorld {
         newWorldMap = WorldMap({
             worldIndex: _worldIndex,
             Length: _length,
-            Breadth: _breadth
-            // PlanetsInWorld: 
+            Breadth: _breadth, 
+           //  PlanetsInWorld: 5
         });
 
         existingWorlds[_worldIndex] = newWorldMap;
@@ -56,6 +58,8 @@ contract WorldMapCreator is IWorld {
 
     function addPlanets(uint _numPlanets, uint256 _worldIndex) public {
         // TODO: consider modifying to be based on hash of the locations
+
+
         
         // TODO: consider renaming to add all planets
 
@@ -72,7 +76,10 @@ contract WorldMapCreator is IWorld {
         }        
     }
 
+
     function getLocation(uint256 _worldId, uint256 _planetId) public pure override returns(uint x, uint y) {
+        
+        
         return (1,2);
     }
 

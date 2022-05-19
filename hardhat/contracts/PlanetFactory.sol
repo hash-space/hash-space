@@ -5,6 +5,9 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./DeFI/interfaces/IVault.sol";
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+
+//import "UsingTellor"
 // contract PlanetFactory is UsingTellor {
 contract PlanetFactory {
 
@@ -35,6 +38,8 @@ contract PlanetFactory {
 
     // constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {}
     constructor() {
+
+        
 
         // Add one planet type
         PlanetCharacs memory newPlanetType1;
@@ -78,7 +83,7 @@ contract PlanetFactory {
 
     }
 
-    function getPlanet(uint _planetId) public view returns (Planet memory) {
+    function getPlanet(uint _planetId) public view returns (uint _planetId, uint _worldMapIndex, uint _xCoord, uint _yCoord, uint ) {
         return existingPlanets[_planetId];
     }
 
@@ -88,14 +93,14 @@ contract PlanetFactory {
 
     }
 
-    function _retrieveRandomNumber() public view returns (uint256) {
-        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, "TellorRNG")));
-        // TODO: modify to enable multiple modificaitons during the same time stamp
-    }
-
-    // TODO: figure out how to deploy with Tellor, then use this as random number function
-    // function _retrieveRandomNumber(uint256 _timestamp) internal view returns(uint256) {
-  
+    // function _retrieveRandomNumber() public view returns (uint256) {
+    //     return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, "TellorRNG")));
+    //    //
     // }
+
+   // TODO: figure out how to deploy with Tellor, then use this as random number function
+    function _retrieveRandomNumber(uint256 _timestamp) internal view returns(uint256) {
+  
+    }
 
 }
