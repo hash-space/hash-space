@@ -24,6 +24,7 @@ module.exports = {
     matic: {
       url: 'https://matic-mumbai.chainstacklabs.com',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
+      gasMultiplier: 2,
     },
   },
   namedAccounts: {
