@@ -20,8 +20,13 @@ export default function HeadBar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Hash Space
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.png" title="hash space" height={35} />
+          <Box sx={{ width: 8 }}></Box>
+          <span>Hash Space</span>
         </Typography>
 
         {ethersAppContext.active && (
