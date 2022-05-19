@@ -82,6 +82,7 @@ export const AuthContext: React.FC<IProps> = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  // throw error if connected to the wrong chain
   useEffect(() => {
     if (
       networks.length > 0 &&
@@ -95,6 +96,21 @@ export const AuthContext: React.FC<IProps> = (props) => {
     }
   }, [ethersAppContext.chainId, networks]);
 
+  // auto connect to provider if cached to avoid relogin
+  useEffect(() => {
+    if (
+      !ethersAppContext.active &&
+      createLoginConnector &&
+      localStorage.getItem('WEB3_CONNECT_CACHED_PROVIDER')
+    ) {
+      let connector = createLoginConnector(undefined);
+      if (connector) {
+        ethersAppContext.activate(connector);
+      }
+    }
+  }, [web3Config]);
+
+  // load contract
   useLoadAppContracts();
   useConnectAppContracts(asEthersAdaptor(ethersAppContext));
 
