@@ -8,7 +8,6 @@ import hardhatContractsJson from '../generated/hardhat_contracts.json';
 
 export const contractConnectorConfig = () => {
   try {
-    console.log(hardhatContractsJson);
     const result = {
       Players: createConnectorForHardhatContract(
         'Players',

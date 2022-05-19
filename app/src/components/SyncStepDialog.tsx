@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,40 +7,29 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';
-import {
-  useQueryParams,
-  StringParam,
-  NumberParam,
-  ArrayParam,
-  withDefault,
-} from 'use-query-params';
 import { useStateContext } from '../context/state';
 
 export default function SyncStepDialog() {
-  const [open, setOpen] = React.useState(false);
+  const router = useRouter();
+  const { query, pathname } = router;
+  const steps = parseInt(
+    Array.isArray(query.steps) ? query.steps[0] : query.steps
+  );
+  const error = Array.isArray(query.error) ? query.error[0] : query.error;
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [query, setQuery] = useQueryParams({
-    steps: NumberParam,
-    error: StringParam,
-  });
-
-  React.useEffect(() => {
-    if (query.steps > 0 || query.error) {
-      setOpen(true);
-    }
-  }, [query.steps, query.error]);
+  const isOpen = Boolean(steps > 0 || query.error);
 
   const { playerContract } = useStateContext();
-  const isError = !!query.error;
+  const isError = !!error;
+
+  const handleClose = React.useCallback(() => {
+    router.replace('/');
+  }, []);
 
   return (
     <div>
       <Dialog
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
@@ -48,7 +38,7 @@ export default function SyncStepDialog() {
           {!isError && (
             <div>
               <DialogContentText id="alert-dialog-description">
-                Do you want to sync your steps ({query.steps}) to the blockchain
+                Do you want to sync your steps ({steps}) to the blockchain
               </DialogContentText>
               {!playerContract.connected && <CircularProgress />}
             </div>
@@ -56,7 +46,7 @@ export default function SyncStepDialog() {
           {isError && (
             <div>
               <DialogContentText id="alert-dialog-description">
-                {mapError(query.error)}
+                {mapError(error)}
               </DialogContentText>
             </div>
           )}
@@ -66,9 +56,8 @@ export default function SyncStepDialog() {
           {playerContract.connected && !isError && (
             <Button
               onClick={() => {
-                playerContract.playerSyncSteps(query.steps);
+                playerContract.playerSyncSteps(steps);
                 handleClose();
-                setQuery({ error: '', steps: 0 });
               }}
               autoFocus>
               Agree

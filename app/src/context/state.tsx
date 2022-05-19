@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
+import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
-import history from '../helper/history';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -30,14 +30,6 @@ export function useStateContext() {
 export const StateContext: React.FC<IProps> = (props) => {
   const playerContract = usePlayerContract();
 
-  // for url query params for step sync
-  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
-  React.useEffect(() => {
-    history.listen(() => {
-      forceUpdate();
-    });
-  }, []);
-
   return (
     <_Context.Provider value={{ playerContract }}>
       {props.children}
@@ -55,23 +47,23 @@ function usePlayerContract() {
   });
 
   const playersContract = useAppContracts('Players', ethersAppContext.chainId);
-  console.log(playersContract, ethersAppContext.chainId);
+
+  const [playerObject] = useContractReader(
+    playersContract,
+    playersContract?.players,
+    [ethersAppContext.account ?? '']
+  );
 
   useEffect(() => {
-    if (playersContract && ethersAppContext.account) {
-      playersContract.players(ethersAppContext.account).then((res) => {
-        console.log(res.stepsAvailable);
-        setPlayerState({
-          lastQueried: parseInt(ethers.utils.formatUnits(res.lastQueried, 0)),
-          playerId: parseInt(ethers.utils.formatUnits(res.playerId, 0)),
-          stepsAvailable: parseInt(
-            ethers.utils.formatUnits(res.stepsAvailable, 0)
-          ),
-          isSignedUp: parseInt(ethers.utils.formatUnits(res.playerId, 0)) > 0,
-        });
+    if (playerObject) {
+      setPlayerState({
+        lastQueried: parseInt(ethers.utils.formatUnits(playerObject[2], 0)),
+        playerId: parseInt(ethers.utils.formatUnits(playerObject[0], 0)),
+        stepsAvailable: parseInt(ethers.utils.formatUnits(playerObject[3], 0)),
+        isSignedUp: parseInt(ethers.utils.formatUnits(playerObject[0], 0)) > 0,
       });
     }
-  }, [playersContract, ethersAppContext.account]);
+  }, [playerObject]);
 
   const playerRegister = useCallback(() => {
     playersContract.registerProfile();

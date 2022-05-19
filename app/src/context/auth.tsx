@@ -116,10 +116,9 @@ export const AuthContext: React.FC<IProps> = (props) => {
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   useEffect(() => {
-    console.log('force update');
     setTimeout(() => {
       forceUpdate();
-    }, 1000);
+    }, 500);
   }, [ethersAppContext.provider, ethersAppContext.chainId]);
 
   return (
