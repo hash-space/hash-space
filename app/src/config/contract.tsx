@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   contractsContextFactory,
   createConnectorForHardhatContract,
@@ -17,6 +18,11 @@ export const contractConnectorConfig = () => {
       Starship: createConnectorForHardhatContract(
         'Starship',
         hardhatContracts.Starship__factory,
+        hardhatContractsJson
+      ),
+      WorldMapCreator: createConnectorForHardhatContract(
+        'WorldMapCreator',
+        hardhatContracts.WorldMapCreator__factory,
         hardhatContractsJson
       ),
     } as const;

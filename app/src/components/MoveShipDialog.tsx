@@ -35,12 +35,13 @@ export default function MoveShipDialog() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="secondary">
+          <Button onClick={handleClose} variant="text">
             Close
           </Button>
           {playerContract.connected && (
             <Button
-              variant="primary"
+              color="secondary"
+              variant="outlined"
               onClick={() => {
                 playerContract.playerMoveShip(1, 1, 1, 1, 1);
                 handleClose();
