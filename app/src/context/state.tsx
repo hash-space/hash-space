@@ -85,10 +85,24 @@ function usePlayerContract() {
     [playersContract, ethersAppContext.account]
   );
 
+  const playerMoveShip = useCallback(
+    (
+      x: number,
+      y: number,
+      planetId: number,
+      shipId: number,
+      worldId: number
+    ) => {
+      playersContract.moveShip(x, y, planetId, shipId, worldId);
+    },
+    [playersContract, ethersAppContext.account]
+  );
+
   return {
     playerState,
     playerRegister,
     playerSyncSteps,
+    playerMoveShip,
     connected: !!playersContract,
   };
 }
@@ -110,11 +124,12 @@ function useNftContract() {
             y: parseNumber(ship[1]),
             owner: ship[2],
             id: parseNumber(ship[3]),
+            isMine: ship[2] == ethersAppContext.account,
           }))
           .filter((ship) => ship.id > 0)
       );
     }
-  }, [shipList]);
+  }, [shipList, ethersAppContext.account]);
 
   return {
     ships,

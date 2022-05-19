@@ -23,8 +23,8 @@ export default function SyncStepDialog() {
   const isError = !!error;
 
   const handleClose = React.useCallback(() => {
-    router.replace('/');
-  }, []);
+    router.replace(pathname);
+  }, [pathname]);
 
   return (
     <div>
