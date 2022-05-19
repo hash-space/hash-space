@@ -59,8 +59,7 @@ contract Players {
         // buying the nft TODO: send money to treasury
         uint256 shipId = nftContract.mint(msg.sender);
         (uint startingX, uint startingY) = determineStartingPosition();
-        nftContract.setLocation(shipId, msg.sender, startingX, startingY); // TODO: place ship in landing zone (just place them in a row a the top of the screen)
-        // set the position of the ship
+        nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
 
     /**
@@ -120,9 +119,9 @@ contract Players {
         uint startingX = positionIndex % 10;
         uint startingY = (positionIndex / 10) + 1;
 
-        // if (positionIndex == 100) {
-        //     indexStartingPosition.reset();
-        // }
+        if (positionIndex == 100) {
+            indexStartingPosition.reset();
+        }
 
         return (startingX, startingY);
     }

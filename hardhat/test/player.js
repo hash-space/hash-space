@@ -125,13 +125,13 @@ describe('Player', function () {
 
     await player3.registerProfile();
 
-     // get location
-     const shipId3 = await starShip3.tokenId();
-     const startingLocation3 = await starShip3.getLocation(shipId3);
- 
-     // assert second ship
-     expect(startingLocation3.x).to.eq(7);
-     expect(startingLocation3.y).to.eq(1);
+    // get location
+    const shipId3 = await starShip3.tokenId();
+    const startingLocation3 = await starShip3.getLocation(shipId3);
+
+    // assert second ship
+    expect(startingLocation3.x).to.eq(7);
+    expect(startingLocation3.y).to.eq(1);
 
 
     // create third starship
@@ -145,7 +145,7 @@ describe('Player', function () {
     // increment counter to 27
     i = 0;
     while (i < 27) {
-      await player4.incrementPositionCounter();
+      await player4.determineStartingPosition();
       i += 1;
     }
 
@@ -154,16 +154,38 @@ describe('Player', function () {
 
     await player4.registerProfile();
 
-      // get location
-      const shipId4 = await starShip4.tokenId();
-      const startingLocation4 = await starShip4.getLocation(shipId4);
+    // get location
+    const shipId4 = await starShip4.tokenId();
+    const startingLocation4 = await starShip4.getLocation(shipId4);
 
-      // assert third ship
-      expect(startingLocation4.x).to.eq(8);
-      expect(startingLocation4.y).to.eq(3);
+    // assert third ship
+    expect(startingLocation4.x).to.eq(8);
+    expect(startingLocation4.y).to.eq(3);
   });
 
-  // TODO: add test for once > 100 players
+  it('position index counter should reset at 100', async function () {
+    let player5;
+    let starShip5;
 
+    // create player and starship
+    const PlayerContract = await ethers.getContractFactory('Players');
+    const StarshipContract = await ethers.getContractFactory('Starship');
+    PlayerContract.connect(david);
+    player5 = await PlayerContract.deploy();
+    StarshipContract.connect(david);
+    starShip5 = await StarshipContract.deploy();
+    await player5.setNftAddress(starShip5.address);
+    await player5.setWorldAddress(world.address);
+
+    // increment counter to 105
+    i = 0;
+    while (i < 105) {
+      await player5.determineStartingPosition();
+      i += 1;
+    }
+
+    const counter = await player5.indexStartingPosition();
+    expect(counter).to.eq(5);
+  });
 
 });
