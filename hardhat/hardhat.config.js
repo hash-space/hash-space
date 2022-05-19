@@ -16,13 +16,22 @@ require('dotenv').config();
 module.exports = {
   defaultNetwork: 'localhost',
   networks: {
-    hardhat: {},
+    hardhat: {
+      forking: {
+        url:'https://eth-mainnet.alchemyapi.io/v2/${PRIVATE_KEY}',
+        blockNumber:10000000
+      }
+
+    },
     localhost: {
       url: 'http://localhost:8545',
     },
     matic: {
-      url: 'https://rpc-mumbai.maticvigil.com',
-      accounts: [process.env.PRIVATE_KEY_MUMBAI],
+      url: 'https://polygon-mumbai.g.alchemy.com/v2/${PRIVATE_KEY}',
+      
+    },
+    mainnet: {
+      url: 'https://eth-mainnet.alchemyapi.io/v2/${PRIVATE_KEY}'
     },
   },
   namedAccounts: {
