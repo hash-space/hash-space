@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+env:
+  PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
+
 jobs:
   hardhat:
     runs-on: ubuntu-latest
