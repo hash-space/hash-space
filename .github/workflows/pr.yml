@@ -35,10 +35,13 @@ jobs:
         continue-on-error: true
         run: npm list
 
-      - run: |
-          npm install
-          npm run test
-          npm run deploy:testnet
+      - run: npm install
+        working-directory: ./hardhat
+
+      - run: npm run test
+        working-directory: ./hardhat
+
+      - run: npm run deploy:testnet
         working-directory: ./hardhat
 
       - run: |
