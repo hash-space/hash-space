@@ -108,11 +108,6 @@ contract Players {
         return val1 > val2 ? val1 - val2 : val2 - val1;
     }
 
-    function abs(int x) private pure returns (int) {
-        return x >= 0 ? x : -x;
-    }
-
-
     function sqrt(uint y) internal pure returns (uint z) {
         if (y > 3) {
             z = y;
