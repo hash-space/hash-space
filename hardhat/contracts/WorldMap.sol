@@ -3,7 +3,6 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
-
 import "hardhat/console.sol";
 
 
@@ -13,6 +12,7 @@ contract WorldMapCreator is IWorld {
         uint256 worldIndex; // The ID for the world that was created
         uint256 Length; // The vertical length of the world map
         uint256 Breadth; // The breadth of the world map
+        uint256 chainDeployConfig; // Initially, 1 = polygon and 2 = oasis
     }
 
     mapping(uint256 => WorldMap) public existingWorlds;
@@ -27,7 +27,7 @@ contract WorldMapCreator is IWorld {
         _planetFactory = new PlanetFactory();
     }
 
-    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {
+    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth, uint256 _chainConfig) public {
         // TODO: consider having the world index randomly generated
         require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
 
@@ -36,7 +36,8 @@ contract WorldMapCreator is IWorld {
         newWorldMap = WorldMap({
             worldIndex: _worldIndex,
             Length: _length,
-            Breadth: _breadth
+            Breadth: _breadth,
+            chainDeployConfig: _chainConfig
             // PlanetsInWorld:
         });
 
@@ -62,6 +63,7 @@ contract WorldMapCreator is IWorld {
     }
 
     function getPlanets(uint256 _worldId) public view returns(SharedStructs.Planet[] memory) {
+        // TODO: incorporate specification of which world deployed in - currently returns all
         uint count = planetIndex + 1;
         SharedStructs.Planet[] memory planets = new SharedStructs.Planet[](count);
         for (uint j = 0; j < count; j++) {
