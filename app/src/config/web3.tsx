@@ -112,7 +112,7 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
 
   return {
     cacheProvider: true,
-    theme: 'light',
+    theme: 'dark',
     providerOptions,
   };
 };
