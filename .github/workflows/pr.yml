@@ -8,6 +8,8 @@ env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
   PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
 
+concurrency: pr
+
 jobs:
   sanity_check:
     runs-on: ubuntu-latest

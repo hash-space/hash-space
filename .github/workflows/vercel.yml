@@ -8,6 +8,10 @@ env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
   PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
 
+concurrency: main
+
+permissions: write-all
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -37,6 +41,9 @@ jobs:
         continue-on-error: true
         run: npm list
 
+      - run: rm -rf ./app/src/generated
+      - run: mkdir ./app/src/generated
+
       - run: npm install
         working-directory: ./hardhat
 
@@ -48,6 +55,12 @@ jobs:
 
       - run: npm run deploy:emerald-test
         working-directory: ./hardhat
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: '**/* --force'
+          cwd: './app/src/generated'
 
       - run: |
           npm install
