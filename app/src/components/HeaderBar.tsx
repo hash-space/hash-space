@@ -10,12 +10,13 @@ import {
 } from '@mui/material';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../context/auth';
-import { useStateContext } from '../context/state';
+import { usePlayerContract } from '../context/state';
+import Link from 'next/link';
 
 export default function HeadBar() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
-  const stateContext = useStateContext();
+  const playerContract = usePlayerContract();
 
   return (
     <AppBar position="static">
@@ -23,10 +24,19 @@ export default function HeadBar() {
         <Typography
           variant="h6"
           component="div"
-          sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.png" title="hash space" height={35} />
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}>
+          <Link href="/">
+            <img src="/logo.png" title="hash space" height={35} />
+          </Link>
           <Box sx={{ width: 8 }}></Box>
-          <span>Hash Space</span>
+          <Link href="/">
+            <span>Hash Space</span>
+          </Link>
         </Typography>
 
         {ethersAppContext.active && (
@@ -34,7 +44,7 @@ export default function HeadBar() {
             <Chip
               avatar={
                 <Avatar style={{ width: '50px', borderRadius: '16px' }}>
-                  {stateContext.playerContract.playerState.stepsAvailable}
+                  {playerContract.playerState.stepsAvailable}
                 </Avatar>
               }
               label="Steps"

@@ -76,6 +76,13 @@ function MainView() {
           }}>
           <button>to to game</button>
         </Link>
+        <Link
+          href={{
+            pathname: '/',
+            query: { steps: 5000 },
+          }}>
+          <button>get 5000 steps</button>
+        </Link>
         <p>account: {ethersAppContext.account}</p>
         <p>chain: {ethersAppContext.chainId}</p>
         <p>active: {ethersAppContext.active ? 'yes' : 'no'}</p>

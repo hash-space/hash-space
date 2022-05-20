@@ -3,6 +3,7 @@ import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
+import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -25,6 +26,7 @@ interface IShip {
   owner: string;
   id: number;
   isMine: boolean;
+  category: string;
 }
 
 interface IPlanet {
@@ -33,6 +35,8 @@ interface IPlanet {
   x: number;
   y: number;
   planetType: number;
+  category: string;
+  size: number;
 }
 
 interface IContextProps {
@@ -57,7 +61,7 @@ export const StateContext: React.FC<IProps> = (props) => {
   );
 };
 
-function usePlayerContract() {
+export function usePlayerContract() {
   const ethersAppContext = useEthersAppContext();
   const [playerState, setPlayerState] = useState<IPlayerState>({
     playerId: 0,
@@ -87,13 +91,13 @@ function usePlayerContract() {
 
   const playerRegister = useCallback(() => {
     playersContract.registerProfile();
-  }, [playersContract, ethersAppContext.account]);
+  }, [playersContract]);
 
   const playerSyncSteps = useCallback(
     (steps: number) => {
       playersContract.syncSteps(steps);
     },
-    [playersContract, ethersAppContext.account]
+    [playersContract]
   );
 
   const playerMoveShip = useCallback(
@@ -106,7 +110,7 @@ function usePlayerContract() {
     ) => {
       playersContract.moveShip(x, y, planetId, shipId, worldId);
     },
-    [playersContract, ethersAppContext.account]
+    [playersContract]
   );
 
   return {
@@ -118,7 +122,7 @@ function usePlayerContract() {
   };
 }
 
-function useNftContract() {
+export function useNftContract() {
   const ethersAppContext = useEthersAppContext();
   const [ships, setShips] = useState<IShip[]>([]);
 
@@ -136,6 +140,7 @@ function useNftContract() {
             owner: ship[2],
             id: parseNumber(ship[3]),
             isMine: ship[2] == ethersAppContext.account,
+            category: ship[2] == ethersAppContext.account ? 'Me' : 'NotMet',
           }))
           .filter((ship) => ship.id > 0)
       );
@@ -148,7 +153,7 @@ function useNftContract() {
   };
 }
 
-function useWorldContract() {
+export function useWorldContract() {
   const ethersAppContext = useEthersAppContext();
   const [planets, setPlanets] = useState<IPlanet[]>([]);
 
@@ -166,6 +171,9 @@ function useWorldContract() {
             x: parseNumber(planet[2]),
             y: parseNumber(planet[3]),
             planetType: parseNumber(planet[4]),
+            category:
+              planetCategoryIdToNameMapping[parseNumber(planet[4])] || 'Pink',
+            size: 0.5,
           }))
           .filter((planet) => planet.id > 0)
       );
