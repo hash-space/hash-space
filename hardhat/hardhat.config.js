@@ -22,7 +22,7 @@ module.exports = {
       url: 'http://localhost:8545',
     },
     matic: {
-      url: 'https://matic-mumbai.chainstacklabs.com',
+      url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
     },
   },

@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import { PageWrapper } from '../src/components/PageWrapper';
 import { Paper, CircularProgress } from '@mui/material';
+import { useWindowSize } from '../src/hooks/useWindowSize';
 
 const LOCATION_POINTS_PER_STEP = 10;
 
@@ -12,7 +13,18 @@ export default function Game() {
   const [steps, setSteps] = useState(0);
 
   useEffect(() => {
-    if (!didMount.current) {
+    if (appRef.current) {
+      appRef.current.stage.steps = steps;
+    }
+  }, [steps]);
+
+  const size = useWindowSize();
+
+  const leftRightPadding = size.width > 800 ? 50 : 0;
+  const height = size.height - 110;
+
+  useEffect(() => {
+    if (!didMount.current && height > 0) {
       init(ref.current).then((app) => {
         appRef.current = app;
         app.stage.steps = steps;
@@ -22,33 +34,30 @@ export default function Game() {
       });
       didMount.current = true;
     }
-  }, []);
-
-  useEffect(() => {
-    if (appRef.current) {
-      appRef.current.stage.steps = steps;
-    }
-  }, [steps]);
+  }, [height]);
 
   return (
     <PageWrapper>
-      <p>
-        Steps available:{' '}
+      {/* <p>
         <input
           type="number"
           value={steps}
           onChange={(e) => setSteps(e.target.value * 1)}></input>
-      </p>
-      <p>1 step = {LOCATION_POINTS_PER_STEP} location points </p>
+      </p> */}
+      <div style={{ height: 20 }}></div>
 
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div
+        style={{
+          paddingLeft: leftRightPadding,
+          paddingRight: leftRightPadding,
+        }}>
         <Paper style={{ padding: '10px' }}>
           <div
             style={{
               display: 'block',
               position: 'relative',
             }}>
-            <div style={{ paddingTop: '40%' }}></div>
+            <div style={{ paddingTop: height }}></div>
             <div
               ref={ref}
               style={{
@@ -140,8 +149,8 @@ const PLANET = [
 
 async function init(element) {
   const app = new PIXI.Application({
-    width: 800, // element.clientWidth,
-    height: 600, //element.clientHeight,
+    width: element.clientWidth,
+    height: element.clientHeight,
     backgroundColor: 0x000000, //0x696969,
     resolution: 1,
   });
@@ -169,7 +178,7 @@ async function init(element) {
   const graphics = new PIXI.Graphics();
 
   // Rectangle
-  graphics.lineStyle(5, 0xffffff, 1);
+  // graphics.lineStyle(5, 0xffffff, 1);
   graphics.beginFill(0xf0);
   graphics.drawRect(0, 0, 2000, 2000);
   graphics.endFill();
@@ -201,21 +210,23 @@ async function init(element) {
   // Create the stars
   const stars = [];
   for (let i = 0; i < starAmount; i++) {
-      const star = {
-          sprite: new PIXI.Sprite(starTexture),
-          z: 0,
-          x: 0,
-          y: 0,
-      };
-      star.sprite.anchor.x = 0.5;
-      star.sprite.anchor.y = 0.7;
-      randomizeStar(star, true);
-      app.stage.addChild(star.sprite);
-      stars.push(star);
+    const star = {
+      sprite: new PIXI.Sprite(starTexture),
+      z: 0,
+      x: 0,
+      y: 0,
+    };
+    star.sprite.anchor.x = 0.5;
+    star.sprite.anchor.y = 0.7;
+    randomizeStar(star, true);
+    app.stage.addChild(star.sprite);
+    stars.push(star);
   }
 
   function randomizeStar(star, initial) {
-    star.z = initial ? Math.random() * 2000 : cameraZ + Math.random() * 1000 + 2000;
+    star.z = initial
+      ? Math.random() * 2000
+      : cameraZ + Math.random() * 1000 + 2000;
 
     // Calculate star positions with radial random coordinate so no star hits the camera.
     const deg = Math.random() * Math.PI * 2;
@@ -235,24 +246,33 @@ async function init(element) {
     speed += (warpSpeed - speed) / 20;
     cameraZ += delta * 10 * (speed + baseSpeed);
     for (let i = 0; i < starAmount; i++) {
-        const star = stars[i];
-        if (star.z < cameraZ) randomizeStar(star);
+      const star = stars[i];
+      if (star.z < cameraZ) randomizeStar(star);
 
-        // Map star 3d position to 2d with really simple projection
-        const z = star.z - cameraZ;
-        star.sprite.x = star.x * (fov / z) * app.renderer.screen.width + app.renderer.screen.width / 2;
-        star.sprite.y = star.y * (fov / z) * app.renderer.screen.width + app.renderer.screen.height / 2;
+      // Map star 3d position to 2d with really simple projection
+      const z = star.z - cameraZ;
+      star.sprite.x =
+        star.x * (fov / z) * app.renderer.screen.width +
+        app.renderer.screen.width / 2;
+      star.sprite.y =
+        star.y * (fov / z) * app.renderer.screen.width +
+        app.renderer.screen.height / 2;
 
-        // Calculate star scale & rotation.
-        const dxCenter = star.sprite.x - app.renderer.screen.width / 2;
-        const dyCenter = star.sprite.y - app.renderer.screen.height / 2;
-        const distanceCenter = Math.sqrt(dxCenter * dxCenter + dyCenter * dyCenter);
-        const distanceScale = Math.max(0, (2000 - z) / 2000);
-        star.sprite.scale.x = distanceScale * starBaseSize;
-        // Star is looking towards center so that y axis is towards center.
-        // Scale the star depending on how fast we are moving, what the stretchfactor is and depending on how far away it is from the center.
-        star.sprite.scale.y = distanceScale * starBaseSize + distanceScale * speed * starStretch * distanceCenter / app.renderer.screen.width;
-        star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
+      // Calculate star scale & rotation.
+      const dxCenter = star.sprite.x - app.renderer.screen.width / 2;
+      const dyCenter = star.sprite.y - app.renderer.screen.height / 2;
+      const distanceCenter = Math.sqrt(
+        dxCenter * dxCenter + dyCenter * dyCenter
+      );
+      const distanceScale = Math.max(0, (2000 - z) / 2000);
+      star.sprite.scale.x = distanceScale * starBaseSize;
+      // Star is looking towards center so that y axis is towards center.
+      // Scale the star depending on how fast we are moving, what the stretchfactor is and depending on how far away it is from the center.
+      star.sprite.scale.y =
+        distanceScale * starBaseSize +
+        (distanceScale * speed * starStretch * distanceCenter) /
+          app.renderer.screen.width;
+      star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
     }
   });
   // Stary background END
