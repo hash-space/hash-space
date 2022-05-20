@@ -44,13 +44,6 @@ function MainView() {
                 }}>
                 <button>move ship {ship.id}</button>
               </Link>
-              <Link
-                href={{
-                  pathname: '/?steps=5000',
-                  query: { modal: 'move' },
-                }}>
-                <button>get 5000 steps</button>
-              </Link>
             </li>
           ))}
         </ul>
@@ -82,6 +75,13 @@ function MainView() {
             pathname: '/game',
           }}>
           <button>to to game</button>
+        </Link>
+        <Link
+          href={{
+            pathname: '/',
+            query: { steps: 5000 },
+          }}>
+          <button>get 5000 steps</button>
         </Link>
         <p>account: {ethersAppContext.account}</p>
         <p>chain: {ethersAppContext.chainId}</p>

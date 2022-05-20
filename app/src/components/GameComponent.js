@@ -227,8 +227,8 @@ function shipFactory(context, ship) {
     32
   );
   element.anchor.set(0.5);
-  element.x = ship.x + 32;
-  element.y = ship.y + 32;
+  element.x = ship.x;
+  element.y = ship.y;
   element.interactive = true;
   element.roundPixels = true;
   // our metadata
@@ -238,7 +238,8 @@ function shipFactory(context, ship) {
   context.reactContext.eventStream.on('travelShip:' + ship.id, (planet) => {
     const stage = context.app.stage;
     const availableDistance = stepsToDistance(context.reactContext.getSteps()); // the distance the user is allowed to travel
-    let distance = Math.trunc(calcDistance(element, planet)); // the distance the user needs to reach his distination
+    let distance = Math.trunc(calcDistance(ship, planet)); // the distance the user needs to reach his distination
+    console.log(availableDistance, distance, context.reactContext.getSteps());
     let stopDistance = distance;
     // cap distance
     if (availableDistance < stopDistance) {
@@ -281,8 +282,8 @@ function planetFactory(context, planet) {
     size
   );
   element.anchor.set(0.5);
-  element.x = planet.x + planet.size;
-  element.y = planet.y + planet.size;
+  element.x = planet.x;
+  element.y = planet.y;
   element.scale.set(planet.size);
   element.interactive = true;
   element.roundPixels = true;

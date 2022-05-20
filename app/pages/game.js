@@ -11,6 +11,8 @@ import {
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -85,6 +87,7 @@ export default function Game() {
         stepsNeeded={stepsNeeded}
         confirmMove={confirmMove}
         handleClose={handleClose}
+        stepsAvailable={playerContract.playerState.stepsAvailable}
       />
       <div
         style={{
@@ -102,7 +105,7 @@ export default function Game() {
               <GameComponent
                 ships={nftContract.ships}
                 planets={worldContract.planets}
-                steps={1000}
+                steps={playerContract.playerState.stepsAvailable}
                 eventStream={eventStream.current}
               />
             )}
@@ -114,6 +117,7 @@ export default function Game() {
 }
 
 export function MoveShipDialog(props) {
+  const stepsMissing = props.stepsNeeded > props.stepsAvailable;
   return (
     <div>
       <Dialog
@@ -124,8 +128,14 @@ export function MoveShipDialog(props) {
         <DialogTitle id="alert-dialog-title">Move ship</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to move your ship over a distance of Distance:{' '}
-            {props.distance} , Steps: {props.stepsNeeded}
+            {stepsMissing && (
+              <Alert severity="error">you are missing steps</Alert>
+            )}
+            <Box sx={{ height: 10 }}></Box>
+            <div>
+              Are you sure you want to move your ship over a distance of
+              Distance: {props.distance} , Steps: {props.stepsNeeded}
+            </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -133,6 +143,7 @@ export function MoveShipDialog(props) {
             Close
           </Button>
           <Button
+            disabled={stepsMissing}
             onClick={props.confirmMove}
             color="secondary"
             variant="outlined"
