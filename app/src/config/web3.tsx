@@ -1,6 +1,12 @@
-import { ICoreOptions } from 'web3modal';
+import Web3Modal, { ICoreOptions } from 'web3modal';
 import { TNetworkInfo, TEthersProvider } from 'eth-hooks/models';
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
+import type UAuthSPA from '@uauth/js'
+import * as UAuthWeb3Modal from '@uauth/web3modal'
+import Web3 from 'web3'
+
+import WalletConnectProvider from '@walletconnect/web3-provider'
+
 
 export const web3ModalConfigKeys = {
   coinbaseKey: 'custom-walletlink',
@@ -79,24 +85,35 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
     console.log('Failed to load config for web3 connector coinbase: ', e);
   }
 
-  // try {
-  //   const WalletConnectProvider = (
-  //     await import('@walletconnect/ethereum-provider')
-  //   ).default;
-  //   const walletConnectEthereum = {
-  //     package: WalletConnectProvider,
-  //     options: {
-  //       bridge: 'https://polygon.bridge.walletconnect.org',
-  //       infuraId: process.env.INFURA_ID,
-  //       rpc: {},
-  //     },
-  //   };
-  //   providerOptions.walletconnect = walletConnectEthereum;
-  // } catch (e) {
-  //   console.log('Failed to load config for web3 connector WalletConnect: ', e);
-  // }
+  try {
+    // These options are used to construct the UAuthSPA instance.
+    const uauthOptions: IUAuthOptions = {
+      clientID: 'client_id',
+      redirectUri: 'http://localhost:3000',
 
+      // Must include both the openid and wallet scopes.
+      scope: 'openid wallet',
+    }
+    
+    const custom_uauth = {
+      // The UI Assets
+      display: UAuthWeb3Modal.display,
+        
+      // The Connector
+      connector: UAuthWeb3Modal.connector,
 
+      // The SPA libary
+      package: UAuthSPA,
+
+      // The SPA libary options
+      options: uauthOptions,
+    } 
+
+    providerOptions.unstoppabledomains = custom_uauth;
+  } catch (e) {
+    console.log('Failed to load config for web3 connector UnstoppableDomains: ', e);
+  }
+ 
   // === LOCALHOST STATIC
   try {
     if (LOCAL_PROVIDER) {
