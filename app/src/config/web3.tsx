@@ -1,7 +1,7 @@
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { TNetworkInfo, TEthersProvider } from 'eth-hooks/models';
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
-import type UAuthSPA from '@uauth/js'
+import UAuthSPA from '@uauth/js'
 import * as UAuthWeb3Modal from '@uauth/web3modal'
 import Web3 from 'web3'
 
@@ -87,7 +87,7 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
 
   try {
     // These options are used to construct the UAuthSPA instance.
-    const uauthOptions: IUAuthOptions = {
+    const uauthOptions: any = {
       clientID: 'client_id',
       redirectUri: 'http://localhost:3000',
 
@@ -147,7 +147,7 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
 
   return {
     cacheProvider: true,
-    theme: 'light',
+    theme: 'dark',
     providerOptions,
   };
 };
