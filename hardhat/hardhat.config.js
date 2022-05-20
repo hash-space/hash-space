@@ -25,12 +25,27 @@ module.exports = {
       url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
     },
+    emerald_mainnet: {
+      chainId: 42262,
+      url: "https://emerald.oasis.dev",
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined ? [process.env.PRIVATE_KEY_OASIS] : [],
+    },
+    emerald_testnet: {
+      url: "https://testnet.emerald.oasis.dev",
+      chainId: 42261,
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined ? [process.env.PRIVATE_KEY_OASIS] : [],
+    },
   },
   namedAccounts: {
     deployer: 0,
   },
   paths: {
     sources: 'contracts',
+  },
+  mocha: {
+    timeout: 60000
   },
   solidity: '0.8.4',
   paths: {
