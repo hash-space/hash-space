@@ -3,6 +3,7 @@ import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
+import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -33,6 +34,8 @@ interface IPlanet {
   x: number;
   y: number;
   planetType: number;
+  category: string;
+  size: number;
 }
 
 interface IContextProps {
@@ -148,7 +151,7 @@ function useNftContract() {
   };
 }
 
-function useWorldContract() {
+export function useWorldContract() {
   const ethersAppContext = useEthersAppContext();
   const [planets, setPlanets] = useState<IPlanet[]>([]);
 
@@ -166,6 +169,9 @@ function useWorldContract() {
             x: parseNumber(planet[2]),
             y: parseNumber(planet[3]),
             planetType: parseNumber(planet[4]),
+            category:
+              planetCategoryIdToNameMapping[parseNumber(planet[4])] || 'Pink',
+            size: 0.5,
           }))
           .filter((planet) => planet.id > 0)
       );
