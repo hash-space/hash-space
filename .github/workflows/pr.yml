@@ -45,7 +45,7 @@ jobs:
       - run: npm run deploy:mumbai
         working-directory: ./hardhat
 
-      - run: nm run deploy:emerald-test
+      - run: npm run deploy:emerald-test
         working-directory: ./hardhat
 
       - run: |
