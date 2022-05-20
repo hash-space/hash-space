@@ -17,6 +17,7 @@ contract Players {
     }
 
     Counters.Counter indexPlayerIds;
+    Counters.Counter public indexStartingPosition;
 
     mapping (address => PersonProfile) public players;
 
@@ -57,8 +58,8 @@ contract Players {
 
         // buying the nft TODO: send money to treasury
         uint256 shipId = nftContract.mint(msg.sender);
-        nftContract.setLocation(shipId, msg.sender, 10, 10); // TODO: place ship in landing zone (just place them in a row a the top of the screen)
-        // set the position of the ship
+        (uint startingX, uint startingY) = determineStartingPosition();
+        nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
 
     /**
@@ -78,13 +79,20 @@ contract Players {
         {_shipId} the ship you are moving
      */
     function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
-        // TODO: calc distance used
 
         // current location of the ship
         (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
 
+        // calculate distance moved
+        uint travelX = get_abs_diff(xCoordShip, x);
+        uint travelY = get_abs_diff(yCoordShip, y);
+        uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
+        
+        // check enough steps available
+        require(players[msg.sender].stepsAvailable > travelDistance * 10, "Not enough steps available to move there");
+
         // update steps of user
-        players[msg.sender].stepsAvailable -= 100; // TODO: replace with distance
+        players[msg.sender].stepsAvailable -= travelDistance * 10;
 
         // update ship position
         nftContract.setLocation(_shipId, msg.sender, x, y);
@@ -97,6 +105,9 @@ contract Players {
         }
     }
 
+    function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
+        return val1 > val2 ? val1 - val2 : val2 - val1;
+    }
 
     function sqrt(uint y) internal pure returns (uint z) {
         if (y > 3) {
@@ -111,5 +122,22 @@ contract Players {
         }
     }
 
+    function determineStartingPosition() public returns(uint x, uint y) {
 
+        indexStartingPosition.increment();
+        uint positionIndex = indexStartingPosition.current();
+
+        uint startingX = positionIndex % 10;
+        uint startingY = (positionIndex / 10) + 1;
+
+        if (positionIndex == 100) {
+            indexStartingPosition.reset();
+        }
+
+        return (startingX, startingY);
+    }
+
+    function incrementPositionCounter() public {
+        indexStartingPosition.increment();
+    }
 }

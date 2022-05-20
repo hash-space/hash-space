@@ -62,8 +62,9 @@ contract WorldMapCreator is IWorld {
     }
 
     function getPlanets(uint256 _worldId) public view returns(SharedStructs.Planet[] memory) {
-        SharedStructs.Planet[] memory planets = new SharedStructs.Planet[](planetIndex);
-        for (uint j = 1; j < planetIndex; j++) {
+        uint count = planetIndex + 1;
+        SharedStructs.Planet[] memory planets = new SharedStructs.Planet[](count);
+        for (uint j = 0; j < count; j++) {
             SharedStructs.Planet memory planet = _planetFactory.getPlanet(j);
             planets[j] = planet;
         }

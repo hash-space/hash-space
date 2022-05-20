@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import { PageWrapper } from '../src/components/PageWrapper';
 import { Paper, CircularProgress } from '@mui/material';
+import { useWindowSize } from '../src/hooks/useWindowSize';
 
 const LOCATION_POINTS_PER_STEP = 10;
 
@@ -12,7 +13,18 @@ export default function Game() {
   const [steps, setSteps] = useState(0);
 
   useEffect(() => {
-    if (!didMount.current) {
+    if (appRef.current) {
+      appRef.current.stage.steps = steps;
+    }
+  }, [steps]);
+
+  const size = useWindowSize();
+
+  const leftRightPadding = size.width > 800 ? 50 : 0;
+  const height = size.height - 110;
+
+  useEffect(() => {
+    if (!didMount.current && height > 0) {
       init(ref.current).then((app) => {
         appRef.current = app;
         app.stage.steps = steps;
@@ -22,33 +34,30 @@ export default function Game() {
       });
       didMount.current = true;
     }
-  }, []);
-
-  useEffect(() => {
-    if (appRef.current) {
-      appRef.current.stage.steps = steps;
-    }
-  }, [steps]);
+  }, [height]);
 
   return (
     <PageWrapper>
-      <p>
-        Steps available:{' '}
+      {/* <p>
         <input
           type="number"
           value={steps}
           onChange={(e) => setSteps(e.target.value * 1)}></input>
-      </p>
-      <p>1 step = {LOCATION_POINTS_PER_STEP} location points </p>
+      </p> */}
+      <div style={{ height: 20 }}></div>
 
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div
+        style={{
+          paddingLeft: leftRightPadding,
+          paddingRight: leftRightPadding,
+        }}>
         <Paper style={{ padding: '10px' }}>
           <div
             style={{
               display: 'block',
               position: 'relative',
             }}>
-            <div style={{ paddingTop: '40%' }}></div>
+            <div style={{ paddingTop: height }}></div>
             <div
               ref={ref}
               style={{
@@ -72,12 +81,32 @@ const SHIPS = [
     x: 0,
     y: 100,
     id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 300,
+    y: 500,
+    id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 400,
+    y: 200,
+    id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 650,
+    y: 300,
+    id: 1,
+    category: 'NotMe',
   },
   {
     x: 100,
     y: 100,
     id: 2,
     isMine: true,
+    category: 'Me',
   },
 ];
 
@@ -87,54 +116,70 @@ const PLANET = [
     y: 50,
     id: 1,
     size: 0.5,
+    category:'Black',
   },
   {
     x: 750,
     y: 600,
     id: 1,
     size: 0.5,
+    category:'Purple',
   },
   {
     x: 350,
     y: 650,
     id: 1,
     size: 0.5,
+    category:'Blue',
   },
   {
     x: 50,
     y: 350,
     id: 1,
     size: 0.5,
+    category:'Teal',
   },
   {
     x: 700,
-    y: 800,
+    y: 300,
     id: 1,
     size: 0.5,
+    category:'Green',
   },
   {
     x: 450,
     y: 700,
     id: 1,
     size: 0.5,
+    category:'Yellow',
   },
   {
     x: 200,
     y: 300,
     id: 1,
     size: 0.5,
+    category:'Orange',
   },
   {
     x: 600,
     y: 500,
     id: 1,
     size: 0.5,
+    category:'Red',
+  },
+  {
+    x: 350,
+    y: 350,
+    id: 1,
+    size: 0.5,
+    category:'Pink',
   },
   {
     x: 750,
-    y: 950,
+    y: 50,
     id: 1,
     size: 0.5,
+    category:'White',
   },
 ];
 
@@ -142,7 +187,7 @@ async function init(element) {
   const app = new PIXI.Application({
     width: element.clientWidth,
     height: element.clientHeight,
-    backgroundColor: 0x696969,
+    backgroundColor: 0x000000, //0x696969,
     resolution: 1,
   });
   [...element.children].forEach((child) => {
@@ -158,25 +203,128 @@ async function init(element) {
   });
   app.stage.addChild(viewport);
   viewport.drag().pinch().wheel().decelerate();
-
-  const ship = await PIXI.Texture.fromURL('/procedural-pixel-art.png');
-  const planet = await PIXI.Texture.fromURL('/planetTeal.png');
+  const shipTypes = ['Me','NotMe']
+  // const ship = await PIXI.Texture.fromURL('/shipNotMe32.png');
+  var ship = {};
+  for (const shipType of shipTypes){
+    ship[shipType] = await PIXI.Texture.fromURL('/ship'+shipType+'32.png');
+  }
+  const planetColors = ['Black','Blue','Purple','Teal','Green','Yellow','Orange','Red','Pink','White'];
+  var planet = {};
+  for (const planetColor of planetColors){
+    planet[planetColor] = await PIXI.Texture.fromURL('/planet'+planetColor+'.png');
+  }
+  // const planet = await PIXI.Texture.fromURL('/planet'+planetColors[0]+'.png');
   const context = { asset: { ship, planet }, app };
+
+  const BGTexture = await PIXI.Texture.fromURL('/backgroundTile.png');
 
   const mainContainer = new PIXI.Container();
   const graphics = new PIXI.Graphics();
 
   // Rectangle
-  graphics.lineStyle(5, 0xfeeb77, 1);
-  graphics.beginFill(0x000);
+  // graphics.lineStyle(5, 0xffffff, 1);
+  // graphics.beginFill(0xf0);
   graphics.drawRect(0, 0, 2000, 2000);
   graphics.endFill();
   mainContainer.height = 2000;
   mainContainer.width = 2000;
   mainContainer.addChild(graphics);
-  viewport.addChild(mainContainer);
 
-  const containerPlanets = new PIXI.Container();
+  // Add background tiling texture to mainContainer
+  // const TilingSprite = new PIXI.TilingSprite(
+  //   BGTexture,
+  //   mainContainer.width,
+  //   mainContainer.height,
+  // );
+  // mainContainer.addChild(TilingSprite);
+
+  // ========================================
+  // Stary background START
+  const starTexture = await PIXI.Texture.fromURL('/star.png');
+
+  const starAmount = 1000;
+  let cameraZ = 0;
+  const fov = 20;
+  const baseSpeed = 0.025;
+  let speed = 0;
+  let warpSpeed = 0;
+  const starStretch = 5;
+  const starBaseSize = 0.05;
+
+  // Create the stars
+  const stars = [];
+  for (let i = 0; i < starAmount; i++) {
+    const star = {
+      sprite: new PIXI.Sprite(starTexture),
+      z: 0,
+      x: 0,
+      y: 0,
+    };
+    star.sprite.anchor.x = 0.5;
+    star.sprite.anchor.y = 0.7;
+    randomizeStar(star, true);
+    app.stage.addChild(star.sprite);
+    stars.push(star);
+  }
+
+  function randomizeStar(star, initial) {
+    star.z = initial
+      ? Math.random() * 2000
+      : cameraZ + Math.random() * 1000 + 2000;
+
+    // Calculate star positions with radial random coordinate so no star hits the camera.
+    const deg = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 50 + 1;
+    star.x = Math.cos(deg) * distance;
+    star.y = Math.sin(deg) * distance;
+  }
+
+  // Change flight speed every 5 seconds
+  // setInterval(() => {
+  //   warpSpeed = warpSpeed > 0 ? 0 : 1;
+  // }, 5000);
+
+  // Listen for animate update
+  app.ticker.add((delta) => {
+    // Simple easing. This should be changed to proper easing function when used for real.
+    speed += (warpSpeed - speed) / 20;
+    cameraZ += delta * 10 * (speed + baseSpeed);
+    for (let i = 0; i < starAmount; i++) {
+      const star = stars[i];
+      if (star.z < cameraZ) randomizeStar(star);
+
+      // Map star 3d position to 2d with really simple projection
+      const z = star.z - cameraZ;
+      star.sprite.x =
+        star.x * (fov / z) * app.renderer.screen.width +
+        app.renderer.screen.width / 2;
+      star.sprite.y =
+        star.y * (fov / z) * app.renderer.screen.width +
+        app.renderer.screen.height / 2;
+
+      // Calculate star scale & rotation.
+      const dxCenter = star.sprite.x - app.renderer.screen.width / 2;
+      const dyCenter = star.sprite.y - app.renderer.screen.height / 2;
+      const distanceCenter = Math.sqrt(
+        dxCenter * dxCenter + dyCenter * dyCenter
+      );
+      const distanceScale = Math.max(0, (2000 - z) / 2000);
+      star.sprite.scale.x = distanceScale * starBaseSize;
+      // Star is looking towards center so that y axis is towards center.
+      // Scale the star depending on how fast we are moving, what the stretchfactor is and depending on how far away it is from the center.
+      star.sprite.scale.y =
+        distanceScale * starBaseSize +
+        (distanceScale * speed * starStretch * distanceCenter) /
+          app.renderer.screen.width;
+      star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
+    }
+  });
+  // Stary background END
+  // ========================================
+
+  // Add mainContainer to the viewport
+  viewport.addChild(mainContainer);
 
   // app.stage.on('pointermove', (e) => {
   //   console.log(e);
@@ -186,15 +334,16 @@ async function init(element) {
   //   app.stage.pivot.x += 0.1;
   // });
 
+  const containerPlanets = new PIXI.Container();
   mainContainer.addChild(containerPlanets);
-  PLANET.forEach((planet) => {
-    addPlanet(planet, { ...context, stage: containerPlanets });
+  PLANET.forEach((planetElement) => {
+    addPlanet(planetElement, { ...context, stage: containerPlanets });
   });
 
   const containerShips = new PIXI.Container();
   mainContainer.addChild(containerShips);
-  SHIPS.forEach((ship) => {
-    addShip(ship, { ...context, stage: containerShips });
+  SHIPS.forEach((shipElement) => {
+    addShip(shipElement, { ...context, stage: containerShips });
   });
 
   app.stage.interactive = true;
@@ -227,7 +376,7 @@ async function init(element) {
 }
 
 function addShip(ship, context) {
-  const element = new PIXI.TilingSprite(context.asset.ship, 32, 32);
+  const element = new PIXI.TilingSprite(context.asset.ship[ship.category], 32, 32);
   element.anchor.set(0.5);
   element.x = ship.x + 32;
   element.y = ship.y + 32;
@@ -288,7 +437,7 @@ function addShip(ship, context) {
 
 function addPlanet(planet, context) {
   const size = 100;
-  const element = new PIXI.Sprite(context.asset.planet, size, size);
+  const element = new PIXI.Sprite(context.asset.planet[planet.category], size, size);
   element.anchor.set(0.5);
   element.x = planet.x + (size / 2) * planet.size;
   element.y = planet.y + (size / 2) * planet.size;
