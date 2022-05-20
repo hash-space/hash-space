@@ -81,12 +81,32 @@ const SHIPS = [
     x: 0,
     y: 100,
     id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 300,
+    y: 500,
+    id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 400,
+    y: 200,
+    id: 1,
+    category: 'NotMe',
+  },
+  {
+    x: 650,
+    y: 300,
+    id: 1,
+    category: 'NotMe',
   },
   {
     x: 100,
     y: 100,
     id: 2,
     isMine: true,
+    category: 'Me',
   },
 ];
 
@@ -96,54 +116,70 @@ const PLANET = [
     y: 50,
     id: 1,
     size: 0.5,
+    category:'Black',
   },
   {
     x: 750,
     y: 600,
     id: 1,
     size: 0.5,
+    category:'Purple',
   },
   {
     x: 350,
     y: 650,
     id: 1,
     size: 0.5,
+    category:'Blue',
   },
   {
     x: 50,
     y: 350,
     id: 1,
     size: 0.5,
+    category:'Teal',
   },
   {
     x: 700,
-    y: 800,
+    y: 300,
     id: 1,
     size: 0.5,
+    category:'Green',
   },
   {
     x: 450,
     y: 700,
     id: 1,
     size: 0.5,
+    category:'Yellow',
   },
   {
     x: 200,
     y: 300,
     id: 1,
     size: 0.5,
+    category:'Orange',
   },
   {
     x: 600,
     y: 500,
     id: 1,
     size: 0.5,
+    category:'Red',
+  },
+  {
+    x: 350,
+    y: 350,
+    id: 1,
+    size: 0.5,
+    category:'Pink',
   },
   {
     x: 750,
-    y: 950,
+    y: 50,
     id: 1,
     size: 0.5,
+    category:'White',
   },
 ];
 
@@ -167,9 +203,18 @@ async function init(element) {
   });
   app.stage.addChild(viewport);
   viewport.drag().pinch().wheel().decelerate();
-
-  const ship = await PIXI.Texture.fromURL('/procedural-pixel-art.png');
-  const planet = await PIXI.Texture.fromURL('/planetTeal.png');
+  const shipTypes = ['Me','NotMe']
+  // const ship = await PIXI.Texture.fromURL('/shipNotMe32.png');
+  var ship = {};
+  for (const shipType of shipTypes){
+    ship[shipType] = await PIXI.Texture.fromURL('/ship'+shipType+'32.png');
+  }
+  const planetColors = ['Black','Blue','Purple','Teal','Green','Yellow','Orange','Red','Pink','White'];
+  var planet = {};
+  for (const planetColor of planetColors){
+    planet[planetColor] = await PIXI.Texture.fromURL('/planet'+planetColor+'.png');
+  }
+  // const planet = await PIXI.Texture.fromURL('/planet'+planetColors[0]+'.png');
   const context = { asset: { ship, planet }, app };
 
   const BGTexture = await PIXI.Texture.fromURL('/backgroundTile.png');
@@ -179,7 +224,7 @@ async function init(element) {
 
   // Rectangle
   // graphics.lineStyle(5, 0xffffff, 1);
-  graphics.beginFill(0xf0);
+  // graphics.beginFill(0xf0);
   graphics.drawRect(0, 0, 2000, 2000);
   graphics.endFill();
   mainContainer.height = 2000;
@@ -280,7 +325,6 @@ async function init(element) {
 
   // Add mainContainer to the viewport
   viewport.addChild(mainContainer);
-  const containerPlanets = new PIXI.Container();
 
   // app.stage.on('pointermove', (e) => {
   //   console.log(e);
@@ -290,15 +334,16 @@ async function init(element) {
   //   app.stage.pivot.x += 0.1;
   // });
 
+  const containerPlanets = new PIXI.Container();
   mainContainer.addChild(containerPlanets);
-  PLANET.forEach((planet) => {
-    addPlanet(planet, { ...context, stage: containerPlanets });
+  PLANET.forEach((planetElement) => {
+    addPlanet(planetElement, { ...context, stage: containerPlanets });
   });
 
   const containerShips = new PIXI.Container();
   mainContainer.addChild(containerShips);
-  SHIPS.forEach((ship) => {
-    addShip(ship, { ...context, stage: containerShips });
+  SHIPS.forEach((shipElement) => {
+    addShip(shipElement, { ...context, stage: containerShips });
   });
 
   app.stage.interactive = true;
@@ -331,7 +376,7 @@ async function init(element) {
 }
 
 function addShip(ship, context) {
-  const element = new PIXI.TilingSprite(context.asset.ship, 32, 32);
+  const element = new PIXI.TilingSprite(context.asset.ship[ship.category], 32, 32);
   element.anchor.set(0.5);
   element.x = ship.x + 32;
   element.y = ship.y + 32;
@@ -392,7 +437,7 @@ function addShip(ship, context) {
 
 function addPlanet(planet, context) {
   const size = 100;
-  const element = new PIXI.Sprite(context.asset.planet, size, size);
+  const element = new PIXI.Sprite(context.asset.planet[planet.category], size, size);
   element.anchor.set(0.5);
   element.x = planet.x + (size / 2) * planet.size;
   element.y = planet.y + (size / 2) * planet.size;
