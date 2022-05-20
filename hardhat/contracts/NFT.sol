@@ -7,11 +7,14 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IPlanet.sol";
 import "./ERC721Tradable.sol";
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Starship is Ownable, ERC721Tradable, IPlanet {
+
+contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
+
+
 
     struct ShipData {
             uint x;
@@ -30,10 +33,8 @@ contract Starship is Ownable, ERC721Tradable, IPlanet {
         _;
     }
 
-    // constructor () {}
-
-    // Commenting out this constructor for timebeing - can be called from alt function below
-    constructor() ERC721("Startship", "SHIP") {}
+    
+    constructor(address _proxyRegistryAddress) ERC721Tradable("StarShip", "SHIP", _proxyRegistryAddress) {}
     // public {
         // setPlayerContract(_playerContract);
     // }
@@ -44,6 +45,30 @@ contract Starship is Ownable, ERC721Tradable, IPlanet {
          ShipData memory location = shipData[_tokenId];
          return (location.x, location.y);
     }
+
+    function _msgSender() internal override(Context, ERC721Tradable) view returns (address sender)
+    {
+        return super.msgSender();
+    }
+
+        function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721) 
+    {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721Tradable, ERC721URIStorage) returns (string memory)
+    {
+        super.tokenURI(tokenId);
+    }
+
+    function isApprovedForAll(address owner, address operator) override(ERC721, ERC721Tradable) public view returns (bool){
+        super.isApprovedForAll(owner, operator);
+    }
+
+    function baseTokenURI() override(ERC721Tradable) public pure returns (string memory){
+        return "ipfs://";
+    }
+
 
     /**
         secure, only allow calls from PlayerContract. DONE
@@ -63,11 +88,12 @@ contract Starship is Ownable, ERC721Tradable, IPlanet {
         playerContract = _newPlayerContract;
     }
 
-    function mint(address player) public onlyPlayerContract override returns (uint256) {
+    function mint(address player, string memory _tokenURI) public onlyPlayerContract override returns (uint256) {
         tokenId.increment();
 
         uint256 newItemId = tokenId.current();
         _mint(player, newItemId);
+        _setTokenURI(newItemId, _tokenURI);
 
         return newItemId;
     }

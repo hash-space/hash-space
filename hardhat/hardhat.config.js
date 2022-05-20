@@ -21,10 +21,10 @@ module.exports = {
     localhost: {
       url: 'http://localhost:8545',
     },
-    matic: {
-      url: 'https://matic-mumbai.chainstacklabs.com',
-      accounts: [process.env.PRIVATE_KEY_MUMBAI],
-    },
+    // matic: {
+    //   url: 'https://matic-mumbai.chainstacklabs.com',
+    //   accounts: [process.env.PRIVATE_KEY_MUMBAI],
+    // },
   },
   namedAccounts: {
     deployer: 0,

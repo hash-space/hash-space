@@ -68,7 +68,7 @@ abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction,
 
     function baseTokenURI() virtual public pure returns (string memory);
 
-    function tokenURI(uint256 _tokenId) override public pure returns (string memory) {
+    function tokenURI(uint256 _tokenId) override virtual public view returns (string memory) {
         return string(abi.encodePacked(baseTokenURI(), Strings.toString(_tokenId)));
     }
 
@@ -79,6 +79,7 @@ abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction,
         override
         public
         view
+        virtual
         returns (bool)
     {
         // Whitelist OpenSea proxy contract for easy trading.
@@ -96,6 +97,7 @@ abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction,
     function _msgSender()
         internal
         override
+        virtual
         view
         returns (address sender)
     {

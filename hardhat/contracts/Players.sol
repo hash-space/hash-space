@@ -49,7 +49,7 @@ contract Players is Ownable {
         Creates the user profile of the user and mints a starship nft
         and forwards $$ to the treasury
      */
-    function registerProfile() public payable
+    function registerProfile(string memory _tokenURI) public payable
      {
         PersonProfile storage player = players[msg.sender];
         require(player.playerId == 0, "you already signed up");
@@ -62,7 +62,7 @@ contract Players is Ownable {
 
         // buying the nft TODO: send money to treasury. Implemented in withdraw function
         require(msg.value == NFTPRICE, "Not enought/too much ether sent");
-        uint256 shipId = nftContract.mint(msg.sender);
+        uint256 shipId = nftContract.mint(msg.sender, _tokenURI);
         (uint startingX, uint startingY) = determineStartingPosition();
         nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
