@@ -25,6 +25,10 @@ module.exports = {
       url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
     },
+    arbitrum_rinkeby: {
+      url: 'https://rinkeby.arbitrum.io/rpc',
+      accounts: [process.env.PRIVATE_KEY_ARBITRUM],
+    }
   },
   namedAccounts: {
     deployer: 0,
