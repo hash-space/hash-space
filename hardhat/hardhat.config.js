@@ -24,18 +24,23 @@ module.exports = {
     matic: {
       url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
+      gas: 4000000,
     },
     emerald_mainnet: {
       chainId: 42262,
-      url: "https://emerald.oasis.dev",
+      url: 'https://emerald.oasis.dev',
       accounts:
-        process.env.PRIVATE_KEY_OASIS !== undefined ? [process.env.PRIVATE_KEY_OASIS] : [],
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
     },
     emerald_testnet: {
-      url: "https://testnet.emerald.oasis.dev",
+      url: 'https://testnet.emerald.oasis.dev',
       chainId: 42261,
       accounts:
-        process.env.PRIVATE_KEY_OASIS !== undefined ? [process.env.PRIVATE_KEY_OASIS] : [],
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
     },
   },
   namedAccounts: {
@@ -45,7 +50,7 @@ module.exports = {
     sources: 'contracts',
   },
   mocha: {
-    timeout: 60000
+    timeout: 60000,
   },
   solidity: '0.8.4',
   paths: {
