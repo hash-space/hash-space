@@ -26,7 +26,7 @@ describe('Player', function () {
     const YourContract = await ethers.getContractFactory('WorldMapCreator');
 
     world = await YourContract.deploy();
-    await world.defineWorldMap(worldId, 2000, 2000);
+    await world.defineWorldMap(worldId, 2000, 2000, 0);
     await player.setWorldAddress(world.address);
   });
 

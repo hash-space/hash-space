@@ -9,7 +9,7 @@ describe('World', function () {
     const WorldMapCreator = await ethers.getContractFactory('WorldMapCreator');
     world = await WorldMapCreator.deploy();
     await world.deployed();
-    await world.defineWorldMap(worldId, 2000, 2000);
+    await world.defineWorldMap(worldId, 2000, 2000, 0);
   });
 
   it('can get location of planet', async function () {
@@ -45,4 +45,8 @@ describe('World', function () {
     expect(res[3].planetType).to.eq(BigNumber.from(23));
     expect(res.length).to.eq(4);
   });
+
+  // it('can deploy in ')
+
+
 });
