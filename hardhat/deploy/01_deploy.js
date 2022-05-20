@@ -32,13 +32,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   // define worldmap
   const contractWorld = await hre.ethers.getContract('WorldMapCreator');
-  const txCreateWorld = await contractWorld.defineWorldMap(1, 5000, 5000);
+  const txCreateWorld = await contractWorld.defineWorldMap(1, 5000, 5000, 0);
   await txCreateWorld.wait();
   const txPlanet1 = await contractWorld.manualCreatePlanet(1, 100, 100, 1);
   const txPlanet2 = await contractWorld.manualCreatePlanet(1, 200, 200, 2);
   const txPlanet3 = await contractWorld.manualCreatePlanet(1, 300, 300, 2);
   await Promise.all([txPlanet1.wait(), txPlanet2.wait(), txPlanet3.wait()]);
-
 
 
 
