@@ -6,6 +6,7 @@ on:
 
 env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
+  PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
 
 jobs:
   sanity_check:
@@ -41,7 +42,10 @@ jobs:
       - run: npm run test
         working-directory: ./hardhat
 
-      - run: npm run deploy:testnet
+      - run: npm run deploy:mumbai
+        working-directory: ./hardhat
+
+      - run: nm run deploy:emerald-test
         working-directory: ./hardhat
 
       - run: |
