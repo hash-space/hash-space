@@ -19,7 +19,7 @@ export default function MoveShipDialog() {
 
   const handleClose = React.useCallback(() => {
     router.replace(pathname);
-  }, [pathname]);
+  }, [pathname, router]);
 
   return (
     <div>

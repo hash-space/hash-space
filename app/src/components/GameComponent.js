@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { useCallback, useEffect, useRef } from 'react';
 import { CircularProgress } from '@mui/material';
-
-const LOCATION_POINTS_PER_STEP = 10;
+import { calcDistance, stepsToDistance } from '../helper/distance';
 
 export default function Game(props) {
   const ref = useRef();
@@ -23,13 +22,18 @@ export default function Game(props) {
 
   useEffect(() => {
     if (!didMount.current) {
-      initGame(ref.current, { getSteps, getShips, getPlanets }).then((app) => {
+      initGame(ref.current, {
+        getSteps,
+        getShips,
+        getPlanets,
+        eventStream: props.eventStream,
+      }).then((app) => {
         appRef.current = app;
-        app.stage.on('targetReached', (playload) => {
-          props.eventHandler('targetReached', playload);
-        });
-        app.stage.on('clickPlanet', (playload) => {
-          props.eventHandler('targetReached', playload);
+        const events = ['targetReached', 'clickPlanet', 'clickShip'];
+        events.forEach((_event) => {
+          app.stage.on(_event, (playload) => {
+            props.eventStream.emit(_event, playload);
+          });
         });
       });
       didMount.current = true;
@@ -112,6 +116,12 @@ async function initGame(element, reactContext) {
     if (e.target && e.target.__hashName == 'planet') {
       app.stage.emit('clickPlanet', {
         planet: e.target.__hashMeta,
+        x: e.target.position.x,
+        y: e.target.position.y,
+      });
+    } else if (e.target && e.target.__hashName == 'ship') {
+      app.stage.emit('clickShip', {
+        ship: e.target.__hashMeta,
         x: e.target.position.x,
         y: e.target.position.y,
       });
@@ -225,11 +235,10 @@ function shipFactory(context, ship) {
   element.__hashName = 'ship';
   element.__hashMeta = ship;
 
-  element.on('travel', (e) => {
+  context.reactContext.eventStream.on('travelShip:' + ship.id, (planet) => {
     const stage = context.app.stage;
-    const availableDistance =
-      context.reactContext.getSteps() * LOCATION_POINTS_PER_STEP; // the distance the user is allowed to travel
-    let distance = Math.trunc(calcDistance(element, e)); // the distance the user needs to reach his distination
+    const availableDistance = stepsToDistance(context.reactContext.getSteps()); // the distance the user is allowed to travel
+    let distance = Math.trunc(calcDistance(element, planet)); // the distance the user needs to reach his distination
     let stopDistance = distance;
     // cap distance
     if (availableDistance < stopDistance) {
@@ -238,8 +247,8 @@ function shipFactory(context, ship) {
 
     // math stuff
     let delta = 0.0;
-    const targetX = e.x;
-    const targetY = e.y;
+    const targetX = planet.x;
+    const targetY = planet.y;
     const deltaX = (targetX - element.x) / distance;
     const deltaY = (targetY - element.y) / distance;
     function animate() {
@@ -247,14 +256,16 @@ function shipFactory(context, ship) {
       element.y += deltaY;
       delta += 1;
       if (delta === stopDistance) {
-        console.log('el', stage);
-        stage.emit('targetReached', { ship: { x: element.x, y: element.y } });
+        stage.emit('targetReached', {
+          ship,
+          planet,
+        });
         return;
       }
 
       setTimeout(() => {
         requestAnimationFrame(animate);
-      }, 1000 / 25);
+      }, 500 / 25);
     }
     requestAnimationFrame(animate);
   });
@@ -270,8 +281,8 @@ function planetFactory(context, planet) {
     size
   );
   element.anchor.set(0.5);
-  element.x = planet.x + (size / 2) * planet.size;
-  element.y = planet.y + (size / 2) * planet.size;
+  element.x = planet.x + planet.size;
+  element.y = planet.y + planet.size;
   element.scale.set(planet.size);
   element.interactive = true;
   element.roundPixels = true;
@@ -279,12 +290,6 @@ function planetFactory(context, planet) {
   element.__hashName = 'planet';
   element.__hashMeta = planet;
   return element;
-}
-
-function calcDistance(point1, point2) {
-  return Math.sqrt(
-    Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)
-  );
 }
 
 function randomizeStar(star, initial, cameraZ) {

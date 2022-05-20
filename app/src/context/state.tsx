@@ -61,7 +61,7 @@ export const StateContext: React.FC<IProps> = (props) => {
   );
 };
 
-function usePlayerContract() {
+export function usePlayerContract() {
   const ethersAppContext = useEthersAppContext();
   const [playerState, setPlayerState] = useState<IPlayerState>({
     playerId: 0,

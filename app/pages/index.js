@@ -44,6 +44,13 @@ function MainView() {
                 }}>
                 <button>move ship {ship.id}</button>
               </Link>
+              <Link
+                href={{
+                  pathname: '/?steps=5000',
+                  query: { modal: 'move' },
+                }}>
+                <button>get 5000 steps</button>
+              </Link>
             </li>
           ))}
         </ul>
