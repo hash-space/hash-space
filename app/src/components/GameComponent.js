@@ -221,6 +221,9 @@ function shipFactory(context, ship) {
   element.y = ship.y + 32;
   element.interactive = true;
   element.roundPixels = true;
+  // our metadata
+  element.__hashName = 'ship';
+  element.__hashMeta = ship;
 
   element.on('travel', (e) => {
     const stage = context.app.stage;

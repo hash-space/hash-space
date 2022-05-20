@@ -26,6 +26,7 @@ interface IShip {
   owner: string;
   id: number;
   isMine: boolean;
+  category: string;
 }
 
 interface IPlanet {
@@ -90,13 +91,13 @@ function usePlayerContract() {
 
   const playerRegister = useCallback(() => {
     playersContract.registerProfile();
-  }, [playersContract, ethersAppContext.account]);
+  }, [playersContract]);
 
   const playerSyncSteps = useCallback(
     (steps: number) => {
       playersContract.syncSteps(steps);
     },
-    [playersContract, ethersAppContext.account]
+    [playersContract]
   );
 
   const playerMoveShip = useCallback(
@@ -109,7 +110,7 @@ function usePlayerContract() {
     ) => {
       playersContract.moveShip(x, y, planetId, shipId, worldId);
     },
-    [playersContract, ethersAppContext.account]
+    [playersContract]
   );
 
   return {
@@ -121,7 +122,7 @@ function usePlayerContract() {
   };
 }
 
-function useNftContract() {
+export function useNftContract() {
   const ethersAppContext = useEthersAppContext();
   const [ships, setShips] = useState<IShip[]>([]);
 
@@ -139,6 +140,7 @@ function useNftContract() {
             owner: ship[2],
             id: parseNumber(ship[3]),
             isMine: ship[2] == ethersAppContext.account,
+            category: ship[2] == ethersAppContext.account ? 'Me' : 'NotMet',
           }))
           .filter((ship) => ship.id > 0)
       );
