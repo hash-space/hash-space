@@ -83,7 +83,7 @@ describe('Player', function () {
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
     expect(stepsResult.totalStepsTaken).to.eq(9100);
-    expect(stepsResult.stepsAvailable).to.eq(3100);
+    expect(stepsResult.stepsAvailable).to.eq(3480);
     // TODO: consider amending to account for rounding error
   });
 
@@ -107,8 +107,8 @@ describe('Player', function () {
     expect(ships[1].x).to.eq(400);
     expect(ships[1].y).to.eq(450);
     expect(ships[2].owner).to.eq(addr1.address);
-    expect(ships[2].x).to.eq(2);
-    expect(ships[2].y).to.eq(1);
+    expect(ships[2].x).to.eq(84);
+    expect(ships[2].y).to.eq(16);
   });
 
   it('user can transfer ownership of ship', async function () {
@@ -129,8 +129,8 @@ describe('Player', function () {
     expect(ships[1].x).to.eq(400);
     expect(ships[1].y).to.eq(450);
     expect(ships[2].owner).to.eq(addr1.address);
-    expect(ships[2].x).to.eq(2);
-    expect(ships[2].y).to.eq(1);
+    expect(ships[2].x).to.eq(84);
+    expect(ships[2].y).to.eq(16);
   });
 
   it.skip('multiple starships should start in the correct locations', async function () {
