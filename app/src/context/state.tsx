@@ -140,7 +140,7 @@ export function useNftContract() {
             owner: ship[2],
             id: parseNumber(ship[3]),
             isMine: ship[2] == ethersAppContext.account,
-            category: ship[2] == ethersAppContext.account ? 'Me' : 'NotMet',
+            category: ship[2] == ethersAppContext.account ? 'Me' : 'NotMe',
           }))
           .filter((ship) => ship.id > 0)
       );

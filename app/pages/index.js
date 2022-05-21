@@ -33,10 +33,7 @@ function MainView() {
         <ul>
           {shipsContract.ships.map((ship) => (
             <li key={ship.id}>
-              <div>
-                id: {ship.id}, owner: {ship.owner}, x: {ship.x}, y: {ship.y},
-                isMine: {ship.isMine ? 'yes' : 'no'}
-              </div>
+              <div>{JSON.stringify(ship)}</div>
               <Link
                 href={{
                   pathname: '/',
