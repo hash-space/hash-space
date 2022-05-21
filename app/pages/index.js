@@ -32,13 +32,11 @@ export default function Home() {
           <SyncStepDialog />
           <MoveShipDialog />
           <Typography variant="h5" gutterBottom component="div">
-            About
+            HASH SPACE: The DeFi Explorer
           </Typography>
           <Typography variant="body1" gutterBottom>
-            body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore
-            consectetur, neque doloribus, cupiditate numquam dignissimos laborum
-            fugiat deleniti? Eum quasi quidem quibusdam.
+            <b>Are you ready to go on a quest?
+            Learn about DeFi and earn yield while exploring different worlds.</b>
           </Typography>
           {isDebug && (
             <div>
@@ -132,7 +130,7 @@ export default function Home() {
             NFT Collection / OpenSea
           </Typography>
           <Typography variant="body1" gutterBottom>
-            You can find your Starship NFT on following networks
+            You'll receive a starship NFT on registration. View the full collection on the following networks:
           </Typography>
           <div>
             <ButtonGroup size="large" aria-label="large button group">
@@ -152,6 +150,9 @@ export default function Home() {
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
             Subscribe To our EPNS Channel
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Keep up-to-date with the latest events across your chosen universes.
           </Typography>
           <Alert severity="warning">only available on testnet kovan</Alert>
           <Box sx={{ height: 10 }} />
