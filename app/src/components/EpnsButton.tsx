@@ -64,7 +64,7 @@ function EpnsButton() {
         color="secondary"
         variant="outlined"
         onClick={onClickHandler}>
-        {isSubscribed || isDisabled ? 'Subscribe' : 'Unsubscribe'}
+        {!isSubscribed || isDisabled ? 'Subscribe' : 'Unsubscribe'}
       </Button>
     </div>
   );
