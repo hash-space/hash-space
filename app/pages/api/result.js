@@ -10,6 +10,7 @@ const Cookies = require('cookies');
 export default async function handler(req, res) {
   const cookies = new Cookies(req, res);
   const lastSync = cookies.get('lastSync');
+  const redirectUrl = cookies.get('redirectUrl');
   const lastSyncParsed = parseInt(lastSync);
   let result;
   try {
@@ -26,14 +27,16 @@ export default async function handler(req, res) {
     result = await findBestResult(lastSyncParsed);
   } catch (e) {
     console.log(e);
-    res.redirect('/?error=error1');
+    res.redirect(redirectUrl + '?error=error1');
     return;
   }
 
   if (!result) {
-    res.redirect('/?error=error2');
+    res.redirect(redirectUrl + '?error=error2');
     return;
   }
 
-  res.redirect('/?steps=' + formatData(result.bucket).totalStepsToday);
+  res.redirect(
+    redirectUrl + '?steps=' + formatData(result.bucket).totalStepsToday
+  );
 }
