@@ -5,7 +5,7 @@
       "chainId": "42261",
       "contracts": {
         "Starship": {
-          "address": "0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43",
+          "address": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
           "abi": [
             {
               "inputs": [],
@@ -464,7 +464,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD",
+          "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
           "abi": [
             {
               "inputs": [],
@@ -726,7 +726,7 @@
           ]
         },
         "Players": {
-          "address": "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+          "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
           "abi": [
             {
               "inputs": [],
@@ -900,7 +900,7 @@
       "chainId": "80001",
       "contracts": {
         "Players": {
-          "address": "0x22c0dBF44AfD513D11876fB5765e9449D6F32424",
+          "address": "0x767B6C2A81Cd7f39bb89B1a60182E0B55B11ef4d",
           "abi": [
             {
               "inputs": [],
@@ -1066,7 +1066,7 @@
           ]
         },
         "Starship": {
-          "address": "0x17AA9EB461aCf564185A306c4Db3783447f58860",
+          "address": "0x4C0fA72807f0FEf7608b32A2A7D647EbAA83f5Bb",
           "abi": [
             {
               "inputs": [],
@@ -1525,7 +1525,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x5A7d9e754903ED00baBBB636e8AEbAA1320Eb0aC",
+          "address": "0xD9D6215e580a72B0131C16Cd93b5D76Fc3Cb2a29",
           "abi": [
             {
               "inputs": [],
