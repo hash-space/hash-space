@@ -8,6 +8,7 @@ import { Typography } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
 import MoveShipDialog from '../src/components/MoveShipDialog';
 import Link from 'next/link';
+import { getCallbackUrl } from '../src/helper/callbackUrl';
 export default function Home() {
   return (
     <PageWrapper>
@@ -62,8 +63,13 @@ function MainView() {
         )}
         <button
           onClick={() => {
-            location.href =
-              '/api/auth?lastSync=' + playerContract.playerState.lastQueried;
+            const url = new URL('/api/auth', getCallbackUrl());
+            url.searchParams.set(
+              'lastSync',
+              playerContract.playerState.lastQueried
+            );
+            url.searchParams.set('redirectUrl', location.href);
+            location.href = url.href;
           }}>
           sync steps
         </button>
