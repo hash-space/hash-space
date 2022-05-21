@@ -13,7 +13,10 @@ export default function handler(req, res) {
     redirect_uri: getCallbackUrl(req),
   });
   cookies.set('lastSync', qs.get('lastSync'), {
-    httpOnly: true, // true by default
+    httpOnly: true,
+  });
+  cookies.set('redirectUrl', qs.get('redirectUrl'), {
+    httpOnly: true,
   });
   res.redirect(authorizeUrl);
 }
