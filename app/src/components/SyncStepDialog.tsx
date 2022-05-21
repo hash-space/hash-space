@@ -40,7 +40,17 @@ export default function SyncStepDialog() {
               <DialogContentText id="alert-dialog-description">
                 Do you want to sync your steps ({steps}) to the blockchain
               </DialogContentText>
-              {!playerContract.connected && <CircularProgress />}
+              {!playerContract.connected && (
+                <div
+                  style={{
+                    paddingTop: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <CircularProgress />
+                </div>
+              )}
             </div>
           )}
           {isError && (
