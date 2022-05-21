@@ -141,17 +141,13 @@ contract Players is Ownable {
         indexStartingPosition.increment();
         uint positionIndex = indexStartingPosition.current();
 
-        uint startingX = positionIndex % 10;
-        uint startingY = (positionIndex / 10) + 1;
+        uint startingX = positionIndex * 42;
+        uint startingY = 16;
 
-        if (positionIndex == 100) {
+        if (positionIndex == 46) {
             indexStartingPosition.reset();
         }
 
         return (startingX, startingY);
-    }
-
-    function incrementPositionCounter() public {
-        indexStartingPosition.increment();
     }
 }

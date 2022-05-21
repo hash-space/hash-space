@@ -90,7 +90,9 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
-    playersContract.registerProfile();
+    playersContract.registerProfile('', {
+      value: ethers.utils.parseEther('0.01'),
+    });
   }, [playersContract]);
 
   const playerSyncSteps = useCallback(
