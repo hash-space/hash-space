@@ -31,7 +31,6 @@ export interface PlayersInterface extends utils.Interface {
   functions: {
     "NFTPRICE()": FunctionFragment;
     "determineStartingPosition()": FunctionFragment;
-    "incrementPositionCounter()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -49,7 +48,6 @@ export interface PlayersInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "NFTPRICE"
       | "determineStartingPosition"
-      | "incrementPositionCounter"
       | "indexStartingPosition"
       | "moveShip"
       | "owner"
@@ -66,10 +64,6 @@ export interface PlayersInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "determineStartingPosition",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "incrementPositionCounter",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -117,10 +111,6 @@ export interface PlayersInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "determineStartingPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "incrementPositionCounter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -205,10 +195,6 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    incrementPositionCounter(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     indexStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { _value: BigNumber }>;
@@ -277,10 +263,6 @@ export interface Players extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  incrementPositionCounter(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
   moveShip(
@@ -346,8 +328,6 @@ export interface Players extends BaseContract {
     determineStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
-    incrementPositionCounter(overrides?: CallOverrides): Promise<void>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -420,10 +400,6 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    incrementPositionCounter(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
     moveShip(
@@ -477,10 +453,6 @@ export interface Players extends BaseContract {
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    incrementPositionCounter(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
