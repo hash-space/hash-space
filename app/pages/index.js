@@ -32,11 +32,19 @@ export default function Home() {
           <SyncStepDialog />
           <MoveShipDialog />
           <Typography variant="h5" gutterBottom component="div">
-            HASH SPACE: The DeFi Explorer
+            <b>HASH SPACE: The DeFi Explorer</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <b>Are you ready to go on a quest?
-            Learn about DeFi and earn yield while exploring different worlds.</b>
+            <b><em>Learn about DeFi and earn yield while exploring different worlds.</em></b><br/><br/>
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            How to play
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Visit different planets to pick up the yield they've generated since the last visitor. 
+            At each planet, you'll learn about the protocol used to generate that yield. Explore as
+            many planets as you can. You'll learn about Yearn Finance, MakerDAO, UniSwap, Aave and 
+            more!
           </Typography>
           {isDebug && (
             <div>
@@ -85,7 +93,7 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            Action
+            PLAY
           </Typography>
           <div>
             {!playerContract.playerState.isSignedUp && (
@@ -130,7 +138,7 @@ export default function Home() {
             NFT Collection / OpenSea
           </Typography>
           <Typography variant="body1" gutterBottom>
-            You'll receive a starship NFT on registration. View the full collection on the following networks:
+            You'll receive a starship NFT on registration. View the full collection and trade starships on the following networks:
           </Typography>
           <div>
             <ButtonGroup size="large" aria-label="large button group">
