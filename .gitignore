@@ -12,3 +12,5 @@ hardhat/deployments
 !.env.example
 
 **.DS_Store
+
+.deps
