@@ -95,6 +95,9 @@ export default function Home() {
           <Typography variant="h5" gutterBottom component="div">
             PLAY
           </Typography>
+          <Typography variant="body1" gutterBottom>
+            <em>Currently available on Polygon Mumbai, Oasis Emerald Testnet and Arbitrum Rinkeby.</em>
+          </Typography>
           <div>
             {!playerContract.playerState.isSignedUp && (
               <Button
@@ -157,7 +160,7 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            Subscribe To our EPNS Channel
+            Subscribe to our EPNS Channel
           </Typography>
           <Typography variant="body1" gutterBottom>
             Keep up-to-date with the latest events across your chosen universes.
