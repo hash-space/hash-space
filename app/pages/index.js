@@ -4,10 +4,11 @@ import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../src/context/auth';
 import { useStateContext } from '../src/context/state';
 import { PageWrapper } from '../src/components/PageWrapper';
-import { Typography, Button, ButtonGroup } from '@mui/material';
+import { Typography, Button, ButtonGroup, Alert } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
 import MoveShipDialog from '../src/components/MoveShipDialog';
 import { useRouter } from 'next/router';
+import { getAddress } from '../src/helper/getAddress';
 
 import Link from 'next/link';
 const EpnsButtonNoSSR = dynamic(() => import('../src/components/EpnsButton'), {
@@ -128,8 +129,32 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            Subscribe To our EPNS Channel (only on kovan)
+            NFT Collection / OpenSea
           </Typography>
+          <Typography variant="body1" gutterBottom>
+            You can find your Starship NFT on following networks
+          </Typography>
+          <div>
+            <ButtonGroup size="large" aria-label="large button group">
+              <Link
+                href={`https://testnets.opensea.io/assets?search[query]=${getAddress(
+                  80001,
+                  'Starship'
+                )}`}>
+                <Button color="secondary" variant="outlined">
+                  Mumbai
+                </Button>
+              </Link>
+            </ButtonGroup>
+          </div>
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            Subscribe To our EPNS Channel
+          </Typography>
+          <Alert severity="warning">only available on testnet kovan</Alert>
+          <Box sx={{ height: 10 }} />
           <div>
             <EpnsButtonNoSSR />
           </div>
