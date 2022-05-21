@@ -4,6 +4,7 @@ import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
+import { uploadIPFS } from '../helper/uploadIPFS';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -89,7 +90,11 @@ export function usePlayerContract() {
     }
   }, [playerObject]);
 
-  const playerRegister = useCallback(() => {
+  const playerRegister = useCallback(async () => {
+    
+    const metadata = await uploadIPFS();
+
+    // tokenURI = 
     playersContract.registerProfile();
   }, [playersContract]);
 
