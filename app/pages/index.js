@@ -4,7 +4,7 @@ import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../src/context/auth';
 import { useStateContext } from '../src/context/state';
 import { PageWrapper } from '../src/components/PageWrapper';
-import { Typography } from '@mui/material';
+import { Typography, Button, ButtonGroup } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
 import MoveShipDialog from '../src/components/MoveShipDialog';
 import { useRouter } from 'next/router';
@@ -14,6 +14,7 @@ const EpnsButtonNoSSR = dynamic(() => import('../src/components/EpnsButton'), {
   ssr: false,
 });
 import { Container, Paper, Box } from '@mui/material';
+import { getCallbackUrl } from '../src/helper/callbackUrl';
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
@@ -69,25 +70,6 @@ export default function Home() {
                 ))}
               </ul>
               <hr></hr>
-              {!playerContract.playerState.isSignedUp && (
-                <button onClick={playerContract.playerRegister}>
-                  register
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  location.href =
-                    '/api/auth?lastSync=' +
-                    playerContract.playerState.lastQueried;
-                }}>
-                sync steps
-              </button>
-              <Link
-                href={{
-                  pathname: '/game',
-                }}>
-                <button>to to game</button>
-              </Link>
               <Link
                 href={{
                   pathname: '/',
@@ -103,7 +85,49 @@ export default function Home() {
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
-          <Typography variant="h5" gutterBottom gutterTop component="div">
+          <Typography variant="h5" gutterBottom component="div">
+            Action
+          </Typography>
+          <div>
+            {!playerContract.playerState.isSignedUp && (
+              <Button
+                color="secondary"
+                variant="outlined"
+                onClick={playerContract.playerRegister}>
+                Register
+              </Button>
+            )}
+            {playerContract.playerState.isSignedUp && (
+              <ButtonGroup size="large" aria-label="large button group">
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  onClick={() => {
+                    const url = new URL('/api/auth', getCallbackUrl());
+                    url.searchParams.set(
+                      'lastSync',
+                      playerContract.playerState.lastQueried
+                    );
+                    url.searchParams.set('redirectUrl', location.href);
+                    location.href = url.href;
+                  }}>
+                  Sync your steps
+                </Button>
+                <Link
+                  href={{
+                    pathname: '/game',
+                  }}>
+                  <Button color="secondary" variant="outlined">
+                    Go to game
+                  </Button>
+                </Link>
+              </ButtonGroup>
+            )}
+          </div>
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
             Subscribe To our EPNS Channel (only on kovan)
           </Typography>
           <div>
