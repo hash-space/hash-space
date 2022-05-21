@@ -75,5 +75,5 @@ export async function findBestResult(startTimestamp) {
 export function getCallbackUrl(req) {
   return req.headers.host.indexOf('localhost') !== -1
     ? `http://localhost:3000/api/result`
-    : `https://${req.headers.host}/api/result`;
+    : `https://steps-app.vercel.app/api/result`;
 }

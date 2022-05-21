@@ -92,7 +92,7 @@ contract Players is Ownable {
         uint travelX = get_abs_diff(xCoordShip, x);
         uint travelY = get_abs_diff(yCoordShip, y);
         uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
-        
+
         // check enough steps available
         require(players[msg.sender].stepsAvailable > travelDistance * 10, "Not enough steps available to move there");
 

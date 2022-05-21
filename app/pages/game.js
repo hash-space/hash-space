@@ -1,65 +1,114 @@
-import * as PIXI from 'pixi.js';
-import { useEffect, useRef, useState } from 'react';
 import { PageWrapper } from '../src/components/PageWrapper';
-import { Paper, CircularProgress } from '@mui/material';
-
-const LOCATION_POINTS_PER_STEP = 10;
+import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import { Paper } from '@mui/material';
+import { useWindowSize } from '../src/hooks/useWindowSize';
+import GameComponent from '../src/components/GameComponent';
+import {
+  useWorldContract,
+  useNftContract,
+  usePlayerContract,
+} from '../src/context/state';
+import { useRouter } from 'next/router';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { calcDistance, distanceToSteps } from '../src/helper/distance';
+import EventEmitter from 'events';
 
 export default function Game() {
-  const ref = useRef();
-  const didMount = useRef();
-  const appRef = useRef();
-  const [steps, setSteps] = useState(0);
+  const size = useWindowSize();
+  const eventStream = useRef(new EventEmitter());
+  const worldContract = useWorldContract();
+  const nftContract = useNftContract();
+  const playerContract = usePlayerContract();
+  const router = useRouter();
+  const [isOpen, setOpen] = useState(false);
+  const [payload, setPayload] = useState(undefined);
 
   useEffect(() => {
-    if (!didMount.current) {
-      init(ref.current).then((app) => {
-        appRef.current = app;
-        app.stage.steps = steps;
-        app.stage.on('updateSteps', (newSteps) => {
-          setSteps(newSteps);
-        });
-      });
-      didMount.current = true;
+    function clickPlanet(payload) {
+      setOpen(true);
+      setPayload(payload);
     }
+    function targetReached(payload) {
+      playerContract.playerMoveShip(
+        payload.planet.x,
+        payload.planet.y,
+        payload.planet.id,
+        payload.ship.id,
+        1
+      );
+    }
+    eventStream.current.on('targetReached', targetReached);
+    eventStream.current.on('clickPlanet', clickPlanet);
+    return () => {
+      eventStream.current.removeListener('targetReached', targetReached);
+      eventStream.current.removeListener('clickPlanet', clickPlanet);
+    };
+  }, [playerContract]);
+
+  const myShip = useMemo(() => {
+    return nftContract.ships.find((s) => s.isMine);
+  }, [nftContract.ships]);
+
+  const confirmMove = useCallback(() => {
+    setOpen(false);
+    // tell the ship to move
+    eventStream.current.emit('travelShip:' + myShip.id, payload.planet);
+  }, [eventStream.current, myShip, payload]);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    setPayload(undefined);
   }, []);
 
-  useEffect(() => {
-    if (appRef.current) {
-      appRef.current.stage.steps = steps;
-    }
-  }, [steps]);
+  const distance = myShip && payload ? calcDistance(myShip, payload.planet) : 0;
+  const stepsNeeded = distanceToSteps(distance);
+
+  const leftRightPadding = size.width > 800 ? 50 : 0;
+  const height = size.height - 110;
+
+  const isLoaded =
+    height > 0 &&
+    worldContract.planets.length > 0 &&
+    nftContract.ships.length > 0;
 
   return (
     <PageWrapper>
-      <p>
-        Steps available:{' '}
-        <input
-          type="number"
-          value={steps}
-          onChange={(e) => setSteps(e.target.value * 1)}></input>
-      </p>
-      <p>1 step = {LOCATION_POINTS_PER_STEP} location points </p>
-
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ height: 20 }}></div>
+      <MoveShipDialog
+        isOpen={isOpen}
+        distance={distance}
+        stepsNeeded={stepsNeeded}
+        confirmMove={confirmMove}
+        handleClose={handleClose}
+        stepsAvailable={playerContract.playerState.stepsAvailable}
+      />
+      <div
+        style={{
+          paddingLeft: leftRightPadding,
+          paddingRight: leftRightPadding,
+        }}>
         <Paper style={{ padding: '10px' }}>
           <div
             style={{
               display: 'block',
               position: 'relative',
             }}>
-            <div style={{ paddingTop: '40%' }}></div>
-            <div
-              ref={ref}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}>
-              <CircularProgress />
-            </div>
+            <div style={{ paddingTop: height }}></div>
+            {isLoaded && (
+              <GameComponent
+                ships={nftContract.ships}
+                planets={worldContract.planets}
+                steps={playerContract.playerState.stepsAvailable}
+                eventStream={eventStream.current}
+              />
+            )}
           </div>
         </Paper>
       </div>
@@ -67,242 +116,42 @@ export default function Game() {
   );
 }
 
-const SHIPS = [
-  {
-    x: 0,
-    y: 100,
-    id: 1,
-  },
-  {
-    x: 100,
-    y: 100,
-    id: 2,
-    isMine: true,
-  },
-];
-
-const PLANET = [
-  {
-    x: 10,
-    y: 50,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 750,
-    y: 600,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 350,
-    y: 650,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 50,
-    y: 350,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 700,
-    y: 800,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 450,
-    y: 700,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 200,
-    y: 300,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 600,
-    y: 500,
-    id: 1,
-    size: 0.5,
-  },
-  {
-    x: 750,
-    y: 950,
-    id: 1,
-    size: 0.5,
-  },
-];
-
-async function init(element) {
-  const app = new PIXI.Application({
-    width: element.clientWidth,
-    height: element.clientHeight,
-    backgroundColor: 0x696969,
-    resolution: 1,
-  });
-  [...element.children].forEach((child) => {
-    element.removeChild(child);
-  });
-  element.appendChild(app.view);
-  const { Viewport } = require('pixi-viewport');
-  const viewport = new Viewport({
-    worldWidth: 2000,
-    worldHeight: 2000,
-
-    interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
-  });
-  app.stage.addChild(viewport);
-  viewport.drag().pinch().wheel().decelerate();
-
-  const ship = await PIXI.Texture.fromURL('/procedural-pixel-art.png');
-  const planet = await PIXI.Texture.fromURL('/planetTeal.png');
-  const context = { asset: { ship, planet }, app };
-
-  const mainContainer = new PIXI.Container();
-  const graphics = new PIXI.Graphics();
-
-  // Rectangle
-  graphics.lineStyle(5, 0xfeeb77, 1);
-  graphics.beginFill(0x000);
-  graphics.drawRect(0, 0, 2000, 2000);
-  graphics.endFill();
-  mainContainer.height = 2000;
-  mainContainer.width = 2000;
-  mainContainer.addChild(graphics);
-  viewport.addChild(mainContainer);
-
-  const containerPlanets = new PIXI.Container();
-
-  // app.stage.on('pointermove', (e) => {
-  //   console.log(e);
-  // });
-  // app.ticker.add(() => {
-  //   // just for fun, let's rotate mr rabbit a little
-  //   app.stage.pivot.x += 0.1;
-  // });
-
-  mainContainer.addChild(containerPlanets);
-  PLANET.forEach((planet) => {
-    addPlanet(planet, { ...context, stage: containerPlanets });
-  });
-
-  const containerShips = new PIXI.Container();
-  mainContainer.addChild(containerShips);
-  SHIPS.forEach((ship) => {
-    addShip(ship, { ...context, stage: containerShips });
-  });
-
-  app.stage.interactive = true;
-  app.stage.hitArea = app.renderer.screen;
-  app.stage.on('pointerdown', (e) => {
-    // console.log(e);
-    if (e.target && e.target.name == 'planet') {
-      const myShip = SHIPS.find((i) => i.isMine);
-
-      const distance = calcDistance(myShip.element, e.target.position);
-      if (app.stage.steps == 0) {
-        alert('you dont have enough steps to move');
-      } else {
-        const result = confirm(
-          `do you want to travel ${Math.trunc(
-            distance / LOCATION_POINTS_PER_STEP
-          )}, you have ${app.stage.steps} available?`
-        );
-
-        if (result) {
-          myShip.element.emit('travel', {
-            x: e.target.position.x,
-            y: e.target.position.y,
-          });
-        }
-      }
-    }
-  });
-  return app;
-}
-
-function addShip(ship, context) {
-  const element = new PIXI.TilingSprite(context.asset.ship, 32, 32);
-  element.anchor.set(0.5);
-  element.x = ship.x + 32;
-  element.y = ship.y + 32;
-  element.interactive = true;
-  element.roundPixels = true;
-  ship.element = element;
-
-  context.stage.addChild(element);
-
-  element.on('travel', (e) => {
-    const stage = context.app.stage;
-    const availableDistance = stage.steps * LOCATION_POINTS_PER_STEP; // the distance the user is allowed to travel
-    let distance = Math.trunc(calcDistance(element, e)); // the distance the user needs to reach his distination
-    let stopDistance = distance;
-    // cap distance
-    if (availableDistance < stopDistance) {
-      stopDistance = availableDistance;
-    }
-    const distanceDelta = Math.trunc(
-      (availableDistance - stopDistance) / LOCATION_POINTS_PER_STEP
-    );
-    // console.log({ availableDistance, distance, distanceDelta });
-
-    // math stuff
-    let delta = 0.0;
-    const targetX = e.x;
-    const targetY = e.y;
-    const deltaX = (targetX - element.x) / distance;
-    const deltaY = (targetY - element.y) / distance;
-    function animate() {
-      element.x += deltaX;
-      element.y += deltaY;
-      delta += 1;
-      // console.log(
-      //   JSON.stringify(
-      //     {
-      //       delta,
-      //       c: [element.x, e.x],
-      //       y: [element.y, e.y],
-      //     },
-      //     null,
-      //     2
-      //   )
-      // );
-      if (delta === stopDistance) {
-        console.log('el', stage);
-        stage.emit('updateSteps', distanceDelta);
-        return;
-      }
-
-      setTimeout(() => {
-        requestAnimationFrame(animate);
-      }, 1000 / 25);
-    }
-    requestAnimationFrame(animate);
-  });
-}
-
-function addPlanet(planet, context) {
-  const size = 100;
-  const element = new PIXI.Sprite(context.asset.planet, size, size);
-  element.anchor.set(0.5);
-  element.x = planet.x + (size / 2) * planet.size;
-  element.y = planet.y + (size / 2) * planet.size;
-  element.scale.set(planet.size);
-  element.interactive = true;
-  element.roundPixels = true;
-  element.name = 'planet';
-  planet.element = element;
-
-  context.stage.addChild(element);
-}
-
-function calcDistance(point1, point2) {
-  return Math.sqrt(
-    Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)
+export function MoveShipDialog(props) {
+  const stepsMissing = props.stepsNeeded > props.stepsAvailable;
+  return (
+    <div>
+      <Dialog
+        open={props.isOpen}
+        onClose={props.handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">Move ship</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {stepsMissing && (
+              <Alert severity="error">you are missing steps</Alert>
+            )}
+            <Box sx={{ height: 10 }}></Box>
+            <div>
+              Are you sure you want to move your ship over a distance of
+              Distance: {props.distance} , Steps: {props.stepsNeeded}
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.handleClose} variant="text">
+            Close
+          </Button>
+          <Button
+            disabled={stepsMissing}
+            onClick={props.confirmMove}
+            color="secondary"
+            variant="outlined"
+            autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }

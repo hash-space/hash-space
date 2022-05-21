@@ -14,8 +14,6 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
 
-
-
     struct ShipData {
             uint x;
             uint y;
@@ -33,11 +31,7 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
         _;
     }
 
-    
     constructor(address _proxyRegistryAddress) ERC721Tradable("StarShip", "SHIP", _proxyRegistryAddress) {}
-    // public {
-        // setPlayerContract(_playerContract);
-    // }
 
     function getLocation(
         uint256 _tokenId
@@ -51,7 +45,7 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
         return super.msgSender();
     }
 
-        function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721) 
+        function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721)
     {
         super._burn(tokenId);
     }

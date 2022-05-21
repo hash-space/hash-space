@@ -8,7 +8,6 @@ import hardhatContractsJson from '../generated/hardhat_contracts.json';
 
 export const contractConnectorConfig = () => {
   try {
-    console.log(hardhatContractsJson);
     const result = {
       Players: createConnectorForHardhatContract(
         'Players',
@@ -18,6 +17,11 @@ export const contractConnectorConfig = () => {
       Starship: createConnectorForHardhatContract(
         'Starship',
         hardhatContracts.Starship__factory,
+        hardhatContractsJson
+      ),
+      WorldMapCreator: createConnectorForHardhatContract(
+        'WorldMapCreator',
+        hardhatContracts.WorldMapCreator__factory,
         hardhatContractsJson
       ),
     } as const;
@@ -47,7 +51,7 @@ export const {
 } = contractsContextFactory<
   /* the contractNames (keys) in config output */
   keyof TAppConnectorList,
-  /* the type of the config output  */
+  // @ts-ignore
   TAppConnectorList,
   /* A type that infers the value of each contractName: contract pair*/
   TTypedContract<keyof TAppConnectorList, TAppConnectorList>

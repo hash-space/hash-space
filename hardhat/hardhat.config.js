@@ -21,16 +21,36 @@ module.exports = {
     localhost: {
       url: 'http://localhost:8545',
     },
-    // matic: {
-    //   url: 'https://matic-mumbai.chainstacklabs.com',
-    //   accounts: [process.env.PRIVATE_KEY_MUMBAI],
-    // },
+    matic: {
+      url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
+      accounts: [process.env.PRIVATE_KEY_MUMBAI],
+      gas: 4000000,
+    },
+    emerald_mainnet: {
+      chainId: 42262,
+      url: 'https://emerald.oasis.dev',
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
+    },
+    emerald_testnet: {
+      url: 'https://testnet.emerald.oasis.dev',
+      chainId: 42261,
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
+    },
   },
   namedAccounts: {
     deployer: 0,
   },
   paths: {
     sources: 'contracts',
+  },
+  mocha: {
+    timeout: 60000,
   },
   solidity: '0.8.4',
   paths: {
