@@ -65,7 +65,7 @@ export default function HeadBar() {
             <Button
               color="secondary"
               variant="outlined"
-              onClick={authContext.login}>
+              onClick={() => authContext.login()}>
               Connect Wallet
             </Button>
           </div>
