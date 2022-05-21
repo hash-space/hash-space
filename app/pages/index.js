@@ -96,7 +96,7 @@ export default function Home() {
             PLAY
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <em>Currently available on Polygon Mumbai, Oasis Emerald Testnet and Arbitrum Rinkeby.</em>
+            <em>Currently available on Polygon Mumbai, Oasis Emerald Testnet and Arbitrum Nitro.</em>
           </Typography>
           <div>
             {!playerContract.playerState.isSignedUp && (
