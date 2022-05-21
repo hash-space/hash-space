@@ -4,13 +4,13 @@ import React, {
   useState,
   useContext,
   useReducer,
+  useRef,
 } from 'react';
 import { useEthersAppContext, EthersModalConnector } from 'eth-hooks/context';
 import { ICoreOptions } from 'web3modal';
 import { useSnackbar } from 'notistack';
 import { useLoadAppContracts } from '../config/contract';
 import { asEthersAdaptor } from 'eth-hooks/functions';
-import { useEthersAdaptorFromProviderOrSigners } from 'eth-hooks';
 import { useConnectAppContracts } from '../config/contract';
 
 const _AuthContext = React.createContext<IAuthProps>(
@@ -20,10 +20,11 @@ const _AuthContext = React.createContext<IAuthProps>(
 interface IProps {
   children: React.ReactNode;
 }
-
 interface IAuthProps {
   login: () => void;
   logout: () => void;
+  addTx: (input: any) => any;
+  isLoading: boolean;
 }
 
 export function useAuthContext() {
@@ -33,6 +34,48 @@ export function useAuthContext() {
 export const AuthContext: React.FC<IProps> = (props) => {
   const [web3Config, setConfig] = useState<Partial<ICoreOptions>>();
   const [networks, setNetworks] = useState<string[]>([]);
+  const txAdded = useRef(0);
+  const txDone = useRef(0);
+  const [isLoading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTx = useCallback((promise: any) => {
+    txAdded.current += 1;
+    return promise
+      .then((result) => {
+        if (result.wait) {
+          return result
+            .wait(1)
+            .then(() => {
+              txDone.current += 1;
+            })
+            .catch(() => {
+              txDone.current += 1;
+              enqueueSnackbar('Tx errored', { variant: 'error' });
+            });
+        } else {
+          txDone.current += 1;
+        }
+      })
+      .catch(() => {
+        txDone.current += 1;
+        enqueueSnackbar('Tx errored', { variant: 'error' });
+      });
+  }, []);
+
+  useEffect(() => {
+    function timer() {
+      if (txAdded.current !== txDone.current) {
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
+    }
+    const timerId = setInterval(timer, 100);
+    return () => {
+      clearInterval(timerId);
+    };
+  }, []);
 
   const ethersAppContext = useEthersAppContext();
 
@@ -80,8 +123,6 @@ export const AuthContext: React.FC<IProps> = (props) => {
     }
   }, [ethersAppContext]);
 
-  const { enqueueSnackbar } = useSnackbar();
-
   // throw error if connected to the wrong chain
   useEffect(() => {
     if (
@@ -122,7 +163,7 @@ export const AuthContext: React.FC<IProps> = (props) => {
   }, [ethersAppContext.provider, ethersAppContext.chainId]);
 
   return (
-    <_AuthContext.Provider value={{ login, logout }}>
+    <_AuthContext.Provider value={{ login, logout, isLoading, addTx }}>
       {props.children}
     </_AuthContext.Provider>
   );

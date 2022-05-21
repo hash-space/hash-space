@@ -4,6 +4,7 @@ import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
+import { useAuthContext } from '../context/auth';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -62,6 +63,7 @@ export const StateContext: React.FC<IProps> = (props) => {
 };
 
 export function usePlayerContract() {
+  const authContext = useAuthContext();
   const ethersAppContext = useEthersAppContext();
   const [playerState, setPlayerState] = useState<IPlayerState>({
     playerId: 0,
@@ -90,12 +92,12 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
-    playersContract.registerProfile();
+    authContext.addTx(playersContract.registerProfile());
   }, [playersContract]);
 
   const playerSyncSteps = useCallback(
     (steps: number) => {
-      playersContract.syncSteps(steps);
+      authContext.addTx(playersContract.syncSteps(steps));
     },
     [playersContract]
   );
@@ -108,7 +110,9 @@ export function usePlayerContract() {
       shipId: number,
       worldId: number
     ) => {
-      playersContract.moveShip(x, y, planetId, shipId, worldId);
+      authContext.addTx(
+        playersContract.moveShip(x, y, planetId, shipId, worldId)
+      );
     },
     [playersContract]
   );
