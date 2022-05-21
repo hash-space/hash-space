@@ -9,3 +9,9 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Debugging
+
+Add ?debug=true as a query parameter to get some extra info.
+
+Example: http://localhost:3000/?debug=true
