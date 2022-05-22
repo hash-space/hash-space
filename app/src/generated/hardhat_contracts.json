@@ -5,7 +5,7 @@
       "chainId": "42261",
       "contracts": {
         "Starship": {
-          "address": "0x00CAC06Dd0BB4103f8b62D280fE9BCEE8f26fD59",
+          "address": "0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6",
           "abi": [
             {
               "inputs": [
@@ -714,7 +714,7 @@
           ]
         },
         "StarToken": {
-          "address": "0x4951A1C579039EbfCBA0BE33D2cd3A6D30b0f802",
+          "address": "0x15Ff10fCc8A1a50bFbE07847A22664801eA79E0f",
           "abi": [
             {
               "inputs": [],
@@ -1053,7 +1053,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x2e8880cAdC08E9B438c6052F5ce3869FBd6cE513",
+          "address": "0xAe9Ed85dE2670e3112590a2BB17b7283ddF44d9c",
           "abi": [
             {
               "inputs": [],
@@ -1315,7 +1315,7 @@
           ]
         },
         "Players": {
-          "address": "0xb007167714e2940013EC3bb551584130B7497E22",
+          "address": "0xD1760AA0FCD9e64bA4ea43399Ad789CFd63C7809",
           "abi": [
             {
               "inputs": [],
@@ -1560,7 +1560,7 @@
       "chainId": "80001",
       "contracts": {
         "Players": {
-          "address": "0x1a8cCc38782f40193F2B43b4a480f8376aCaB409",
+          "address": "0x7bc073A96469e1B02D96a244848D433e4b76BC88",
           "abi": [
             {
               "inputs": [],
@@ -1797,7 +1797,7 @@
           ]
         },
         "StarToken": {
-          "address": "0x16fc27fbdAD2e9e8df2400D72604D2408A72fD36",
+          "address": "0x1FB51CC9338f980fD24b60E2c23068571499Fc49",
           "abi": [
             {
               "inputs": [],
@@ -2136,7 +2136,7 @@
           ]
         },
         "Starship": {
-          "address": "0xf5A32cd84cfb6A6A556a2DdC35f1DD5b548f7Bf3",
+          "address": "0x966f1515220752E910aFF773d48D14310eB3b313",
           "abi": [
             {
               "inputs": [
@@ -2845,7 +2845,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x81fDED7D396930DF2eF697017Ef103bFCeBA3D62",
+          "address": "0xce6b00aD6383D3B22EAB567b99f6b9b403315084",
           "abi": [
             {
               "inputs": [],
