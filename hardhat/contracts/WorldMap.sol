@@ -3,11 +3,13 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
+// import "hardhat/console.sol";
+import "usingtellor/contracts/UsingTellor.sol";
+import "./interfaces/IAutopay.sol";
+import "./interfaces/IERC20.sol";
 
-import "hardhat/console.sol";
 
-
-contract WorldMapCreator is IWorld {
+contract WorldMapCreator is IWorld, UsingTellor {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
@@ -22,13 +24,24 @@ contract WorldMapCreator is IWorld {
 
     PlanetFactory _planetFactory;
 
-    constructor() {
+    IAutopay public autopay;
+    IERC20 public tellorToken;
+    uint256 public tipAmount;
+
+    constructor(address payable _tellor, address _autopay, address _tellorToken, uint256 _tipAmount) UsingTellor(_tellor) {
+        
+        autopay = IAutopay(_autopay);
+        tellorToken = IERC20(_tellorToken);
+        tipAmount = _tipAmount;
+        
         planetIndex = 0;
         _planetFactory = new PlanetFactory();
     }
 
-    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {
-        // TODO: consider having the world index randomly generated
+    function defineWorldMap(uint256 _length, uint256 _breadth) public {
+
+        _worldIndex = retrieveRandomNumber(block.timestamp);
+
         require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
 
         WorldMap memory newWorldMap;
@@ -79,5 +92,13 @@ contract WorldMapCreator is IWorld {
         delete(existingWorlds[_selectedWorldIndex]);
     }
 
+    function retrieveRandomNumber(uint256 _timestamp) public view returns(uint256) {
+        bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp));
+        bytes32 _queryId = keccak256(_queryData);
+        bytes memory _randomNumberBytes;
+        (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 30 minutes);
+        uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
+        return _randomNumber;
+    }
 
 }

@@ -82,16 +82,6 @@ contract PlanetFactory {
     function _retrieveRandomNumber() public view returns (uint256) {
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, "TellorRNG")));
         // TODO: modify to enable multiple modificaitons during the same time stamp
-    }
-
-    // TODO: figure out how to deploy with Tellor, then use this as random number function
-    // function _retrieveRandomNumber(uint256 _timestamp) internal view returns(uint256) {
-    //     bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp));
-    //     bytes32 _queryId = keccak256(_queryData);
-    //     bytes memory _randomNumberBytes;
-    //     (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 10 minutes);
-    //     uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
-    //     return _randomNumber;
-    // }
+    } 
 
 }
