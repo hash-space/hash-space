@@ -119,11 +119,46 @@ export default function Game() {
 }
 
 const message = {};
-message["Blue"] = <span>AAVE. You can learn more about this planet <a href="https://aave.com/"><u>here</u></a></span>;
-message["Orange"] = <span>Yearn. You can learn more about this planet <a href="https://yearn.finance/"><u>here</u></a> </span>;
-message["Green"] = <span>MakerDAO. You can learn more about this planet <a href="https://makerdao.com/"><u>here</u></a></span>;
-message["Pink"] = <span>Uniswap. You can learn more about this planet <a href="https://uniswap.org/"><u>here</u></a> </span>;
-message["White"] = <span>APWine. You can learn more about this planet <a href="https://www.apwine.fi/"><u>here</u></a> </span>;
+message['Blue'] = (
+  <span>
+    AAVE. You can learn more about this planet{' '}
+    <a href="https://aave.com/">
+      <u>here</u>
+    </a>
+  </span>
+);
+message['Orange'] = (
+  <span>
+    Yearn. You can learn more about this planet{' '}
+    <a href="https://yearn.finance/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
+message['Green'] = (
+  <span>
+    MakerDAO. You can learn more about this planet{' '}
+    <a href="https://makerdao.com/">
+      <u>here</u>
+    </a>
+  </span>
+);
+message['Pink'] = (
+  <span>
+    Uniswap. You can learn more about this planet{' '}
+    <a href="https://uniswap.org/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
+message['White'] = (
+  <span>
+    APWine. You can learn more about this planet{' '}
+    <a href="https://www.apwine.fi/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
 
 export function MoveShipDialog(props) {
   const stepsMissing = props.stepsNeeded > props.stepsAvailable;
@@ -142,10 +177,13 @@ export function MoveShipDialog(props) {
             )}
             <Box sx={{ height: 10 }}></Box>
             <div>
-              This is planet {message[props.planet?.category]}. 
-              <br/><br/>You need {props.stepsNeeded} steps to get there. 
-              <br/>Are you sure you want to move your ship over that distance?
-              {/* Distance: {props.distance} ,  */}              
+              This is planet {message[props.planet?.category]}.
+              <br />
+              <br />
+              You need {props.stepsNeeded} steps to get there.
+              <br />
+              Are you sure you want to move your ship over that distance?
+              {/* Distance: {props.distance} ,  */}
             </div>
           </DialogContentText>
         </DialogContent>
@@ -159,7 +197,7 @@ export function MoveShipDialog(props) {
             color="secondary"
             variant="outlined"
             autoFocus>
-            Yes, let's fly
+            Yes, let&apos;s fly
           </Button>
         </DialogActions>
       </Dialog>
