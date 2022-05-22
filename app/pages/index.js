@@ -120,7 +120,7 @@ export default function Home() {
           </ol>
           <Typography variant="body1" gutterBottom>
             <em>
-              Note: requires 0.01 ETH / 0.01 MATIC to register (in order to mint
+              Note: requires 0.01 MATIC / ROSE / ETH to register (in order to mint
               the starship NFT).
             </em>
           </Typography>
