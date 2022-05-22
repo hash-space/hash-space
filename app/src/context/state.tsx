@@ -94,11 +94,11 @@ export function usePlayerContract() {
 
   const playerRegister = useCallback(() => {
     authContext.addTx(
-      uploadIPFS().then((metadata) =>
-        playersContract.registerProfile(metadata.ipnft, {
+      uploadIPFS().then((metadata) => {
+        return playersContract.registerProfile(metadata.url, {
           value: ethers.utils.parseEther('0.01'),
-        })
-      )
+        });
+      })
     );
   }, [playersContract, authContext]);
 
