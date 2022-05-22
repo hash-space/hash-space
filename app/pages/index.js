@@ -35,16 +35,25 @@ export default function Home() {
             <b>HASH SPACE: The DeFi Explorer</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <b><em>Learn about DeFi and earn yield while exploring different worlds.</em></b><br/><br/>
+            <b>
+              <em>
+                Learn about DeFi and earn yield while exploring different
+                worlds.
+              </em>
+            </b>
+            <br />
+            <br />
           </Typography>
           <Typography variant="h6" gutterBottom>
             How to play
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Visit different planets to pick up the yield they've generated since the last visitor. 
-            At each planet, you'll learn about the protocol used to generate that yield. Explore as
-            many planets as you can. You'll learn about Yearn Finance, MakerDAO, UniSwap, Aave and 
-            more!
+            Visit different planets to pick up the yield they&apos;ve generated
+            since the last visitor. The fuel for your ship comes from your
+            real-world steps. At each planet, you&apos;ll learn about the
+            protocol used to generate that yield. Explore as many planets as you
+            can. You&apos;ll learn about Yearn Finance, MakerDAO, UniSwap, Aave
+            and more!
           </Typography>
           {isDebug && (
             <div>
@@ -93,10 +102,27 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            PLAY
+            <b>PLAY</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <em>Currently available on Polygon Mumbai, Oasis Emerald Testnet and Arbitrum Nitro.</em>
+            Explore different DeFi galaxies by connecting to different chains:
+          </Typography>
+          <ol>
+            <li>
+              <b>The Polygon Planetary System</b> (on Polygon Mumbai)
+            </li>
+            <li>
+              <b>The Oasis Constellation</b> (on Oasis Emerald Testnet)
+            </li>
+            <li>
+              <b>The Arbitrum Nitro Nebula</b> (on Arbitrum Nitro Devnet)
+            </li>
+          </ol>
+          <Typography variant="body1" gutterBottom>
+            <em>
+              Note: requires 0.01 ETH / 0.01 MATIC to register (in order to mint
+              the starship NFT).
+            </em>
           </Typography>
           <div>
             {!playerContract.playerState.isSignedUp && (
@@ -108,40 +134,55 @@ export default function Home() {
               </Button>
             )}
             {playerContract.playerState.isSignedUp && (
-              <ButtonGroup size="large" aria-label="large button group">
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  onClick={() => {
-                    const url = new URL('/api/auth', getCallbackUrl());
-                    url.searchParams.set(
-                      'lastSync',
-                      playerContract.playerState.lastQueried
-                    );
-                    url.searchParams.set('redirectUrl', location.href);
-                    location.href = url.href;
-                  }}>
-                  Sync your steps
-                </Button>
-                <Link
-                  href={{
-                    pathname: '/game',
-                  }}>
-                  <Button color="secondary" variant="outlined">
-                    Go to game
+              <>
+                <ButtonGroup size="large" aria-label="large button group">
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() => {
+                      const url = new URL('/api/auth', getCallbackUrl());
+                      url.searchParams.set(
+                        'lastSync',
+                        playerContract.playerState.lastQueried
+                      );
+                      url.searchParams.set('redirectUrl', location.href);
+                      location.href = url.href;
+                    }}>
+                    Sync your steps
                   </Button>
-                </Link>
-              </ButtonGroup>
+                  <Link
+                    href={{
+                      pathname: '/game',
+                    }}>
+                    <Button color="secondary" variant="outlined">
+                      Go to game
+                    </Button>
+                  </Link>
+                </ButtonGroup>
+                <Typography variant="body1" gutterBottom>
+                  <br />
+                  In order to sync your steps:
+                </Typography>
+                <ol>
+                  <li>
+                    Download the google fit app{' '}
+                    <a href="http://onelink.to/yrjrzp">here (link)</a>
+                  </li>
+                  <li>Grant permissions to pull your step data</li>
+                  <li>Sync your steps into the game</li>
+                </ol>
+              </>
             )}
           </div>
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            NFT Collection / OpenSea
+            <b>NFT Collection / OpenSea</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            You'll receive a starship NFT on registration. View the full collection and trade starships on the following networks:
+            You&apos;ll receive a starship NFT on registration. View the full
+            collection and trade starships on the following networks:
           </Typography>
           <div>
             <ButtonGroup size="large" aria-label="large button group">
@@ -160,7 +201,7 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            Subscribe to our EPNS Channel
+            <b>Subscribe to our EPNS Channel</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
             Keep up-to-date with the latest events across your chosen universes.

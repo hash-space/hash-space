@@ -19,6 +19,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { calcDistance, distanceToSteps } from '../src/helper/distance';
 import EventEmitter from 'events';
+// import { json } from 'stream/consumers';
 
 export default function Game() {
   const size = useWindowSize();
@@ -88,6 +89,7 @@ export default function Game() {
         confirmMove={confirmMove}
         handleClose={handleClose}
         stepsAvailable={playerContract.playerState.stepsAvailable}
+        planet={payload?.planet}
       />
       <div
         style={{
@@ -116,6 +118,71 @@ export default function Game() {
   );
 }
 
+const message = {};
+message['Blue'] = (
+  <span>
+    AAVE. The galaxy&apos;s biggest DeFi lending planet where users can
+    participate as depositors or borrowers.
+    <br />
+    Depositors provide liquidity to the market to earn a passive income, while
+    borrowers are able to borrow over and undercollateralized assets.
+    <br />
+    You can learn more about this planet{' '}
+    <a href="https://aave.com/">
+      <u>here</u>
+    </a>
+  </span>
+);
+message['Orange'] = (
+  <span>
+    Yearn. A yield farming planet where you can stake your cryptocurrency to
+    earn interest as passive income.
+    <br />
+    You can learn more about this planet{' '}
+    <a href="https://yearn.finance/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
+message['Green'] = (
+  <span>
+    MakerDAO. This planet is the galaxy&apos;s source of Dai, the leading
+    unbiased decentralized stablecoin.
+    <br />
+    You can learn more about this planet{' '}
+    <a href="https://makerdao.com/">
+      <u>here</u>
+    </a>
+  </span>
+);
+message['Pink'] = (
+  <span>
+    Uniswap. This planet is the place to swap, earn, and build on the leading
+    decentralized crypto trading protocol.
+    <br />
+    Here developers, traders, and liquidity providers participate together in a
+    financial marketplace that is open and accessible to all.
+    <br />
+    You can learn more about this planet{' '}
+    <a href="https://uniswap.org/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
+message['White'] = (
+  <span>
+    APWine. This planet is a leading yield derivatives marketplace.
+    <br />
+    Here you can tokenise and get your yield upfront, and hedge your risk on APY
+    volatility.
+    <br />
+    You can learn more about this planet{' '}
+    <a href="https://www.apwine.fi/">
+      <u>here</u>
+    </a>{' '}
+  </span>
+);
+
 export function MoveShipDialog(props) {
   const stepsMissing = props.stepsNeeded > props.stepsAvailable;
   return (
@@ -133,14 +200,19 @@ export function MoveShipDialog(props) {
             )}
             <Box sx={{ height: 10 }}></Box>
             <div>
-              Are you sure you want to move your ship over a distance of
-              Distance: {props.distance} , Steps: {props.stepsNeeded}
+              This is planet {message[props.planet?.category]}.
+              <br />
+              <br />
+              You need {props.stepsNeeded} steps to get there.
+              <br />
+              Are you sure you want to move your ship over that distance?
+              {/* Distance: {props.distance} ,  */}
             </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={props.handleClose} variant="text">
-            Close
+            No, stay here
           </Button>
           <Button
             disabled={stepsMissing}
@@ -148,7 +220,7 @@ export function MoveShipDialog(props) {
             color="secondary"
             variant="outlined"
             autoFocus>
-            Agree
+            Yes, let&apos;s fly
           </Button>
         </DialogActions>
       </Dialog>
