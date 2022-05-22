@@ -10,7 +10,7 @@ Hash Space is a DeFi product discovery game where players explore a galaxy of de
 
 - [About](#about)
 - [Install](#install)
-- [How It's Made](#how-it's-made)
+- [How It's Made](#how-its-made)
 - [How It Works](#how-it-works)
 - [Team and Context](#team-and-context)
 
