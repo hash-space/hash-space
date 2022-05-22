@@ -8,7 +8,7 @@
     "deploy": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:mumbai": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:emerald-test": "hardhat --network emerald_testnet deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
-    "start-node":"npx hardhat node"
+    "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.3",

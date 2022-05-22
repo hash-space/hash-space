@@ -4,6 +4,8 @@ import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
+import { uploadIPFS } from '../helper/uploadIPFS';
+import { useAuthContext } from '../context/auth';
 
 const _Context = React.createContext<IContextProps>(
   undefined as unknown as IContextProps
@@ -62,6 +64,7 @@ export const StateContext: React.FC<IProps> = (props) => {
 };
 
 export function usePlayerContract() {
+  const authContext = useAuthContext();
   const ethersAppContext = useEthersAppContext();
   const [playerState, setPlayerState] = useState<IPlayerState>({
     playerId: 0,
@@ -90,14 +93,20 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
-    playersContract.registerProfile();
-  }, [playersContract]);
+    authContext.addTx(
+      uploadIPFS().then((metadata) => {
+        return playersContract.registerProfile(metadata.url, {
+          value: ethers.utils.parseEther('0.01'),
+        });
+      })
+    );
+  }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
     (steps: number) => {
-      playersContract.syncSteps(steps);
+      authContext.addTx(playersContract.syncSteps(steps));
     },
-    [playersContract]
+    [playersContract, authContext]
   );
 
   const playerMoveShip = useCallback(
@@ -108,7 +117,9 @@ export function usePlayerContract() {
       shipId: number,
       worldId: number
     ) => {
-      playersContract.moveShip(x, y, planetId, shipId, worldId);
+      authContext.addTx(
+        playersContract.moveShip(x, y, planetId, shipId, worldId)
+      );
     },
     [playersContract]
   );

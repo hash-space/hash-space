@@ -34,6 +34,12 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
       gas: 4000000,
     },
+    arbitrum_nitro: {
+      chainId: 421612,
+      url: 'https://nitro-devnet.arbitrum.io/rpc',
+      accounts: [process.env.PRIVATE_KEY_ARBITRUM_NITRO],
+      gas: 4000000,
+    },
     emerald_mainnet: {
       chainId: 42262,
       url: 'https://emerald.oasis.dev',
