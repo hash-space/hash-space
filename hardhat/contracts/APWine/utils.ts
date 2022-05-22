@@ -56,13 +56,6 @@ export const getDate = async (sdk: APWineSDK) =>
 
 
 
-/**
- * 
- * @param block  the blocknumber corresponding to the 
- * 
- * @param provider 
- * @returns 
- */
 export const resetFork = async (block: number , provider : any) => {
         return await provider.send("hardhat_reset", [
             {

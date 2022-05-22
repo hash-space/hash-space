@@ -8,7 +8,9 @@ app/src/generated/*
 
 hardhat/artifacts*
 hardhat/deployments
-.deps/
+
 !.env.example
 
 **.DS_Store
+
+.deps
