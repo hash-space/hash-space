@@ -5,7 +5,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts();
   const starship = await deploy('Starship', {
     from: deployer,
-    gasLimit: 4000000,
+    gasLimit: 8000000,
+    args: ['0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101'], // polygon
+    log: true,
+  });
+  await deploy('StarToken', {
+    from: deployer,
+    gasLimit: 8000000,
     args: [],
     log: true,
   });
@@ -17,7 +23,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
 
-  await deploy('Players', {
+  const players = await deploy('Players', {
     from: deployer,
     gasLimit: 4000000,
     args: [],
@@ -26,9 +32,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   // link contracts
   const contractPlayers = await hre.ethers.getContract('Players');
+  const contractStartship = await hre.ethers.getContract('Starship');
   const txNft = await contractPlayers.setNftAddress(starship.address);
   const txWorld = await contractPlayers.setWorldAddress(world.address);
-  await Promise.all([txNft.wait(), txWorld.wait()]);
+  const txNftLink = await contractStartship.setPlayerContract(players.address);
+  await Promise.all([txNft.wait(), txWorld.wait(), txNftLink.wait()]);
 
   // define worldmap
   const contractWorld = await hre.ethers.getContract('WorldMapCreator');
@@ -48,7 +56,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const txPlanet11 = await contractWorld.manualCreatePlanet(1, 1050, 1600, 1);
   const txPlanet12 = await contractWorld.manualCreatePlanet(1, 1200, 2099, 2);
   const txPlanet13 = await contractWorld.manualCreatePlanet(1, 1280, 20, 3);
-  const txPlanet14  = await contractWorld.manualCreatePlanet(1, 1400, 400, 4);
+  const txPlanet14 = await contractWorld.manualCreatePlanet(1, 1400, 400, 4);
   const txPlanet15 = await contractWorld.manualCreatePlanet(1, 1550, 1200, 1);
   const txPlanet16 = await contractWorld.manualCreatePlanet(1, 1640, 1400, 2);
   const txPlanet17 = await contractWorld.manualCreatePlanet(1, 1700, 1600, 2);
@@ -57,14 +65,28 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const txPlanet20 = await contractWorld.manualCreatePlanet(1, 2000, 600, 3);
   const txPlanet21 = await contractWorld.manualCreatePlanet(1, 4000, 4000, 1);
 
-  await Promise.all([txPlanet1.wait(), txPlanet2.wait(), txPlanet3.wait(),
-                    txPlanet4.wait(), txPlanet5.wait(), txPlanet6.wait(),
-                    txPlanet7.wait(), txPlanet8.wait(), txPlanet9.wait(),
-                    txPlanet10.wait(), txPlanet11.wait(), txPlanet12.wait(),
-                    txPlanet13.wait(), txPlanet14.wait(), txPlanet15.wait(),
-                    txPlanet16.wait(), txPlanet17.wait(), txPlanet18.wait(),
-                    txPlanet19.wait(), txPlanet20.wait(), txPlanet21.wait(),
-                    ]);
-
+  await Promise.all([
+    txPlanet1.wait(),
+    txPlanet2.wait(),
+    txPlanet3.wait(),
+    txPlanet4.wait(),
+    txPlanet5.wait(),
+    txPlanet6.wait(),
+    txPlanet7.wait(),
+    txPlanet8.wait(),
+    txPlanet9.wait(),
+    txPlanet10.wait(),
+    txPlanet11.wait(),
+    txPlanet12.wait(),
+    txPlanet13.wait(),
+    txPlanet14.wait(),
+    txPlanet15.wait(),
+    txPlanet16.wait(),
+    txPlanet17.wait(),
+    txPlanet18.wait(),
+    txPlanet19.wait(),
+    txPlanet20.wait(),
+    txPlanet21.wait(),
+  ]);
 };
 module.exports.tags = ['Starship'];

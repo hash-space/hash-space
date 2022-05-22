@@ -1,12 +1,16 @@
+//SPDX-License-Identifier: Unlicense
+
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IWorld.sol";
 
-
-contract Players {
+contract Players is Ownable {
     using Counters for Counters.Counter;
+
+    uint256 constant public NFTPRICE = 0.01 ether;
 
     struct PersonProfile {
             uint256 playerId;
@@ -45,7 +49,7 @@ contract Players {
         Creates the user profile of the user and mints a starship nft
         and forwards $$ to the treasury
      */
-    function registerProfile() public
+    function registerProfile(string memory _tokenURI) public payable
      {
         PersonProfile storage player = players[msg.sender];
         require(player.playerId == 0, "you already signed up");
@@ -56,8 +60,9 @@ contract Players {
         player.stepsAvailable = 0;
         player.totalStepsTaken = 0;
 
-        // buying the nft TODO: send money to treasury
-        uint256 shipId = nftContract.mint(msg.sender);
+        // buying the nft TODO: send money to treasury. Implemented in withdraw function
+        require(msg.value == NFTPRICE, "Not enought/too much ether sent");
+        uint256 shipId = nftContract.mint(msg.sender, _tokenURI);
         (uint startingX, uint startingY) = determineStartingPosition();
         nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
@@ -87,7 +92,7 @@ contract Players {
         uint travelX = get_abs_diff(xCoordShip, x);
         uint travelY = get_abs_diff(yCoordShip, y);
         uint travelDistance = uint(sqrt((travelX * travelX) + (travelY * travelY)));
-        
+
         // check enough steps available
         require(players[msg.sender].stepsAvailable > travelDistance * 10, "Not enough steps available to move there");
 
@@ -122,22 +127,27 @@ contract Players {
         }
     }
 
+    function withdraw() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No ether left to withdraw");
+
+        (bool success, ) = payable(owner()).call{value: balance}("");
+
+        require(success, "Transfer failed.");
+    }
+
     function determineStartingPosition() public returns(uint x, uint y) {
 
         indexStartingPosition.increment();
         uint positionIndex = indexStartingPosition.current();
 
-        uint startingX = positionIndex % 10;
-        uint startingY = (positionIndex / 10) + 1;
+        uint startingX = positionIndex * 42;
+        uint startingY = 16;
 
-        if (positionIndex == 100) {
+        if (positionIndex == 46) {
             indexStartingPosition.reset();
         }
 
         return (startingX, startingY);
-    }
-
-    function incrementPositionCounter() public {
-        indexStartingPosition.increment();
     }
 }
