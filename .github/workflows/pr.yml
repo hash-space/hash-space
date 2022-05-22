@@ -17,21 +17,21 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
 
       - run: npm -v
 
-      - run: npm install
-        working-directory: ./hardhat
+      # - run: npm install
+      #   working-directory: ./hardhat
 
-      - run: npm run test
-        working-directory: ./hardhat
+      # - run: npm run test
+      #   working-directory: ./hardhat
 
-      - run: npm run deploy:mumbai
-        working-directory: ./hardhat
+      # - run: npm run deploy:mumbai
+      #   working-directory: ./hardhat
 
-      - run: npm run deploy:emerald-test
-        working-directory: ./hardhat
+      # - run: npm run deploy:emerald-test
+      #   working-directory: ./hardhat
 
       - run: |
           npm install
