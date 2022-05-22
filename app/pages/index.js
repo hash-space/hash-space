@@ -102,12 +102,20 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            PLAY
+            <b>PLAY</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
+            Explore different DeFi galaxies by connecting to different chains:
+          </Typography>
+          <ol>
+            <li><b>The Polygon Planetary System</b> (on Polygon Mumbai)</li>
+            <li><b>The Oasis Constellation</b> (on Oasis Emerald Testnet)</li>
+            <li><b>The Arbitrum Nitro Nebula</b> (on Arbitrum Nitro Devnet)</li>
+          </ol>
+          <Typography variant="body1" gutterBottom>
             <em>
-              Currently available on Polygon Mumbai, Oasis Emerald Testnet and
-              Arbitrum Rinkeby.
+               Note: requires 0.01 ETH / 0.01 MATIC to register
+              (in order to mint the starship NFT). 
             </em>
           </Typography>
           <div>
@@ -120,6 +128,7 @@ export default function Home() {
               </Button>
             )}
             {playerContract.playerState.isSignedUp && (
+              <>
               <ButtonGroup size="large" aria-label="large button group">
                 <Button
                   color="secondary"
@@ -143,14 +152,23 @@ export default function Home() {
                     Go to game
                   </Button>
                 </Link>
-              </ButtonGroup>
-            )}
+              </ButtonGroup> 
+                <Typography variant="body1" gutterBottom>
+                  <br/>In order to sync your steps:
+                </Typography>
+                <ol>
+                      <li>Download the google fit app <a href="http://onelink.to/yrjrzp">here (link)</a></li>
+                      <li>Grant permissions to pull your step data</li>
+                      <li>Sync your steps into the game</li>
+                </ol>
+                </>
+              )}
           </div>
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            NFT Collection / OpenSea
+            <b>NFT Collection / OpenSea</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
             You&apos;ll receive a starship NFT on registration. View the full
@@ -173,7 +191,7 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            Subscribe to our EPNS Channel
+            <b>Subscribe to our EPNS Channel</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
             Keep up-to-date with the latest events across your chosen universes.
