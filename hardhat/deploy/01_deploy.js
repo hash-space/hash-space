@@ -22,7 +22,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     args: [
       '0x41b66dd93b03e89D29114a7613A6f9f0d4F40178',
       '0xD789488E5ee48Ef8b0719843672Bc04c213b648c',
-      '0x86c428b9a0c43d78bee4b6bea1e7d149b116e09c',
+      '0x45cAF1aae42BA5565EC92362896cc8e0d55a2126',
       10000
     ],
     log: true,
@@ -45,7 +45,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   // define worldmap
   const contractWorld = await hre.ethers.getContract('WorldMapCreator');
-  const txCreateWorld = await contractWorld.defineWorldMap(1, 5000, 5000);
+  // const txCreateWorld = await contractWorld.defineWorldMap(1, 5000, 5000);
+  const txCreateWorld = await contractWorld.defineWorldMap(5000, 5000);
+
+
   await txCreateWorld.wait();
   const txPlanet1 = await contractWorld.manualCreatePlanet(1, 100, 100, 1);
   const txPlanet2 = await contractWorld.manualCreatePlanet(1, 200, 200, 2);

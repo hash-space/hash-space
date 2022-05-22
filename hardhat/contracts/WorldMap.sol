@@ -40,7 +40,7 @@ contract WorldMapCreator is IWorld, UsingTellor {
 
     function defineWorldMap(uint256 _length, uint256 _breadth) public {
 
-        _worldIndex = retrieveRandomNumber(block.timestamp);
+        uint256 _worldIndex = retrieveRandomNumber(block.timestamp);
 
         require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
 
