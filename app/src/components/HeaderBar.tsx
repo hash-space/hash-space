@@ -6,6 +6,7 @@ import {
   Button,
   Chip,
   Avatar,
+  LinearProgress,
   Box,
 } from '@mui/material';
 import { useEthersAppContext } from 'eth-hooks/context';
@@ -20,6 +21,7 @@ export default function HeadBar() {
 
   return (
     <AppBar position="static">
+      {authContext.isLoading && <LinearProgress />}
       <Toolbar>
         <Typography
           variant="h6"
@@ -65,7 +67,7 @@ export default function HeadBar() {
             <Button
               color="secondary"
               variant="outlined"
-              onClick={authContext.login}>
+              onClick={() => authContext.login()}>
               Connect Wallet
             </Button>
           </div>
