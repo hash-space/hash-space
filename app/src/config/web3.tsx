@@ -11,7 +11,11 @@ if (typeof window !== 'undefined') {
   hostname = window?.location?.hostname ?? 'localhost';
 }
 
-export type TNetworkNames = 'localhost' | 'mumbai' | 'emerald_testnet';
+export type TNetworkNames =
+  | 'localhost'
+  | 'mumbai'
+  | 'emerald_testnet'
+  | 'arbitrum_nitro';
 
 export const NETWORKS: Readonly<Record<TNetworkNames, TNetworkInfo>> = {
   localhost: {
@@ -32,6 +36,13 @@ export const NETWORKS: Readonly<Record<TNetworkNames, TNetworkInfo>> = {
     url: 'https://rpc-mumbai.maticvigil.com',
     faucet: 'https://faucet.matic.network/',
     blockExplorer: 'https://mumbai-explorer.matic.today/',
+  },
+  arbitrum_nitro: {
+    name: 'arbitrum_nitro',
+    color: '#7003DD',
+    chainId: 421612,
+    url: `https://nitro-devnet.arbitrum.io/rpc`,
+    blockExplorer: 'https://nitro-devnet-explorer.arbitrum.io',
   },
   emerald_testnet: {
     url: 'https://testnet.emerald.oasis.dev',
