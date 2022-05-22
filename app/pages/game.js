@@ -121,7 +121,13 @@ export default function Game() {
 const message = {};
 message['Blue'] = (
   <span>
-    AAVE. You can learn more about this planet{' '}
+    AAVE. The galaxy&apos;s biggest DeFi lending planet where users can
+    participate as depositors or borrowers.
+    <br />
+    Depositors provide liquidity to the market to earn a passive income, while
+    borrowers are able to borrow over and undercollateralized assets.
+    <br />
+    You can learn more about this planet{' '}
     <a href="https://aave.com/">
       <u>here</u>
     </a>
@@ -129,7 +135,10 @@ message['Blue'] = (
 );
 message['Orange'] = (
   <span>
-    Yearn. You can learn more about this planet{' '}
+    Yearn. A yield farming planet where you can stake your cryptocurrency to
+    earn interest as passive income.
+    <br />
+    You can learn more about this planet{' '}
     <a href="https://yearn.finance/">
       <u>here</u>
     </a>{' '}
@@ -137,7 +146,10 @@ message['Orange'] = (
 );
 message['Green'] = (
   <span>
-    MakerDAO. You can learn more about this planet{' '}
+    MakerDAO. This planet is the galaxy&apos;s source of Dai, the leading
+    unbiased decentralized stablecoin.
+    <br />
+    You can learn more about this planet{' '}
     <a href="https://makerdao.com/">
       <u>here</u>
     </a>
@@ -145,7 +157,13 @@ message['Green'] = (
 );
 message['Pink'] = (
   <span>
-    Uniswap. You can learn more about this planet{' '}
+    Uniswap. This planet is the place to swap, earn, and build on the leading
+    decentralized crypto trading protocol.
+    <br />
+    Here developers, traders, and liquidity providers participate together in a
+    financial marketplace that is open and accessible to all.
+    <br />
+    You can learn more about this planet{' '}
     <a href="https://uniswap.org/">
       <u>here</u>
     </a>{' '}
@@ -153,7 +171,12 @@ message['Pink'] = (
 );
 message['White'] = (
   <span>
-    APWine. You can learn more about this planet{' '}
+    APWine. This planet is a leading yield derivatives marketplace.
+    <br />
+    Here you can tokenise and get your yield upfront, and hedge your risk on APY
+    volatility.
+    <br />
+    You can learn more about this planet{' '}
     <a href="https://www.apwine.fi/">
       <u>here</u>
     </a>{' '}
