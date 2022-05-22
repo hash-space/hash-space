@@ -105,7 +105,7 @@ We make heavy use of github actions to automate deployments of smart contracts t
 
 ## Team and Context
 This project was a collaborative effort between:
-- Manuel 
+- Manuel Villing
 - Chris Lovejoy
 - Dhruv Malik
 - Ali Rizvi
