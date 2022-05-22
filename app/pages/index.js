@@ -49,7 +49,8 @@ export default function Home() {
           </Typography>
           <Typography variant="body1" gutterBottom>
             Visit different planets to pick up the yield they&apos;ve generated
-            since the last visitor. At each planet, you&apos;ll learn about the
+            since the last visitor. The fuel for your ship comes from your real-world 
+            steps. At each planet, you&apos;ll learn about the
             protocol used to generate that yield. Explore as many planets as you
             can. You&apos;ll learn about Yearn Finance, MakerDAO, UniSwap, Aave
             and more!
