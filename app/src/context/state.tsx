@@ -92,14 +92,16 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
-    authContext.addTx(playersContract.registerProfile());
-  }, [playersContract]);
+    authContext.addTx(playersContract.registerProfile('',{
+      value: ethers.utils.parseEther('0.01'),
+    }));
+  }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
     (steps: number) => {
       authContext.addTx(playersContract.syncSteps(steps));
     },
-    [playersContract]
+    [playersContract, authContext]
   );
 
   const playerMoveShip = useCallback(

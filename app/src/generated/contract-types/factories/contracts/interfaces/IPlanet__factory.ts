@@ -41,6 +41,11 @@ const _abi = [
         name: "player",
         type: "address",
       },
+      {
+        internalType: "string",
+        name: "_tokenURI",
+        type: "string",
+      },
     ],
     name: "mint",
     outputs: [

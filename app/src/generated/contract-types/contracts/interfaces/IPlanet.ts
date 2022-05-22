@@ -25,7 +25,7 @@ import type {
 export interface IPlanetInterface extends utils.Interface {
   functions: {
     "getLocation(uint256)": FunctionFragment;
-    "mint(address)": FunctionFragment;
+    "mint(address,string)": FunctionFragment;
     "setLocation(uint256,address,uint256,uint256)": FunctionFragment;
   };
 
@@ -37,7 +37,10 @@ export interface IPlanetInterface extends utils.Interface {
     functionFragment: "getLocation",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "mint", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "mint",
+    values: [string, string]
+  ): string;
   encodeFunctionData(
     functionFragment: "setLocation",
     values: [BigNumberish, string, BigNumberish, BigNumberish]
@@ -90,6 +93,7 @@ export interface IPlanet extends BaseContract {
 
     mint(
       player: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -109,6 +113,7 @@ export interface IPlanet extends BaseContract {
 
   mint(
     player: string,
+    _tokenURI: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -126,7 +131,11 @@ export interface IPlanet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
 
-    mint(player: string, overrides?: CallOverrides): Promise<BigNumber>;
+    mint(
+      player: string,
+      _tokenURI: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     setLocation(
       _tokenId: BigNumberish,
@@ -147,6 +156,7 @@ export interface IPlanet extends BaseContract {
 
     mint(
       player: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -167,6 +177,7 @@ export interface IPlanet extends BaseContract {
 
     mint(
       player: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
