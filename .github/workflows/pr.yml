@@ -17,12 +17,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
-          cache: 'npm'
+          node-version: 15
 
-        name: List the state of node modules
-        continue-on-error: true
-        run: npm list
+      - run: rm -rf ./app/src/generated
+      - run: mkdir ./app/src/generated
 
       - run: npm install
         working-directory: ./hardhat
