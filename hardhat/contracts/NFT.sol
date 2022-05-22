@@ -52,11 +52,11 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
 
     function tokenURI(uint256 tokenId) public view override(ERC721Tradable, ERC721URIStorage) returns (string memory)
     {
-        super.tokenURI(tokenId);
+        return super.tokenURI(tokenId);
     }
 
     function isApprovedForAll(address owner, address operator) override(ERC721, ERC721Tradable) public view returns (bool){
-        super.isApprovedForAll(owner, operator);
+        return super.isApprovedForAll(owner, operator);
     }
 
     function baseTokenURI() override(ERC721Tradable) public pure returns (string memory){

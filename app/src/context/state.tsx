@@ -4,6 +4,7 @@ import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
+import { uploadIPFS } from '../helper/uploadIPFS';
 import { useAuthContext } from '../context/auth';
 
 const _Context = React.createContext<IContextProps>(
@@ -92,9 +93,13 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
-    authContext.addTx(playersContract.registerProfile('',{
-      value: ethers.utils.parseEther('0.01'),
-    }));
+    authContext.addTx(
+      uploadIPFS().then((metadata) => {
+        return playersContract.registerProfile(metadata.url, {
+          value: ethers.utils.parseEther('0.01'),
+        });
+      })
+    );
   }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
