@@ -31,6 +31,7 @@
     "query-string": "^7.1.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "usingtellor": "^4.0.6",
     "web3modal": "^1.9.7"
   },
   "devDependencies": {
