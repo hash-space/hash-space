@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IWorld.sol";
+import "hardhat/console.sol";
 
 contract Players is Ownable {
     using Counters for Counters.Counter;
@@ -27,6 +28,8 @@ contract Players is Ownable {
 
     IPlanet nftContract;
     IWorld worldContract;
+
+    event TreasuryFunded(uint amountFunded);
 
     constructor () {
     }
@@ -83,7 +86,7 @@ contract Players is Ownable {
         {_planetId} the planet you want to reach
         {_shipId} the ship you are moving
      */
-    function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public {
+    function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public payable {
 
         // current location of the ship
         (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
@@ -102,12 +105,31 @@ contract Players is Ownable {
         // update ship position
         nftContract.setLocation(_shipId, msg.sender, x, y);
 
-        // check if we hit the jackpot
+        // check if we landed on a planet
         (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
         if (xCoordShip == xCoordPlanet && yCoordShip == yCoordPlanet) {
-            // you hit the planet
-            // TODO: forward to vault contract
+
+            console.log("Starship has landed on a planet");
+
+            // Check whether any yield available
+            uint balance = address(this).balance;
+            uint reward = 10000;
+            // TODO: consider moving reward specification into move ship function call
+
+            // TO DO: add randomness to whether somebody gets the reward
+
+            require(balance > reward, "There's no remaining token to withdraw.");
+
+            // User withdraws tokens
+            (bool sent,) = msg.sender.call{value: reward}("");
+            require(sent, "Failed to withdraw token");
+
+            // TODO: update amount for withdrawal away from hard-coded amount
         }
+    }
+
+    function fundTreasury() public payable {
+        emit TreasuryFunded(msg.value);
     }
 
     function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
@@ -127,15 +149,6 @@ contract Players is Ownable {
         }
     }
 
-    function withdraw() external onlyOwner {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "No ether left to withdraw");
-
-        (bool success, ) = payable(owner()).call{value: balance}("");
-
-        require(success, "Transfer failed.");
-    }
-
     function determineStartingPosition() public returns(uint x, uint y) {
 
         indexStartingPosition.increment();
@@ -150,4 +163,10 @@ contract Players is Ownable {
 
         return (startingX, startingY);
     }
+
+    function checkContractBalance() public view returns (uint) {
+        uint contractBalance = address(this).balance;
+        return contractBalance;
+    }
+
 }

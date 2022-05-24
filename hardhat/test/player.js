@@ -60,6 +60,21 @@ describe('Player', function () {
     expect(stepsResult.stepsAvailable).to.eq(9100);
   });
 
+  it('possible to fund the treasury', async function () {
+    // Should be 0.01 ether in treasury already from player registration
+    expect(await player.checkContractBalance()).be.equal(ethers.utils.parseEther('0.01'));
+    await player.fundTreasury({value: ethers.utils.parseEther('0.1')});
+    
+    // assert
+    expect(await player.checkContractBalance()).be.equal(ethers.utils.parseEther('0.11'));
+  });
+
+  it('funding the treasury emits an event', async function () {
+    await expect(player.fundTreasury({value: ethers.utils.parseEther('0.1')}))
+      .to.emit(player, 'TreasuryFunded')
+      .withArgs(ethers.utils.parseEther('0.1'));
+  });
+
   it('user can move ship', async function () {
     // arrange
     const newX = 400;
@@ -86,6 +101,7 @@ describe('Player', function () {
     expect(stepsResult.stepsAvailable).to.eq(3480);
     // TODO: consider amending to account for rounding error
   });
+
 
   it('user can list ships', async function () {
     const [owner, addr1] = await ethers.getSigners();
