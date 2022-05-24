@@ -62,15 +62,19 @@ describe('Player', function () {
 
   it('possible to fund the treasury', async function () {
     // Should be 0.01 ether in treasury already from player registration
-    expect(await player.checkContractBalance()).be.equal(ethers.utils.parseEther('0.01'));
-    await player.fundTreasury({value: ethers.utils.parseEther('0.1')});
-    
+    expect(await player.checkContractBalance()).be.equal(
+      ethers.utils.parseEther('0.01')
+    );
+    await player.fundTreasury({ value: ethers.utils.parseEther('0.1') });
+
     // assert
-    expect(await player.checkContractBalance()).be.equal(ethers.utils.parseEther('0.11'));
+    expect(await player.checkContractBalance()).be.equal(
+      ethers.utils.parseEther('0.11')
+    );
   });
 
   it('funding the treasury emits an event', async function () {
-    await expect(player.fundTreasury({value: ethers.utils.parseEther('0.1')}))
+    await expect(player.fundTreasury({ value: ethers.utils.parseEther('0.1') }))
       .to.emit(player, 'TreasuryFunded')
       .withArgs(ethers.utils.parseEther('0.1'));
   });
@@ -102,36 +106,31 @@ describe('Player', function () {
     // TODO: consider amending to account for rounding error
   });
 
-  it('moving ship to planet gets reward', async function() {
+  it('moving ship to planet gets reward', async function () {
     // arrange
     const newX = 410;
     const newY = 460;
-
-    // TO DO: get balance of owner
     const [owner] = await ethers.getSigners();
-
-    // TODO: modify below to assert correct balance
-    // expect(await starship.balanceOf(owner.address)).be.equal(1); // this is the number of ships they have!
-    // const [alice, bob, charlie, david] = new MockProvider().getWallets();
-
+    await world.manualCreatePlanet(worldId, newX, newY, 2);
+    const planetId = await world.planetIndex();
+    const shipId = await starShip.tokenId();
+    const initBalance = await owner.getBalance();
 
     // act
-    await world.manualCreatePlanet(worldId, newX, newY, 2);
-    const planetId = await world.planetIndex(); 
-    const shipId = await starShip.tokenId();
     await player.moveShip(newX, newY, planetId, shipId, worldId);
-  
+
+    const newBalance = await owner.getBalance();
+    const diff =
+      ethers.utils.formatUnits(newBalance) -
+      ethers.utils.formatUnits(initBalance);
+
     // assert
-    // TODO: check that wallet balance has gone up
-
-
+    expect(diff).to.be.greaterThan(0.004);
   });
 
-  it('if planet has no funds, user gets no reward', async function() {
+  it('if planet has no funds, user gets no reward', async function () {
     // TODO: either drain planet funds or initiate new world/planet with no funds
-
   });
-
 
   it('user can list ships', async function () {
     const [owner, addr1] = await ethers.getSigners();

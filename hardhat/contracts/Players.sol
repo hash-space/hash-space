@@ -108,26 +108,25 @@ contract Players is Ownable {
         // check if we landed on a planet
         (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
 
-        // TODO: review conditional function, as doesn't appear to execute properly
-        // if (xCoordShip == xCoordPlanet && yCoordShip == yCoordPlanet) {
+        if (x == xCoordPlanet && y == yCoordPlanet) {
 
         console.log("Starship has landed on a planet");
 
         // Check whether any yield available
         uint balance = address(this).balance;
-        uint reward = 0.01 ether;
+        uint reward = 0.005 ether;
         // TODO: consider moving reward specification into move ship function call
 
         // TODO: add randomness to whether somebody gets the reward
 
-        require(balance > reward, "There's no remaining token to withdraw.");
-
-        // User withdraws tokens
-        (bool sent,) = msg.sender.call{value: reward}("");
-        require(sent, "Failed to withdraw token");
+        if (balance > reward) {
+            // User withdraws tokens
+            (bool sent,) = msg.sender.call{value: reward}("");
+            require(sent, "Failed to withdraw token");
+        }
 
         // TODO: update amount for withdrawal away from hard-coded amount
-        // }
+        }
     }
 
     function fundTreasury() public payable {
