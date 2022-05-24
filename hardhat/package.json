@@ -23,7 +23,9 @@
     "hardhat-deploy-ethers": "^0.3.0-beta.13",
     "shx": "^0.3.4",
     "typechain": "^8.0.0",
-    "@nomiclabs/hardhat-ethers": "^2.0.6"
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@apwine/sdk": "^0.2.2",
+    "cmd-ts": "^0.10.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0"
