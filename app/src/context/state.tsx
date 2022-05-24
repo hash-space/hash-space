@@ -20,6 +20,7 @@ interface IPlayerState {
   playerId: number;
   stepsAvailable: number;
   isSignedUp: boolean;
+  amountEarned: string;
 }
 
 interface IShip {
@@ -71,6 +72,7 @@ export function usePlayerContract() {
     isSignedUp: false,
     lastQueried: 0,
     stepsAvailable: 0,
+    amountEarned: '0.00',
   });
 
   const playersContract = useAppContracts('Players', ethersAppContext.chainId);
@@ -83,11 +85,13 @@ export function usePlayerContract() {
 
   useEffect(() => {
     if (playerObject) {
+      console.log(playerObject);
       setPlayerState({
         lastQueried: parseNumber(playerObject[2]),
         playerId: parseNumber(playerObject[0]),
         stepsAvailable: parseNumber(playerObject[3]),
         isSignedUp: parseNumber(playerObject[0]) > 0,
+        amountEarned: ethers.utils.formatEther(playerObject[5]),
       });
     }
   }, [playerObject]);

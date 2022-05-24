@@ -44,6 +44,12 @@ export default function HeadBar() {
         {ethersAppContext.active && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Chip
+              label={`${playerContract.playerState.amountEarned} earned`}
+              variant="outlined"
+              color="primary"
+            />
+            <Box sx={{ width: 8 }}></Box>
+            <Chip
               avatar={
                 <Avatar style={{ width: '50px', borderRadius: '16px' }}>
                   {playerContract.playerState.stepsAvailable}

@@ -120,12 +120,16 @@ describe('Player', function () {
     await player.moveShip(newX, newY, planetId, shipId, worldId);
 
     const newBalance = await owner.getBalance();
+    const stepsResult = await player.players(owner.address);
     const diff =
       ethers.utils.formatUnits(newBalance) -
       ethers.utils.formatUnits(initBalance);
 
     // assert
     expect(diff).to.be.greaterThan(0.004);
+    expect(
+      ethers.utils.formatEther(ethers.BigNumber.from(stepsResult.amountEarned))
+    ).to.eq('0.005');
   });
 
   it('if planet has no funds, user gets no reward', async function () {

@@ -19,6 +19,7 @@ contract Players is Ownable {
             uint256 lastQueried;
             uint256 stepsAvailable;
             uint256 totalStepsTaken;
+            uint256 amountEarned;
     }
 
     Counters.Counter indexPlayerIds;
@@ -62,6 +63,7 @@ contract Players is Ownable {
         player.lastQueried = block.timestamp - (60*60*12); // give the user 12 hour window, so that he does not sign up with zero steps
         player.stepsAvailable = 0;
         player.totalStepsTaken = 0;
+        player.amountEarned = 0;
 
         // buying the nft TODO: send money to treasury. Implemented in withdraw function
         require(msg.value == NFTPRICE, "Not enought/too much ether sent");
@@ -109,9 +111,12 @@ contract Players is Ownable {
         (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
 
         if (x == xCoordPlanet && y == yCoordPlanet) {
+            payout();
+            // TODO: update amount for withdrawal away from hard-coded amount
+        }
+    }
 
-        console.log("Starship has landed on a planet");
-
+    function payout() internal {
         // Check whether any yield available
         uint balance = address(this).balance;
         uint reward = 0.005 ether;
@@ -123,9 +128,7 @@ contract Players is Ownable {
             // User withdraws tokens
             (bool sent,) = msg.sender.call{value: reward}("");
             require(sent, "Failed to withdraw token");
-        }
-
-        // TODO: update amount for withdrawal away from hard-coded amount
+            players[msg.sender].amountEarned += reward;
         }
     }
 
