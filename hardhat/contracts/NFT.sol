@@ -8,19 +8,17 @@ import "./interfaces/IPlanet.sol";
 import "./ERC721Tradable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
+contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet   {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
-
     struct ShipData {
             uint x;
             uint y;
             address owner;
             uint id;
     }
-
     address public playerContract;
-
+    // tellor contract address needed for polygon testnet deployment only  :
     // mapping tokenId to shipData
     mapping (uint256 => ShipData) shipData;
 
@@ -28,8 +26,7 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
         require (msg.sender == playerContract);
         _;
     }
-
-    constructor(address _proxyRegistryAddress) ERC721Tradable("StarShip", "SHIP", _proxyRegistryAddress) {}
+    constructor(address _proxyRegistryAddress) ERC721Tradable("StarShip", "SHIP", _proxyRegistryAddress)  {    }
 
     function getLocation(
         uint256 _tokenId

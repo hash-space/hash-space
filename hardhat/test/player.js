@@ -15,7 +15,7 @@ describe('Player', function () {
   it('should deploy starShip', async function () {
     const ShipContract = await ethers.getContractFactory('Starship');
     const PlayerContract = await ethers.getContractFactory('Players');
-
+    const Oracle = await ethers.getContractFactory('UsingTellor');
     player = await PlayerContract.deploy();
 
     starShip = await ShipContract.deploy(argsStarship);
@@ -243,4 +243,25 @@ describe('Player', function () {
     const counter = await player5.indexStartingPosition();
     expect(counter).to.eq(5);
   });
+
+  it.only('should be able to teleport to other position using oracle', async function() {
+    let warp;
+    let warpNFT;
+    let warpId;
+
+    const PlayerContract = await ethers.getContractFactory('Players');
+    const StarshipContract = await ethers.getContractFactory('Starship');
+    PlayerContract.connect(david);
+    StarshipContract.connect(david);
+    warp = PlayerContract.deploy();
+    warpNFT = StarshipContract.deploy();
+    warpId = await warpNFT.tokenId();
+    console.log('initial position', warpNFT.getLocation(warpId)[0],warpNFT.getLocation(warpId)[1]);
+    let [newPosX , newPosY] = await warp.Teleport(warpId);
+    console.log('final position ',newPosX,newPosY);
+  
+  
+  });
+
+  
 });

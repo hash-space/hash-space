@@ -4,10 +4,19 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./interfaces/IPlanet.sol";
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IWorld.sol";
 
-contract Players is Ownable {
+// for generating the tellor RNG 
+// credits https://github.com/nkrishang/Tellor_RNG.
+import "./oracle/contracts/UsingTellor.sol"; 
+import "./interfaces/IAutopay.sol";
+
+
+contract Players is UsingTellor ,Ownable {
     using Counters for Counters.Counter;
 
     uint256 constant public NFTPRICE = 0.01 ether;
@@ -27,8 +36,31 @@ contract Players is Ownable {
 
     IPlanet nftContract;
     IWorld worldContract;
+    IAutopay public autopay;
+    IERC20 public tellorToken;
+    // amount for paying oracle per query ( but before need to insure the  tokens are minted).
+    uint256 public tipAmount;
 
-    constructor () {
+    address payable _Tellor;
+
+      /**
+    address needed for the tellor contract on polygon , check out here: https://docs.tellor.io/tellor/integration/reference  .
+    address payable _tellor //oracle address
+    address _autopay ,  
+    address _tellorToken
+    ,uint256 _tipAmount
+    
+    tellorToken address are : 
+    polygon mainnet: 0xE3322702BEdaaEd36CdDAb233360B939775ae5f1
+mumbai: 0x45cAF1aae42BA5565EC92362896cc8e0d55a2126
+     */
+
+
+    constructor ( address payable _tellor, address _autopay , address _tellorToken ,uint256 _tipAmount) UsingTellor(_Tellor)    {
+    autopay = IAutopay(_autopay);
+    tellorToken = IERC20(_tellorToken);
+    tipAmount = _tipAmount;
+    _Tellor = _tellor ; 
     }
 
     /**
@@ -150,4 +182,32 @@ contract Players is Ownable {
 
         return (startingX, startingY);
     }
+    /**
+    rnadom number generation for determining the rpositions 
+    @dev here we determining the further randomness for all other players by using player address as input salt to the timestamp 
+     */
+
+    function _retrieveRandomNumber(uint256 _timestamp )  internal view returns(uint256) {
+
+        bytes32  random = bytes32(uint256(uint160(msg.sender)) << 96);
+        bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp), random);
+        bytes32 _queryId = keccak256(_queryData);
+        bytes memory _randomNumberBytes;
+      //  (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 5 minutes);
+        uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
+        return _randomNumber;
+    }
+
+
+    /** TODO:  currently can be used as setting the initial positions also
+    sets the spaceShips position randomly into other planet if passed through an wormwhole ;)  
+     */
+
+    function Teleport(uint shipId) public  returns(uint256 newX,uint256 newY) {
+        newX = _retrieveRandomNumber(block.timestamp);
+        newY = _retrieveRandomNumber(block.timestamp);
+         nftContract.setLocation(shipId, msg.sender, newX, newY);
+    } 
+
+
 }

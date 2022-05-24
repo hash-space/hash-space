@@ -22,13 +22,16 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     args: [],
     log: true,
   });
-
+  // TODO: for tellor RNG test  , using the params for the mumbai .
   const players = await deploy('Players', {
     from: deployer,
     gasLimit: 4000000,
-    args: [],
+    // _tellor oracle address , _tellor token , autopay contract , amount of fees.
+    args: ['0x41b66dd93b03e89D29114a7613A6f9f0d4F40178','0xD789488E5ee48Ef8b0719843672Bc04c213b648c', '0x45cAF1aae42BA5565EC92362896cc8e0d55a2126','25'],
     log: true,
   });
+
+
 
   // link contracts
   const contractPlayers = await hre.ethers.getContract('Players');

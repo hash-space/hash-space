@@ -12,7 +12,7 @@ function setVaultWrapper(address newVaultWrapper) external ;
 function createPlanet(uint _planetID, uint _worldMapIndex,
                 uint _xCoord, uint _yCoord, uint _planetType) external ;
 
-function getPlanet(uint _planetId) public view returns (uint,uint,uint,uint,uint);
+function getPlanet(uint _planetId) external view returns (uint,uint,uint,uint,uint);
 
 
 

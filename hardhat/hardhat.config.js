@@ -18,10 +18,10 @@ module.exports = {
   defaultNetwork: 'localhost',
   networks: {
     hardhat: {
-      forking: {
-        url:'https://eth-mainnet.alchemyapi.io/v2/${PRIVATE_KEY}',
+    /**   forking: {
+        url:`https://polygon-mumbai.g.alchemy.com/v2/QUf0tu7z5Qlu2p8sFyIGPgqxzV_u5EKR`,
         blockNumber:10000000
-      }
+      } */
 
     },
     localhost: {
@@ -35,7 +35,10 @@ module.exports = {
     arbitrum_nitro: {
       chainId: 421612,
       url: 'https://nitro-devnet.arbitrum.io/rpc',
-      accounts: [process.env.PRIVATE_KEY_ARBITRUM_NITRO],
+      accounts:
+      process.env.PRIVATE_KEY_OASIS !== undefined
+      ? [process.env.PRIVATE_KEY_ARBITRUM_NITRO]
+      : [],
       gas: 4000000,
     },
     emerald_mainnet: {
@@ -59,17 +62,14 @@ module.exports = {
     deployer: 0,
   },
   paths: {
-    sources: 'contracts',
+    cache: './generated/cache',
+    artifacts: './generated/artifacts',
+    deployments: './generated/deployments'
   },
   mocha: {
     timeout: 60000,
   },
-  solidity: '0.8.4',
-  paths: {
-    cache: './generated/cache',
-    artifacts: './generated/artifacts',
-    deployments: './generated/deployments',
-  },
+  solidity: '0.8.9',
   typechain: {
     outDir: '../app/src/generated/contract-types',
     target: 'ethers-v5',
