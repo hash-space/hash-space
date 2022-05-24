@@ -2,6 +2,7 @@ require('@nomiclabs/hardhat-waffle');
 require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
+require('hardhat-deploy-ethers');
 require('dotenv').config();
 
 // You need to export an object to set up your config
@@ -27,11 +28,31 @@ module.exports = {
       url: 'http://localhost:8545',
     },
     matic: {
-      url: 'https://polygon-mumbai.g.alchemy.com/v2/${PRIVATE_KEY}',
-      
+      url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
+      accounts: [process.env.PRIVATE_KEY_MUMBAI],
+      gas: 4000000,
     },
-    mainnet: {
-      url: 'https://eth-mainnet.alchemyapi.io/v2/${PRIVATE_KEY}'
+    arbitrum_nitro: {
+      chainId: 421612,
+      url: 'https://nitro-devnet.arbitrum.io/rpc',
+      accounts: [process.env.PRIVATE_KEY_ARBITRUM_NITRO],
+      gas: 4000000,
+    },
+    emerald_mainnet: {
+      chainId: 42262,
+      url: 'https://emerald.oasis.dev',
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
+    },
+    emerald_testnet: {
+      url: 'https://testnet.emerald.oasis.dev',
+      chainId: 42261,
+      accounts:
+        process.env.PRIVATE_KEY_OASIS !== undefined
+          ? [process.env.PRIVATE_KEY_OASIS]
+          : [],
     },
   },
   namedAccounts: {
@@ -39,6 +60,9 @@ module.exports = {
   },
   paths: {
     sources: 'contracts',
+  },
+  mocha: {
+    timeout: 60000,
   },
   solidity: '0.8.4',
   paths: {

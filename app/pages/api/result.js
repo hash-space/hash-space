@@ -5,10 +5,18 @@ const {
   formatData,
 } = require('../../src/api/shared');
 const url = require('url');
+const Cookies = require('cookies');
 
 export default async function handler(req, res) {
+  const cookies = new Cookies(req, res);
+  const lastSync = cookies.get('lastSync');
+  const redirectUrl = cookies.get('redirectUrl');
+  const lastSyncParsed = parseInt(lastSync);
   let result;
   try {
+    if (isNaN(lastSyncParsed)) {
+      throw new Error('not a number');
+    }
     const qs = new url.URL(req.url, 'http://localhost:3000').searchParams;
     const tokenRes = await oauth2Client.getToken({
       code: qs.get('code'),
@@ -16,18 +24,19 @@ export default async function handler(req, res) {
     });
     oauth2Client.credentials = tokenRes.tokens;
 
-    result = await findBestResult();
+    result = await findBestResult(lastSyncParsed);
   } catch (e) {
-    res.status(200).json({
-      result: `failed to get data`,
-    });
+    console.log(e);
+    res.redirect(redirectUrl + '?error=error1');
     return;
   }
 
   if (!result) {
-    res.redirect('/?error=error2');
+    res.redirect(redirectUrl + '?error=error2');
     return;
   }
 
-  res.redirect('/?steps=' + formatData(result.bucket).totalStepsToday);
+  res.redirect(
+    redirectUrl + '?steps=' + formatData(result.bucket).totalStepsToday
+  );
 }

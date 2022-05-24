@@ -1,43 +1,23 @@
 import '../styles/globals.css';
-import { EthersAppContext } from 'eth-hooks/context';
-import { AuthContext } from '../src/context/auth';
-import { SnackbarProvider } from 'notistack';
-import { createTheme, ThemeProvider } from '@mui/material';
 import Head from 'next/head';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#424242',
-    },
-    secondary: {
-      main: '#ffd54f',
-    },
-  },
-});
+import AppContainer from '../src/components/AppContainer';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={theme}>
-      <EthersAppContext>
-        <SnackbarProvider maxSnack={3}>
-          <AuthContext>
-            <Head>
-              <title>Hash Space</title>
-              <meta name="description" content="Hash Space" />
-              <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-              />
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
-            </Head>
-            <Component {...pageProps} />
-          </AuthContext>
-        </SnackbarProvider>
-      </EthersAppContext>
-    </ThemeProvider>
+    <AppContainer>
+      <Head>
+        <title>Hash Space</title>
+        <meta name="description" content="Hash Space" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
+      </Head>
+      <Component {...pageProps} />
+    </AppContainer>
   );
 }
 

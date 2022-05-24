@@ -1,0 +1,43 @@
+name: pr
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
+  PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
+  PRIVATE_KEY_ARBITRUM_NITRO: ${{ secrets.PRIVATE_KEY_ARBITRUM_NITRO }}
+
+concurrency: pr
+
+jobs:
+  sanity_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: npm install -g npm@8.3.1
+      - run: npm -v
+
+      - run: npm install
+        working-directory: ./hardhat
+
+      - run: npm run test
+        working-directory: ./hardhat
+
+      - run: npm run deploy:mumbai
+        working-directory: ./hardhat
+
+      - run: npm run deploy:emerald-test
+        working-directory: ./hardhat
+
+      - run: npm run deploy:arbitrum-nitro
+        working-directory: ./hardhat 
+
+      - run: |
+          npm install
+          npm run build
+        working-directory: ./app

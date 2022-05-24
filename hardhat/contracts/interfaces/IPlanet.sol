@@ -19,5 +19,5 @@ interface IPlanet {
     ) external;
 
     /** mints a new nft ship */
-    function mint(address player) external returns (uint256);
+    function mint(address player, string calldata _tokenURI) external returns (uint256);
 }

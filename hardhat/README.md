@@ -29,3 +29,9 @@ clean compiled output (run this as needed)
 ```
 npm run clean
 ```
+
+test
+
+```
+npm run test
+```
