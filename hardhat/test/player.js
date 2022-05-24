@@ -50,14 +50,14 @@ describe('Player', function () {
   });
 
   it('user should be able to accumulate steps', async function () {
-    const res = await player.syncSteps(9000);
+    const res = await player.syncSteps(19000);
     await res.wait();
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
 
     // assert
-    expect(stepsResult.totalStepsTaken).to.eq(9100);
-    expect(stepsResult.stepsAvailable).to.eq(9100);
+    expect(stepsResult.totalStepsTaken).to.eq(19100);
+    expect(stepsResult.stepsAvailable).to.eq(19100);
   });
 
   it('possible to fund the treasury', async function () {
@@ -97,9 +97,39 @@ describe('Player', function () {
     // this is 600.6 steps, so testing appropriate subtraction here
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
-    expect(stepsResult.totalStepsTaken).to.eq(9100);
-    expect(stepsResult.stepsAvailable).to.eq(3480);
+    expect(stepsResult.totalStepsTaken).to.eq(19100);
+    expect(stepsResult.stepsAvailable).to.eq(13480);
     // TODO: consider amending to account for rounding error
+  });
+
+  it('moving ship to planet gets reward', async function() {
+    // arrange
+    const newX = 410;
+    const newY = 460;
+
+    // TO DO: get balance of owner
+    const [owner] = await ethers.getSigners();
+
+    // TODO: modify below to assert correct balance
+    // expect(await starship.balanceOf(owner.address)).be.equal(1); // this is the number of ships they have!
+    // const [alice, bob, charlie, david] = new MockProvider().getWallets();
+
+
+    // act
+    await world.manualCreatePlanet(worldId, newX, newY, 2);
+    const planetId = await world.planetIndex(); 
+    const shipId = await starShip.tokenId();
+    await player.moveShip(newX, newY, planetId, shipId, worldId);
+  
+    // assert
+    // TODO: check that wallet balance has gone up
+
+
+  });
+
+  it('if planet has no funds, user gets no reward', async function() {
+    // TODO: either drain planet funds or initiate new world/planet with no funds
+
   });
 
 
@@ -120,8 +150,8 @@ describe('Player', function () {
     // assert
     expect(ships.length).to.eq(3);
     expect(ships[1].owner).to.eq(owner.address);
-    expect(ships[1].x).to.eq(400);
-    expect(ships[1].y).to.eq(450);
+    expect(ships[1].x).to.eq(410);
+    expect(ships[1].y).to.eq(460);
     expect(ships[2].owner).to.eq(addr1.address);
     expect(ships[2].x).to.eq(84);
     expect(ships[2].y).to.eq(16);
@@ -142,8 +172,8 @@ describe('Player', function () {
     // assert
     expect(ships.length).to.eq(3);
     expect(ships[1].owner).to.eq(addr1.address);
-    expect(ships[1].x).to.eq(400);
-    expect(ships[1].y).to.eq(450);
+    expect(ships[1].x).to.eq(410);
+    expect(ships[1].y).to.eq(460);
     expect(ships[2].owner).to.eq(addr1.address);
     expect(ships[2].x).to.eq(84);
     expect(ships[2].y).to.eq(16);
