@@ -2,13 +2,13 @@ pragma solidity ^0.8.9;
 
 interface IPlayer {
 
-function setNftAddress(address _nftContractAddress) public;
+function setNftAddress(address _nftContractAddress) external;
 
-function registerProfile() public;
+function registerProfile() external;
 
-function syncSteps(uint steps) public ;
+function syncSteps(uint steps) external ;
 
-function moveShip(uint x, uint y, uint256 planetId, uint256 shipId) public;
+function moveShip(uint x, uint y, uint256 planetId, uint256 shipId) external;
 
 
 
