@@ -50,14 +50,33 @@ describe('Player', function () {
   });
 
   it('user should be able to accumulate steps', async function () {
-    const res = await player.syncSteps(9000);
+    const res = await player.syncSteps(19000);
     await res.wait();
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
 
     // assert
-    expect(stepsResult.totalStepsTaken).to.eq(9100);
-    expect(stepsResult.stepsAvailable).to.eq(9100);
+    expect(stepsResult.totalStepsTaken).to.eq(19100);
+    expect(stepsResult.stepsAvailable).to.eq(19100);
+  });
+
+  it('possible to fund the treasury', async function () {
+    // Should be 0.01 ether in treasury already from player registration
+    expect(await player.checkContractBalance()).be.equal(
+      ethers.utils.parseEther('0.01')
+    );
+    await player.fundTreasury({ value: ethers.utils.parseEther('0.1') });
+
+    // assert
+    expect(await player.checkContractBalance()).be.equal(
+      ethers.utils.parseEther('0.11')
+    );
+  });
+
+  it('funding the treasury emits an event', async function () {
+    await expect(player.fundTreasury({ value: ethers.utils.parseEther('0.1') }))
+      .to.emit(player, 'TreasuryFunded')
+      .withArgs(ethers.utils.parseEther('0.1'));
   });
 
   it('user can move ship', async function () {
@@ -82,9 +101,39 @@ describe('Player', function () {
     // this is 600.6 steps, so testing appropriate subtraction here
     const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
-    expect(stepsResult.totalStepsTaken).to.eq(9100);
-    expect(stepsResult.stepsAvailable).to.eq(3480);
+    expect(stepsResult.totalStepsTaken).to.eq(19100);
+    expect(stepsResult.stepsAvailable).to.eq(13480);
     // TODO: consider amending to account for rounding error
+  });
+
+  it('moving ship to planet gets reward', async function () {
+    // arrange
+    const newX = 410;
+    const newY = 460;
+    const [owner] = await ethers.getSigners();
+    await world.manualCreatePlanet(worldId, newX, newY, 2);
+    const planetId = await world.planetIndex();
+    const shipId = await starShip.tokenId();
+    const initBalance = await owner.getBalance();
+
+    // act
+    await player.moveShip(newX, newY, planetId, shipId, worldId);
+
+    const newBalance = await owner.getBalance();
+    const stepsResult = await player.players(owner.address);
+    const diff =
+      ethers.utils.formatUnits(newBalance) -
+      ethers.utils.formatUnits(initBalance);
+
+    // assert
+    expect(diff).to.be.greaterThan(0.004);
+    expect(
+      ethers.utils.formatEther(ethers.BigNumber.from(stepsResult.amountEarned))
+    ).to.eq('0.005');
+  });
+
+  it('if planet has no funds, user gets no reward', async function () {
+    // TODO: either drain planet funds or initiate new world/planet with no funds
   });
 
   it('user can list ships', async function () {
@@ -104,8 +153,8 @@ describe('Player', function () {
     // assert
     expect(ships.length).to.eq(3);
     expect(ships[1].owner).to.eq(owner.address);
-    expect(ships[1].x).to.eq(400);
-    expect(ships[1].y).to.eq(450);
+    expect(ships[1].x).to.eq(410);
+    expect(ships[1].y).to.eq(460);
     expect(ships[2].owner).to.eq(addr1.address);
     expect(ships[2].x).to.eq(84);
     expect(ships[2].y).to.eq(16);
@@ -126,8 +175,8 @@ describe('Player', function () {
     // assert
     expect(ships.length).to.eq(3);
     expect(ships[1].owner).to.eq(addr1.address);
-    expect(ships[1].x).to.eq(400);
-    expect(ships[1].y).to.eq(450);
+    expect(ships[1].x).to.eq(410);
+    expect(ships[1].y).to.eq(460);
     expect(ships[2].owner).to.eq(addr1.address);
     expect(ships[2].x).to.eq(84);
     expect(ships[2].y).to.eq(16);
