@@ -30,7 +30,9 @@ import type {
 export interface PlayersInterface extends utils.Interface {
   functions: {
     "NFTPRICE()": FunctionFragment;
+    "checkContractBalance()": FunctionFragment;
     "determineStartingPosition()": FunctionFragment;
+    "fundTreasury()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -41,13 +43,14 @@ export interface PlayersInterface extends utils.Interface {
     "setWorldAddress(address)": FunctionFragment;
     "syncSteps(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "withdraw()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "NFTPRICE"
+      | "checkContractBalance"
       | "determineStartingPosition"
+      | "fundTreasury"
       | "indexStartingPosition"
       | "moveShip"
       | "owner"
@@ -58,12 +61,19 @@ export interface PlayersInterface extends utils.Interface {
       | "setWorldAddress"
       | "syncSteps"
       | "transferOwnership"
-      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "checkContractBalance",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "determineStartingPosition",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fundTreasury",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -106,11 +116,18 @@ export interface PlayersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "checkContractBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "determineStartingPosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "fundTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -141,13 +158,14 @@ export interface PlayersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "TreasuryFunded(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
 
 export interface OwnershipTransferredEventObject {
@@ -161,6 +179,16 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface TreasuryFundedEventObject {
+  amountFunded: BigNumber;
+}
+export type TreasuryFundedEvent = TypedEvent<
+  [BigNumber],
+  TreasuryFundedEventObject
+>;
+
+export type TreasuryFundedEventFilter = TypedEventFilter<TreasuryFundedEvent>;
 
 export interface Players extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -191,8 +219,14 @@ export interface Players extends BaseContract {
   functions: {
     NFTPRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    checkContractBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    fundTreasury(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     indexStartingPosition(
@@ -205,7 +239,7 @@ export interface Players extends BaseContract {
       _planetId: BigNumberish,
       _shipId: BigNumberish,
       _worldId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -214,12 +248,13 @@ export interface Players extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
         playerId: BigNumber;
         timeJoined: BigNumber;
         lastQueried: BigNumber;
         stepsAvailable: BigNumber;
         totalStepsTaken: BigNumber;
+        amountEarned: BigNumber;
       }
     >;
 
@@ -251,16 +286,18 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    withdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
 
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
   determineStartingPosition(
     overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  fundTreasury(
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
@@ -271,7 +308,7 @@ export interface Players extends BaseContract {
     _planetId: BigNumberish,
     _shipId: BigNumberish,
     _worldId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -280,12 +317,13 @@ export interface Players extends BaseContract {
     arg0: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
       playerId: BigNumber;
       timeJoined: BigNumber;
       lastQueried: BigNumber;
       stepsAvailable: BigNumber;
       totalStepsTaken: BigNumber;
+      amountEarned: BigNumber;
     }
   >;
 
@@ -318,16 +356,16 @@ export interface Players extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  withdraw(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     determineStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
+
+    fundTreasury(overrides?: CallOverrides): Promise<void>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -346,12 +384,13 @@ export interface Players extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
         playerId: BigNumber;
         timeJoined: BigNumber;
         lastQueried: BigNumber;
         stepsAvailable: BigNumber;
         totalStepsTaken: BigNumber;
+        amountEarned: BigNumber;
       }
     >;
 
@@ -378,8 +417,6 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    withdraw(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -391,13 +428,22 @@ export interface Players extends BaseContract {
       previousOwner?: string | null,
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
+
+    "TreasuryFunded(uint256)"(amountFunded?: null): TreasuryFundedEventFilter;
+    TreasuryFunded(amountFunded?: null): TreasuryFundedEventFilter;
   };
 
   estimateGas: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    fundTreasury(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
@@ -408,7 +454,7 @@ export interface Players extends BaseContract {
       _planetId: BigNumberish,
       _shipId: BigNumberish,
       _worldId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -443,17 +489,21 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    withdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    checkContractBalance(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    fundTreasury(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     indexStartingPosition(
@@ -466,7 +516,7 @@ export interface Players extends BaseContract {
       _planetId: BigNumberish,
       _shipId: BigNumberish,
       _worldId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -502,10 +552,6 @@ export interface Players extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    withdraw(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

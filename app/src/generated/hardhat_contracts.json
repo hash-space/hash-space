@@ -5,7 +5,7 @@
       "chainId": "42261",
       "contracts": {
         "Starship": {
-          "address": "0x2B07F89c9F574a890F5B8b7FddAfbBaE40f6Fde2",
+          "address": "0xF47e3B0A1952A81F1afc41172762CB7CE8700133",
           "abi": [
             {
               "inputs": [
@@ -714,7 +714,7 @@
           ]
         },
         "StarToken": {
-          "address": "0xCaC60200c1Cb424f2C1e438c7Ee1B98d487f0254",
+          "address": "0xC63db9682Ff11707CADbD72bf1A0354a7feF143B",
           "abi": [
             {
               "inputs": [],
@@ -1053,7 +1053,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0xABc84968376556B5e5B3C3bda750D091a06De536",
+          "address": "0xfC3983DE3F7cBe1Ba01084469779470AD0BbeFfa",
           "abi": [
             {
               "inputs": [],
@@ -1315,7 +1315,7 @@
           ]
         },
         "Players": {
-          "address": "0xFf8FA9381caf61cB3368a6ec0b3F5C788028D0Cd",
+          "address": "0xF8b1d4d0A2Dd9Dd53200A4C6783a69c15E3a25F4",
           "abi": [
             {
               "inputs": [],
@@ -1342,8 +1342,34 @@
               "type": "event"
             },
             {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amountFunded",
+                  "type": "uint256"
+                }
+              ],
+              "name": "TreasuryFunded",
+              "type": "event"
+            },
+            {
               "inputs": [],
               "name": "NFTPRICE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "checkContractBalance",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -1370,6 +1396,13 @@
                 }
               ],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "fundTreasury",
+              "outputs": [],
+              "stateMutability": "payable",
               "type": "function"
             },
             {
@@ -1415,7 +1448,7 @@
               ],
               "name": "moveShip",
               "outputs": [],
-              "stateMutability": "nonpayable",
+              "stateMutability": "payable",
               "type": "function"
             },
             {
@@ -1464,6 +1497,11 @@
                 {
                   "internalType": "uint256",
                   "name": "totalStepsTaken",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountEarned",
                   "type": "uint256"
                 }
               ],
@@ -1538,13 +1576,6 @@
                 }
               ],
               "name": "transferOwnership",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "withdraw",
               "outputs": [],
               "stateMutability": "nonpayable",
               "type": "function"
@@ -1560,7 +1591,7 @@
       "chainId": "80001",
       "contracts": {
         "Players": {
-          "address": "0x7A8e478Bb7e77df4e7ad60827D6D0585709891f1",
+          "address": "0xFce1Ed61D56696B751E85cC61a3055c1128C7e4e",
           "abi": [
             {
               "inputs": [],
@@ -1587,8 +1618,34 @@
               "type": "event"
             },
             {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amountFunded",
+                  "type": "uint256"
+                }
+              ],
+              "name": "TreasuryFunded",
+              "type": "event"
+            },
+            {
               "inputs": [],
               "name": "NFTPRICE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "checkContractBalance",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -1615,6 +1672,13 @@
                 }
               ],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "fundTreasury",
+              "outputs": [],
+              "stateMutability": "payable",
               "type": "function"
             },
             {
@@ -1660,7 +1724,7 @@
               ],
               "name": "moveShip",
               "outputs": [],
-              "stateMutability": "nonpayable",
+              "stateMutability": "payable",
               "type": "function"
             },
             {
@@ -1709,6 +1773,11 @@
                 {
                   "internalType": "uint256",
                   "name": "totalStepsTaken",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountEarned",
                   "type": "uint256"
                 }
               ],
@@ -1786,18 +1855,11 @@
               "outputs": [],
               "stateMutability": "nonpayable",
               "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "withdraw",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
             }
           ]
         },
         "StarToken": {
-          "address": "0x6Ecfa175f3F75f212cA73a16dFde5e0A1054e5bd",
+          "address": "0x0071e19CDB1dB070595583B3B3c353879B061232",
           "abi": [
             {
               "inputs": [],
@@ -2136,7 +2198,7 @@
           ]
         },
         "Starship": {
-          "address": "0x4e74254E1CC0Ae8A499491336eaAFD7260278a6A",
+          "address": "0xdDDC672578eB2810637334D6bF6F9c527c538dA7",
           "abi": [
             {
               "inputs": [
@@ -2845,7 +2907,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x20bA183F0c88803cB46a28B915BeD473ed3CEc3e",
+          "address": "0x7EEA2EaCe6B8011B3B86Adb2b70b052324152AA4",
           "abi": [
             {
               "inputs": [],
