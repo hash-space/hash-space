@@ -11,13 +11,21 @@ require('dotenv').config();
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 
+
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
   defaultNetwork: 'localhost',
   networks: {
-    hardhat: {},
+    hardhat: {
+      forking:
+        {
+            url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY_MUMBAI}`,
+            blockNumber: 14200000
+
+        }
+    },
     localhost: {
       url: 'http://localhost:8545',
     },
