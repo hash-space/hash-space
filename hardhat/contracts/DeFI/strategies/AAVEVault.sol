@@ -1,23 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0
+// credits : @storm0x yearn team
 pragma solidity ^0.8.12;
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IERC4626.sol";
-import "../../Interfaces/IPlayer.sol";
 
+import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 /********************
  *
- *   This contract is a POC as an example of a ERC4626 integration meant for instructive purposes.
- *   The donator assigns approves a token to Sugar Contract and can StartSharingYield with a receiver.
- *   The receiver can claim the donated yield that's "streamed" every time yield is realized in vault.
- *   The donator can stopSharingYield() any time and receiver won't be able to claim yield after this.
- *
- *
- *   // TODO: tokenized this into an NFT or two NFT one for donator and one for receiver keeping same IDs
- *   // TODO: add support for migrating yield source as admin. Require token matches
+ *  POC for trading  user NFT  fees from  sales to deposit into the traditional aave vaults and withdrawls
+ * 
  ********************* */
 
 contract AAVEVault is Ownable {
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -40,66 +36,103 @@ contract AAVEVault is Ownable {
     /*//////////////////////////////////////////////////////////////
                          METADATA STORAGE/LOGIC
     //////////////////////////////////////////////////////////////*/
-    IERC4626 public immutable vault;
+    IPool public aavePool;
+//    IERC4626 public immutable vault;
     IERC20 public immutable token;
 
-    mapping(address => uint256) public tokenBalances; // address of the planets  with the 
+    // on polygon mainnet
+    address PoolAddress = '0x794a61358D6845594F94dc1DB02A252b5b4814aD';
 
-    mapping(address => uint256) public shareBalances;
-    mapping(address => address) public donatorToReceiver;
-    mapping(address => mapping(address => bool)) public receiverToDonator;
-    uint256 public dust = 1e16;
+    mapping(address => uint256) public shipsInvestments; // address of the planets shares receives  
+    mapping(address => uint256) public aTokenBalances; // getting the ships their derivatives 
+    mapping(address => address) public donatorToReceiver; // mapping to the ships to the Pool 
+    mapping(address => mapping(address => bool)) public receiverToDonator; // bool for check whether yield has deposited by the given strategy.
+    uint256 public dust = 1e15;
 
-    constructor(address _vault) {
-        vault = IERC4626(_vault);
-        token = IERC20(vault.asset());
-        token.approve(address(vault), type(uint256).max);
+    // _token is the underlying address for  the ERC20
+    constructor(address _vault , address _token ) {
+        // vault = IERC4626(_vault);
+        token = IERC20(_token);
+
+        token.approve(address(PoolAddress), type(uint256).max);
+        aavePool = IPool(PoolAddress);
+
     }
 
-    function startSharingYield(address receiver, uint256 amount)
+    /**
+    deposits into the  aave pool to receive the aToken as the 
+     */
+    function startSharingYield(address receiver, uint256 amount , address asset)
         public
         returns (uint256 shares)
-    {
+    {   
         require(receiver != address(0), "ADDRESS_NOT_ZERO");
         require(receiver != msg.sender, "SELF_SHARE");
         require(amount > 0, "AMT_NOT_ZERO");
         require(donatorToReceiver[msg.sender] == address(0), "DONATOR_NOT_SET");
+     
         SafeERC20.safeTransferFrom(token, msg.sender, address(this), amount);
-        shares = vault.deposit(amount, address(this));
-        tokenBalances[msg.sender] += amount;
-        shareBalances[msg.sender] += shares;
-        // donator can only have one receiver for yield and can switch it here
-        donatorToReceiver[msg.sender] = receiver;
-        receiverToDonator[receiver][msg.sender] = true;
 
-        emit StartShare(msg.sender, receiver, amount);
+        aavePool.deposit(asset, amount, msg.sender, 0);
+
+        shares = amount;
+
+        // providing 1:1 generating for each deposited , accounting the aTokens received.
+        shipsInvestments[msg.sender] += amount;
+
+        aTokenBalances[msg.sender] += shares;
+
+        // donator can only have one receiver for yield and can switch it here
+        donatorToReceiver[msg.sender] = PoolAddress;
+        receiverToDonator[PoolAddress][msg.sender] = true;
+
+
+        emit StartShare(msg.sender, PoolAddress, amount);
     }
 
+
+    /******
+    getting more information about player reserve in AAVE.
+
+     */
+    function getUserInvestmentParameter(address _shipAddress) 
+    external 
+    returns(
+      uint256 totalCollateralBase,
+      uint256 totalDebtBase,
+      uint256 availableBorrowsBase,
+      uint256 currentLiquidationThreshold
+     
+    ) {
+       totalCollateralBase =  aavePool.getUserAccountData(_shipAddress)[0];
+       totalDebtBase = aavePool.getUserAccountData(_shipAddress)[1];
+       availableBorrowsBase = aavePool.getUserAccountData(_shipAddress)[2];
+        currentLiquidationThreshold = aavePool.getUserAccountData(_shipAddress)[3];
+    }
     function stopSharingYield() public returns (uint256 amount) {
-        uint256 _shares = shareBalances[msg.sender];
-        uint256 _tokenBalance = tokenBalances[msg.sender];
+        uint256 _shares = aTokenBalances[msg.sender];
+        uint256 _tokenBalance = shipsInvestments[msg.sender];
         require(_shares > 0, "NO_SHARES");
         require(_tokenBalance > 0, "NO_TOKEN");
+        // TODO: add emergency exit to withdraw and realize loss in case it happens
+        require(amount >= _tokenBalance, "LOSS");
+        uint totalYield  = aavePool.withdraw(msg.sender, _tokenBalance,msg.sender);
 
-        shareBalances[msg.sender] = 0;
-        tokenBalances[msg.sender] = 0;
+        aTokenBalances[msg.sender] = 0;
+        shipsInvestments[msg.sender] = 0;
         address _receiver = donatorToReceiver[msg.sender];
         donatorToReceiver[msg.sender] = address(0);
         receiverToDonator[_receiver][msg.sender] = false;
 
-        amount = vault.redeem(_shares, msg.sender, address(this));
-
-        emit StopShare(msg.sender, amount);
-
-        // TODO: add emergency exit to withdraw and realize loss in case it happens
-        require(amount >= _tokenBalance, "LOSS");
+        emit StopShare(msg.sender, totalYield);       
     }
+
 
     function claimYield(address _donator) public returns (uint256 claimed) {
         require(donatorToReceiver[_donator] == msg.sender, "NOT_RECEIVER");
         // NOTE: checks in startSharingYield ensure these values are not zero
-        uint256 _shares = shareBalances[_donator];
-        uint256 _tokenBalance = tokenBalances[_donator];
+        uint256 _shares = aTokenBalances[_donator];
+        uint256 _tokenBalance = shipsInvestments[_donator];
 
         // NOTE: we add dust thresold to assure precision
         require(
@@ -112,9 +145,9 @@ contract AAVEVault is Ownable {
 
         uint256 _sharesToClaim = _shares - _remainingShares;
 
-        shareBalances[_donator] = _remainingShares;
-
-        claimed = vault.redeem(_sharesToClaim, msg.sender, address(this));
+        aTokenBalances[_donator] = _remainingShares;
+        claimed = aavePool.withdraw(PoolAddress, amount, to);
+    //    claimed = vault.redeem(_sharesToClaim, msg.sender, address(this));
         // NOTE: ensure donator still has deposited capital after side effect
         require(
             vault.convertToAssets(_remainingShares) >= _tokenBalance,
@@ -132,8 +165,8 @@ contract AAVEVault is Ownable {
         if (donatorToReceiver[_donator] != _receiver) return 0;
 
         // NOTE: checks in startSharingYield ensure these values are not zero
-        uint256 _shares = shareBalances[_donator];
-        uint256 _tokenBalance = tokenBalances[_donator];
+        uint256 _shares = aTokenBalances[_donator];
+        uint256 _tokenBalance = shipsInvestments[_donator];
         if (_shares == 0 || _tokenBalance == 0) return 0;
 
         // NOTE: we add dust thresold to assure precision
