@@ -23,21 +23,7 @@ jobs:
       - run: npm -v
 
       - run: npm install
-        working-directory: ./hardhat
 
-      - run: npm run test
-        working-directory: ./hardhat
+      - run: npm run deploy:all
 
-      - run: npm run deploy:mumbai
-        working-directory: ./hardhat
-
-      - run: npm run deploy:emerald-test
-        working-directory: ./hardhat
-
-      - run: npm run deploy:arbitrum-nitro
-        working-directory: ./hardhat 
-
-      - run: |
-          npm install
-          npm run build
-        working-directory: ./app
+      - run: npm run build

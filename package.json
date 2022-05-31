@@ -1,0 +1,33 @@
+{
+  "name": "hash-space",
+  "version": "1.0.0",
+  "description": "Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets, get yield bounties, flying around in a spaceship powered with footsteps.",
+  "main": "index.js",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "node": "turbo run node",
+    "dev": "turbo run dev",
+    "deploy:local": "turbo run deploy:local",
+    "deploy:mumbai": "turbo run deploy:mumbai",
+    "deploy:emerald-test": "turbo run deploy:emerald-test",
+    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro",
+    "deploy:all": "turbo run deploy:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hash-space/hash-space.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hash-space/hash-space/issues"
+  },
+  "homepage": "https://github.com/hash-space/hash-space#readme",
+  "workspaces": [
+    "*"
+  ],
+  "devDependencies": {
+    "turbo": "^1.2.14"
+  }
+}

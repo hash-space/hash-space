@@ -1,0 +1,46 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "dev": {
+      "dependsOn": ["^dev"],
+      "outputs": []
+    },
+    "node": {
+      "dependsOn": ["^node"],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "deploy:local": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "deploy:mumbai": {
+      "dependsOn": ["test"],
+      "outputs": []
+    },
+    "deploy:emerald-test": {
+      "dependsOn": ["test"],
+      "outputs": []
+    },
+    "deploy:arbitrum-nitro": {
+      "dependsOn": ["test"],
+      "outputs": []
+    },
+    "deploy:all": {
+      "dependsOn": [
+        "deploy:arbitrum-nitro",
+        "deploy:emerald-test",
+        "deploy:mumbai"
+      ],
+      "outputs": []
+    }
+  }
+}
