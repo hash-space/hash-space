@@ -46,14 +46,12 @@ npm install
 In one terminal:
 
 ```sh
-cd ./hardhat
 npm run node
 ```
 
 In another terminal, to deploy on local host::
 
 ```sh
-cd ./hardhat
 npm run deploy:local
 ```
 

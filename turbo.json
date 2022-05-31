@@ -23,15 +23,15 @@
       "outputs": []
     },
     "deploy:mumbai": {
-      "dependsOn": ["test"],
+      "dependsOn": [],
       "outputs": []
     },
     "deploy:emerald-test": {
-      "dependsOn": ["test"],
+      "dependsOn": [],
       "outputs": []
     },
     "deploy:arbitrum-nitro": {
-      "dependsOn": ["test"],
+      "dependsOn": [],
       "outputs": []
     }
   }
