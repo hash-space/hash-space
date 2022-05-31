@@ -1,7 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "build": "hardhat compile --force",
+    "compile": "hardhat compile --force",
     "test": "hardhat test --network hardhat",
     "clean": "hardhat clean && yarn shx rm -rf './generated/deployments' && yarn shx rm -rf './generated/cache'",
     "node": "hardhat node --network hardhat --no-deploy",

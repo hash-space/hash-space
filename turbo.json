@@ -33,14 +33,6 @@
     "deploy:arbitrum-nitro": {
       "dependsOn": ["test"],
       "outputs": []
-    },
-    "deploy:all": {
-      "dependsOn": [
-        "deploy:arbitrum-nitro",
-        "deploy:emerald-test",
-        "deploy:mumbai"
-      ],
-      "outputs": []
     }
   }
 }

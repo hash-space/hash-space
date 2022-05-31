@@ -11,8 +11,7 @@
     "deploy:local": "turbo run deploy:local",
     "deploy:mumbai": "turbo run deploy:mumbai",
     "deploy:emerald-test": "turbo run deploy:emerald-test",
-    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro",
-    "deploy:all": "turbo run deploy:all"
+    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro"
   },
   "repository": {
     "type": "git",
