@@ -5,7 +5,7 @@
     "test": "hardhat test --network hardhat",
     "clean": "hardhat clean && yarn shx rm -rf './generated/deployments' && yarn shx rm -rf './generated/cache'",
     "node": "hardhat node --network hardhat --no-deploy",
-    "deploy": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:local": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:mumbai": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:emerald-test": "hardhat --network emerald_testnet deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json"

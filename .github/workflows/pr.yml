@@ -19,25 +19,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14
+          cache: 'npm'
       - run: npm install -g npm@8.3.1
       - run: npm -v
 
       - run: npm install
-        working-directory: ./hardhat
-
-      - run: npm run test
-        working-directory: ./hardhat
 
       - run: npm run deploy:mumbai
-        working-directory: ./hardhat
-
       - run: npm run deploy:emerald-test
-        working-directory: ./hardhat
-
       - run: npm run deploy:arbitrum-nitro
-        working-directory: ./hardhat 
 
-      - run: |
-          npm install
-          npm run build
-        working-directory: ./app
+      - run: npm run build

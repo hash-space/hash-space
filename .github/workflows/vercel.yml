@@ -22,6 +22,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14
+          cache: 'npm'
       - run: npm install -g npm@8.3.1
       - run: npm -v
 
@@ -29,16 +30,12 @@ jobs:
       - run: mkdir ./app/src/generated
 
       - run: npm install
-        working-directory: ./hardhat
-
-      - run: npm run test
-        working-directory: ./hardhat
 
       - run: npm run deploy:mumbai
-        working-directory: ./hardhat
 
       - run: npm run deploy:emerald-test
-        working-directory: ./hardhat
+
+      - run: npm run deploy:arbitrum-nitro
 
       - uses: EndBug/add-and-commit@v9
         with:
@@ -46,10 +43,8 @@ jobs:
           add: '** --force'
           cwd: './app/src/generated'
 
-      - run: |
-          npm install
-          npm run build
-        working-directory: ./app
+      - run: npm run build
+
       - uses: amondnet/vercel-action@v20 #deploy
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required

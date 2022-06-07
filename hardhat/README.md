@@ -15,13 +15,13 @@ npm run node
 deploy the contract to hardhat node
 
 ```
-npm run deploy
+npm run deploy:local
 ```
 
 deploy the contract to mumbai
 
 ```
-npm run deploy:testnet
+npm run deploy:mumbai
 ```
 
 clean compiled output (run this as needed)
