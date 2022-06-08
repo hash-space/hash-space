@@ -50,11 +50,12 @@ describe('Player', function () {
   });
 
   it('syncing steps should emit event', async function () {
+    const [owner] = await ethers.getSigners();
     await expect(player.syncSteps(10))
       .to.emit(player, 'StepsAdded')
-      .withArgs(10);
+      .withArgs(10, owner.address);
     });
-  
+   
   it('user should be able to accumulate steps', async function () {
     const res = await player.syncSteps(19000);
     await res.wait();

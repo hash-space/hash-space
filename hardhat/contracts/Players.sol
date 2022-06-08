@@ -32,7 +32,7 @@ contract Players is Ownable {
 
     event TreasuryFunded(uint amountFunded);
 
-    event StepsAdded(uint stepsTaken);
+    event StepsAdded(uint stepsTaken, address player);
 
     constructor () {
     }
@@ -83,7 +83,7 @@ contract Players is Ownable {
         player.totalStepsTaken += steps;
         player.stepsAvailable += steps;
         player.lastQueried = block.timestamp;
-        emit StepsAdded(steps);
+        emit StepsAdded(steps, msg.sender);
     }
 
     /**
