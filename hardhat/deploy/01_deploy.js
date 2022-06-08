@@ -3,6 +3,7 @@ const hre = require('hardhat');
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
+  const backendAddress = '0x1712C64a90164e03A2B61ee0f66712da3355a932';
   const starship = await deploy('Starship', {
     from: deployer,
     gasLimit: 8000000,
@@ -34,9 +35,15 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const contractPlayers = await hre.ethers.getContract('Players');
   const contractStartship = await hre.ethers.getContract('Starship');
   const txNft = await contractPlayers.setNftAddress(starship.address);
+  const txBackend = await contractPlayers.setBackendAddress(backendAddress);
   const txWorld = await contractPlayers.setWorldAddress(world.address);
   const txNftLink = await contractStartship.setPlayerContract(players.address);
-  await Promise.all([txNft.wait(), txWorld.wait(), txNftLink.wait()]);
+  await Promise.all([
+    txNft.wait(),
+    txWorld.wait(),
+    txNftLink.wait(),
+    txBackend.wait(),
+  ]);
 
   // define worldmap
   const contractWorld = await hre.ethers.getContract('WorldMapCreator');

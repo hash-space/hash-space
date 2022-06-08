@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const fitness = google.fitness('v1');
+const ethers = require('ethers');
 
 let keys = JSON.parse(process.env.CREDS).web;
 
@@ -76,4 +77,20 @@ export function getCallbackUrl(req) {
   return req.headers.host.indexOf('localhost') !== -1
     ? `http://localhost:3000/api/result`
     : `https://steps-app.vercel.app/api/result`;
+}
+
+export async function signSteps(steps, privateKey) {
+  let wallet = new ethers.Wallet(privateKey);
+
+  // hash payload
+  let payload = ethers.utils.defaultAbiCoder.encode(['uint256'], [steps]);
+  let payloadHash = ethers.utils.keccak256(payload);
+
+  // sign the binary data
+  let flatSig = await wallet.signMessage(ethers.utils.arrayify(payloadHash));
+
+  let sig = ethers.utils.splitSignature(flatSig);
+
+  // serialize in one long string
+  return [payloadHash, steps, sig.v, sig.r, sig.s].join('-');
 }
