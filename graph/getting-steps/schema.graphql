@@ -2,5 +2,5 @@ type StepTrackingEntity @entity {
   id: ID!
   numSyncs: BigInt!
   totalSteps: BigInt!
-  owner: Bytes! # address
+  player: Bytes! # address
 }

@@ -12,13 +12,12 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity = new StepTrackingEntity(event.transaction.from.toHex())
     entity.numSyncs = BigInt.fromI32(0)
     entity.totalSteps = BigInt.fromI32(0)
-
   }
 
   entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
 
   entity.totalSteps = entity.totalSteps + event.params.stepsTaken
-  entity.owner = event.params.player
+  entity.player = event.params.player
 
   entity.save()
 
