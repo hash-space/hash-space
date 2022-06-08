@@ -4,10 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Players
-    network: matic
+    network: mumbai
     source:
       address: "0xd2116b44571CB73Aff01b122224C9D7937cD44F1" # Update to the 'live' mumbai address
       abi: Players
+      startBlock: 26655283
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
