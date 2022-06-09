@@ -115,7 +115,8 @@ export function usePlayerContract() {
           splitString[1],
           splitString[2],
           splitString[3],
-          splitString[4]
+          splitString[4],
+          splitString[5]
         )
       );
     },

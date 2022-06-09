@@ -79,11 +79,14 @@ export function getCallbackUrl(req) {
     : `https://steps-app.vercel.app/api/result`;
 }
 
-export async function signSteps(steps, privateKey) {
+export async function signSteps(steps, lastTimeSync, privateKey) {
   let wallet = new ethers.Wallet(privateKey);
 
   // hash payload
-  let payload = ethers.utils.defaultAbiCoder.encode(['uint256'], [steps]);
+  let payload = ethers.utils.defaultAbiCoder.encode(
+    ['uint256', 'uint256'],
+    [steps, lastTimeSync]
+  );
   let payloadHash = ethers.utils.keccak256(payload);
 
   // sign the binary data
@@ -92,5 +95,5 @@ export async function signSteps(steps, privateKey) {
   let sig = ethers.utils.splitSignature(flatSig);
 
   // serialize in one long string
-  return [payloadHash, steps, sig.v, sig.r, sig.s].join('-');
+  return [payloadHash, steps, lastTimeSync, sig.v, sig.r, sig.s].join('-');
 }

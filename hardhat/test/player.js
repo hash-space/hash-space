@@ -43,10 +43,15 @@ describe('Player', function () {
   });
 
   it('user should be able to sync steps', async function () {
-    const stepString = await signSteps(100, privateKeyBackend);
+    const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      100,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
     const res = await player.syncSteps(...stepString.split('-'));
     await res.wait();
-    const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
 
     // assert
@@ -55,10 +60,15 @@ describe('Player', function () {
   });
 
   it('user should be able to accumulate steps', async function () {
-    const stepString = await signSteps(19000, privateKeyBackend);
+    const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      19000,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
     const res = await player.syncSteps(...stepString.split('-'));
     await res.wait();
-    const [owner] = await ethers.getSigners();
     const stepsResult = await player.players(owner.address);
 
     // assert
@@ -301,11 +311,14 @@ describe('Player', function () {
 });
 
 // this needs to match the implementation in '../../app/src/api/shared'
-async function signSteps(steps, privateKey) {
+async function signSteps(steps, lastTimeSync, privateKey) {
   let wallet = new ethers.Wallet(privateKey);
 
   // hash payload
-  let payload = ethers.utils.defaultAbiCoder.encode(['uint256'], [steps]);
+  let payload = ethers.utils.defaultAbiCoder.encode(
+    ['uint256', 'uint256'],
+    [steps, lastTimeSync]
+  );
   let payloadHash = ethers.utils.keccak256(payload);
 
   // sign the binary data
@@ -314,5 +327,5 @@ async function signSteps(steps, privateKey) {
   let sig = ethers.utils.splitSignature(flatSig);
 
   // serialize in one long string
-  return [payloadHash, steps, sig.v, sig.r, sig.s].join('-');
+  return [payloadHash, steps, lastTimeSync, sig.v, sig.r, sig.s].join('-');
 }

@@ -58,6 +58,8 @@ export default function Home() {
           {isDebug && (
             <div>
               <hr></hr>
+              <h1>user</h1>
+              <div>{JSON.stringify(playerContract.playerState)}</div>
               <h1>ships</h1>
               <ul>
                 {shipsContract.ships.map((ship) => (
@@ -120,8 +122,8 @@ export default function Home() {
           </ol>
           <Typography variant="body1" gutterBottom>
             <em>
-              Note: requires 0.01 MATIC / ROSE / ETH to register (in order to mint
-              the starship NFT).
+              Note: requires 0.01 MATIC / ROSE / ETH to register (in order to
+              mint the starship NFT).
             </em>
           </Typography>
           <div>

@@ -80,19 +80,24 @@ contract Players is Ownable {
     /**
         Sync the steps for the user
     */
-    function syncSteps(bytes32 _hashedMessageBackend, uint256 _steps, uint8 _v, bytes32 _r, bytes32 _s) public {
-        verifySteps(_hashedMessageBackend, _steps, _v, _r, _s);
+    function syncSteps(bytes32 _hashedMessageBackend, uint256 _steps, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public {
+        // verify
         PersonProfile storage player = players[msg.sender];
         require(player.playerId != 0, "you need to be registered");
+
+        require(_lastQueried == player.lastQueried, "last queried does not match");
+        verifySteps(_hashedMessageBackend, _steps, _lastQueried, _v, _r, _s);
+
+        // write
         player.totalStepsTaken += _steps;
         player.stepsAvailable += _steps;
         player.lastQueried = block.timestamp;
     }
 
-    function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint8 _v, bytes32 _r, bytes32 _s) public view {
+    function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public view {
 
-        bytes32 hashedMessageSol = keccak256(abi.encode(_message));
-        require(hashedMessageSol == _hashedMessageBackend, "message was modified");
+        bytes32 hashedMessageSol = keccak256(abi.encode(_message, _lastQueried));
+        require(hashedMessageSol == _hashedMessageBackend, "payload was modified");
 
         bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixedHashMessage = keccak256(abi.encodePacked(prefix, _hashedMessageBackend));

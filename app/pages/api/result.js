@@ -37,6 +37,10 @@ export default async function handler(req, res) {
     return;
   }
   const stepCount = formatData(result.bucket).totalStepsToday;
-  const signedSteps = await signSteps(stepCount, process.env.PRIV_KEY_BACKEND);
+  const signedSteps = await signSteps(
+    stepCount,
+    lastSyncParsed,
+    process.env.PRIV_KEY_BACKEND
+  );
   res.redirect(redirectUrl + '?steps=' + signedSteps);
 }
