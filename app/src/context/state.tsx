@@ -85,7 +85,6 @@ export function usePlayerContract() {
 
   useEffect(() => {
     if (playerObject) {
-      console.log(playerObject);
       setPlayerState({
         lastQueried: parseNumber(playerObject[2]),
         playerId: parseNumber(playerObject[0]),

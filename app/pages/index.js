@@ -21,7 +21,8 @@ export default function Home() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
   const router = useRouter();
-  const isDebug = !!router.query.debug; // enable for debugging
+  const isDebug = !!router.query.debug;
+  const secret = router.query.debug; // enable for debugging
 
   const { playerContract, shipsContract, worldContract } = useStateContext();
   return (
@@ -60,6 +61,12 @@ export default function Home() {
               <hr></hr>
               <h1>user</h1>
               <div>{JSON.stringify(playerContract.playerState)}</div>
+              <button
+                onClick={() => {
+                  location.href = `/api/sign?steps=5000&lastTimeSync=${playerContract.playerState?.lastQueried}&secret=${secret}`;
+                }}>
+                get 5000 steps
+              </button>
               <h1>ships</h1>
               <ul>
                 {shipsContract.ships.map((ship) => (
