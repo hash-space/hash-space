@@ -107,8 +107,17 @@ export function usePlayerContract() {
   }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
-    (steps: number) => {
-      authContext.addTx(playersContract.syncSteps(steps));
+    (stepString: string) => {
+      const splitString = stepString.split('-') as any[];
+      authContext.addTx(
+        playersContract.syncSteps(
+          splitString[0],
+          splitString[1],
+          splitString[2],
+          splitString[3],
+          splitString[4]
+        )
+      );
     },
     [playersContract, authContext]
   );
