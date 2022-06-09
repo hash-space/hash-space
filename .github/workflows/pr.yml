@@ -30,3 +30,12 @@ jobs:
       - run: npm run deploy:arbitrum-nitro
 
       - run: npm run build
+
+      - uses: amondnet/vercel-action@v20 #deploy
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          vercel-args: '' #Optional
+          vercel-org-id: ${{ secrets.ORG_ID}} #Required
+          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
+          working-directory: ./app
+          alias-domains: steps-app-dev.vercel.app
