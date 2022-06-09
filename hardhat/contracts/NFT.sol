@@ -26,7 +26,7 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     // mapping tokenId to shipData
     mapping (uint256 => ShipData) shipData;
 
-    modifier onlyPlayerContract(){
+    modifier onlyPlayerContract() {
         require (msg.sender == playerContract);
         _;
     }
@@ -45,15 +45,6 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
         return super.msgSender();
     }
 
-        function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721)
-    {
-        super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId) public view override(ERC721Tradable, ERC721URIStorage) returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
 
     function isApprovedForAll(address owner, address operator) override(ERC721, ERC721Tradable) public view returns (bool){
         return super.isApprovedForAll(owner, operator);
@@ -108,12 +99,18 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     /**
         To allow transfer of ships
      */
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override {
+    function _afterTokenTransfer(address from,address to,uint256 tokenId) internal override {
         shipData[tokenId].owner = to;
         shipData[tokenId].id = tokenId;
+    }
+
+            function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721)
+    {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721Tradable, ERC721URIStorage) returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }
