@@ -2,7 +2,7 @@ name: pr
 on:
   pull_request:
     branches:
-      - main
+      - v2
 
 env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
