@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../src/context/auth';
@@ -19,7 +18,6 @@ import { getCallbackUrl } from '../src/helper/callbackUrl';
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
-  const authContext = useAuthContext();
   const router = useRouter();
   const isDebug = !!router.query.debug;
   const secret = router.query.debug; // enable for debugging
@@ -134,7 +132,7 @@ export default function Home() {
             </em>
           </Typography>
           <div>
-            {!playerContract.playerState.isSignedUp && (
+            {!playerContract.playerState.isSignedUp && ethersAppContext.active && (
               <Button
                 color="secondary"
                 variant="outlined"

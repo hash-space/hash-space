@@ -96,6 +96,10 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     authContext.addTx(
       uploadIPFS().then((metadata) => {
         return playersContract.registerProfile(metadata.url, {
@@ -107,6 +111,10 @@ export function usePlayerContract() {
 
   const playerSyncSteps = useCallback(
     (stepString: string) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       const splitString = stepString.split('-') as any[];
       authContext.addTx(
         playersContract.syncSteps(
@@ -130,6 +138,10 @@ export function usePlayerContract() {
       shipId: number,
       worldId: number
     ) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       authContext.addTx(
         playersContract.moveShip(x, y, planetId, shipId, worldId)
       );
