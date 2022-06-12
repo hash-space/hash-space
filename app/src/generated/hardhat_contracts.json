@@ -1,11 +1,11 @@
 {
-  "31337": [
+  "80001": [
     {
-      "name": "localhost",
-      "chainId": "31337",
+      "name": "matic",
+      "chainId": "80001",
       "contracts": {
         "Starship": {
-          "address": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
+          "address": "0x8Be534DFda54c521344527D78AF674831F02e343",
           "abi": [
             {
               "inputs": [
@@ -714,7 +714,7 @@
           ]
         },
         "StarToken": {
-          "address": "0x851356ae760d987E095750cCeb3bC6014560891C",
+          "address": "0xb78D7cD5b606c61A1C881884140F91FF9ABc4505",
           "abi": [
             {
               "inputs": [],
@@ -1053,7 +1053,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0xf5059a5D33d5853360D16C683c16e67980206f36",
+          "address": "0x86F07D9b5af38Ba57b8374b66411c5bAC35dA87c",
           "abi": [
             {
               "inputs": [],
@@ -1315,7 +1315,7 @@
           ]
         },
         "Players": {
-          "address": "0x95401dc811bb5740090279Ba06cfA8fcF6113778",
+          "address": "0xdb65491Bb594C575D1F324345D3244593f3B6880",
           "abi": [
             {
               "inputs": [],
@@ -1580,6 +1580,11 @@
                   "type": "uint256"
                 },
                 {
+                  "internalType": "uint256",
+                  "name": "_lastQueried",
+                  "type": "uint256"
+                },
+                {
                   "internalType": "uint8",
                   "name": "_v",
                   "type": "uint8"
@@ -1623,6 +1628,11 @@
                 {
                   "internalType": "uint256",
                   "name": "_message",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_lastQueried",
                   "type": "uint256"
                 },
                 {
