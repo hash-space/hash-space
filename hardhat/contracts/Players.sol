@@ -24,6 +24,7 @@ contract Players is Ownable {
 
     Counters.Counter indexPlayerIds;
     Counters.Counter public indexStartingPosition;
+    address backendAddress;
 
     mapping (address => PersonProfile) public players;
 
@@ -33,6 +34,10 @@ contract Players is Ownable {
     event TreasuryFunded(uint amountFunded);
 
     constructor () {
+    }
+
+    function setBackendAddress(address _address) public {
+        backendAddress = _address;
     }
 
     /**
@@ -75,12 +80,30 @@ contract Players is Ownable {
     /**
         Sync the steps for the user
     */
-    function syncSteps(uint steps) public {
+    function syncSteps(bytes32 _hashedMessageBackend, uint256 _steps, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public {
+        // verify
         PersonProfile storage player = players[msg.sender];
         require(player.playerId != 0, "you need to be registered");
-        player.totalStepsTaken += steps;
-        player.stepsAvailable += steps;
+
+        require(_lastQueried == player.lastQueried, "last queried does not match");
+        verifySteps(_hashedMessageBackend, _steps, _lastQueried, _v, _r, _s);
+
+        // write
+        player.totalStepsTaken += _steps;
+        player.stepsAvailable += _steps;
         player.lastQueried = block.timestamp;
+    }
+
+    function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public view {
+
+        bytes32 hashedMessageSol = keccak256(abi.encode(_message, _lastQueried));
+        require(hashedMessageSol == _hashedMessageBackend, "payload was modified");
+
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 prefixedHashMessage = keccak256(abi.encodePacked(prefix, _hashedMessageBackend));
+        address signer = ecrecover(prefixedHashMessage, _v, _r, _s);
+
+        require(signer == address(backendAddress), "wrong signer");
     }
 
     /**
