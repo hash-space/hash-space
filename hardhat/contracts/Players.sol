@@ -2,14 +2,15 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "./interfaces/IPlanet.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./interfaces/IWorld.sol";
 import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract Players is Ownable {
-    using Counters for Counters.Counter;
+contract Players is Initializable, OwnableUpgradeable {
+    using CountersUpgradeable for CountersUpgradeable.Counter;
 
     uint256 constant public NFTPRICE = 0.01 ether;
 
@@ -22,8 +23,8 @@ contract Players is Ownable {
             uint256 amountEarned;
     }
 
-    Counters.Counter indexPlayerIds;
-    Counters.Counter public indexStartingPosition;
+    CountersUpgradeable.Counter indexPlayerIds;
+    CountersUpgradeable.Counter public indexStartingPosition;
 
     mapping (address => PersonProfile) public players;
 
@@ -32,7 +33,8 @@ contract Players is Ownable {
 
     event TreasuryFunded(uint amountFunded);
 
-    constructor () {
+    function initialize() public initializer {
+        __Ownable_init();
     }
 
     /**

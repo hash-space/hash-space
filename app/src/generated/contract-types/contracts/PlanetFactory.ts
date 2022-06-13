@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -55,6 +59,7 @@ export interface PlanetFactoryInterface extends utils.Interface {
     "createPlanet(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "existingPlanets(uint256)": FunctionFragment;
     "getPlanet(uint256)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "planetTypes(uint256)": FunctionFragment;
     "retrieveTokens(uint256)": FunctionFragment;
   };
@@ -65,6 +70,7 @@ export interface PlanetFactoryInterface extends utils.Interface {
       | "createPlanet"
       | "existingPlanets"
       | "getPlanet"
+      | "initialize"
       | "planetTypes"
       | "retrieveTokens"
   ): FunctionFragment;
@@ -92,6 +98,10 @@ export interface PlanetFactoryInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "planetTypes",
     values: [BigNumberish]
   ): string;
@@ -113,6 +123,7 @@ export interface PlanetFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPlanet", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "planetTypes",
     data: BytesLike
@@ -122,8 +133,19 @@ export interface PlanetFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "Initialized(uint8)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface PlanetFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -182,6 +204,10 @@ export interface PlanetFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[SharedStructs.PlanetStructOutput]>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     planetTypes(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -228,6 +254,10 @@ export interface PlanetFactory extends BaseContract {
     _planetId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<SharedStructs.PlanetStructOutput>;
+
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   planetTypes(
     arg0: BigNumberish,
@@ -276,6 +306,8 @@ export interface PlanetFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<SharedStructs.PlanetStructOutput>;
 
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     planetTypes(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -290,7 +322,10 @@ export interface PlanetFactory extends BaseContract {
     retrieveTokens(_id: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+  };
 
   estimateGas: {
     _retrieveRandomNumber(overrides?: CallOverrides): Promise<BigNumber>;
@@ -312,6 +347,10 @@ export interface PlanetFactory extends BaseContract {
     getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     planetTypes(
@@ -347,6 +386,10 @@ export interface PlanetFactory extends BaseContract {
     getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     planetTypes(

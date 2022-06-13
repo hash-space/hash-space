@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -71,6 +75,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     "getLocation(uint256,uint256)": FunctionFragment;
     "getPlanets(uint256)": FunctionFragment;
     "getWorldMap(uint256)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "manualCreatePlanet(uint256,uint256,uint256,uint256)": FunctionFragment;
     "planetIndex()": FunctionFragment;
     "planetsInWorld(uint256,uint256)": FunctionFragment;
@@ -84,6 +89,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
       | "getLocation"
       | "getPlanets"
       | "getWorldMap"
+      | "initialize"
       | "manualCreatePlanet"
       | "planetIndex"
       | "planetsInWorld"
@@ -112,6 +118,10 @@ export interface WorldMapCreatorInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getWorldMap",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "manualCreatePlanet",
@@ -147,6 +157,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "getWorldMap",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "manualCreatePlanet",
     data: BytesLike
@@ -160,8 +171,19 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "Initialized(uint8)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface WorldMapCreator extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -229,6 +251,10 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[WorldMapCreator.WorldMapStructOutput]>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     manualCreatePlanet(
       _worldMapIndex: BigNumberish,
       _xCoord: BigNumberish,
@@ -284,6 +310,10 @@ export interface WorldMapCreator extends BaseContract {
     _selectedWorldIndex: BigNumberish,
     overrides?: CallOverrides
   ): Promise<WorldMapCreator.WorldMapStructOutput>;
+
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   manualCreatePlanet(
     _worldMapIndex: BigNumberish,
@@ -341,6 +371,8 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<WorldMapCreator.WorldMapStructOutput>;
 
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     manualCreatePlanet(
       _worldMapIndex: BigNumberish,
       _xCoord: BigNumberish,
@@ -358,7 +390,10 @@ export interface WorldMapCreator extends BaseContract {
     ): Promise<BigNumber>;
   };
 
-  filters: {};
+  filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+  };
 
   estimateGas: {
     defineWorldMap(
@@ -392,6 +427,10 @@ export interface WorldMapCreator extends BaseContract {
     getWorldMap(
       _selectedWorldIndex: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     manualCreatePlanet(
@@ -443,6 +482,10 @@ export interface WorldMapCreator extends BaseContract {
     getWorldMap(
       _selectedWorldIndex: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     manualCreatePlanet(

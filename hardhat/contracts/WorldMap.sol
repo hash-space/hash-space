@@ -5,9 +5,10 @@ import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 
-contract WorldMapCreator is IWorld {
+contract WorldMapCreator is IWorld, Initializable {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
@@ -22,9 +23,10 @@ contract WorldMapCreator is IWorld {
 
     PlanetFactory _planetFactory;
 
-    constructor() {
+    function initialize() public initializer {
         planetIndex = 0;
         _planetFactory = new PlanetFactory();
+
     }
 
     function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {

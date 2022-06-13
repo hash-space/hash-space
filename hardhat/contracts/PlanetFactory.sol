@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 library SharedStructs {
         // Define planet information
@@ -18,7 +19,7 @@ library SharedStructs {
 }
 
 // contract PlanetFactory is UsingTellor {
-contract PlanetFactory {
+contract PlanetFactory is Initializable{
 
     // Define planet types
     struct PlanetCharacs {
@@ -32,8 +33,7 @@ contract PlanetFactory {
     mapping(uint => SharedStructs.Planet) public existingPlanets;
 
     // constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) public {}
-    constructor() {
-
+    function initialize() public initializer{
         // Add one planet type
         PlanetCharacs memory newPlanetType1;
 

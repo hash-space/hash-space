@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as erc721TradableSol from "./ERC721Tradable.sol";
 export type { erc721TradableSol };
+import type * as erc721TradableUpgradeableSol from "./ERC721TradableUpgradeable.sol";
+export type { erc721TradableUpgradeableSol };
 import type * as nftSol from "./NFT.sol";
 export type { nftSol };
 import type * as starErc20Sol from "./StarErc20.sol";
@@ -13,5 +15,7 @@ import type * as common from "./common";
 export type { common };
 import type * as interfaces from "./interfaces";
 export type { interfaces };
+import type * as opensealibs from "./opensealibs";
+export type { opensealibs };
 export type { PlanetFactory } from "./PlanetFactory";
 export type { Players } from "./Players";

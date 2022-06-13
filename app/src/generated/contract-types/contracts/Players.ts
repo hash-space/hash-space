@@ -34,6 +34,7 @@ export interface PlayersInterface extends utils.Interface {
     "determineStartingPosition()": FunctionFragment;
     "fundTreasury()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
+    "initialize()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "players(address)": FunctionFragment;
@@ -52,6 +53,7 @@ export interface PlayersInterface extends utils.Interface {
       | "determineStartingPosition"
       | "fundTreasury"
       | "indexStartingPosition"
+      | "initialize"
       | "moveShip"
       | "owner"
       | "players"
@@ -78,6 +80,10 @@ export interface PlayersInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "indexStartingPosition",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -134,6 +140,7 @@ export interface PlayersInterface extends utils.Interface {
     functionFragment: "indexStartingPosition",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "moveShip", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "players", data: BytesLike): Result;
@@ -160,13 +167,22 @@ export interface PlayersInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -232,6 +248,10 @@ export interface Players extends BaseContract {
     indexStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { _value: BigNumber }>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     moveShip(
       x: BigNumberish,
@@ -302,6 +322,10 @@ export interface Players extends BaseContract {
 
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   moveShip(
     x: BigNumberish,
     y: BigNumberish,
@@ -369,6 +393,8 @@ export interface Players extends BaseContract {
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     moveShip(
       x: BigNumberish,
       y: BigNumberish,
@@ -420,6 +446,9 @@ export interface Players extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -447,6 +476,10 @@ export interface Players extends BaseContract {
     ): Promise<BigNumber>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     moveShip(
       x: BigNumberish,
@@ -508,6 +541,10 @@ export interface Players extends BaseContract {
 
     indexStartingPosition(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     moveShip(

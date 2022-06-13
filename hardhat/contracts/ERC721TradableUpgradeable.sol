@@ -3,14 +3,15 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "./common/meta-transactions/ContentMixin.sol";
-import "./common/meta-transactions/NativeMetaTransaction.sol";
+import "./opensealibs/ContentMixin.sol";
+import "./opensealibs/NativeMetaTransaction.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract OwnableDelegateProxy {}
 
@@ -25,23 +26,28 @@ contract ProxyRegistry {
  * @title ERC721Tradable
  * ERC721Tradable - ERC721 contract that whitelists a trading address, and has minting functionality.
  */
-abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction, Ownable {
+abstract contract ERC721TradableUpgradeable is ERC721Upgradeable, ContextMixin, 
+NativeMetaTransaction, OwnableUpgradeable {
     using SafeMath for uint256;
-    using Counters for Counters.Counter;
+    using CountersUpgradeable for CountersUpgradeable.Counter;
 
     /**
      * We rely on the OZ Counter util to keep track of the next available ID.
      * We track the nextTokenId instead of the currentTokenId to save users on gas costs. 
      * Read more about it here: https://shiny.mirror.xyz/OUampBbIz9ebEicfGnQf5At_ReMHlZy0tB4glb9xQ0E
      */ 
-    Counters.Counter private _nextTokenId;
+    CountersUpgradeable.Counter private _nextTokenId;
     address proxyRegistryAddress;
 
-    constructor(
+
+
+    function initialize(
         string memory _name,
         string memory _symbol,
         address _proxyRegistryAddress
-    ) ERC721(_name, _symbol) {
+    ) public initializer {
+        __Ownable_init_unchained();
+        __ERC721_init_unchained(_name, _symbol); 
         proxyRegistryAddress = _proxyRegistryAddress;
         // nextTokenId is initialized to 1, since starting at 0 leads to higher gas cost for the first minter
         _nextTokenId.increment();
@@ -69,7 +75,7 @@ abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction,
     function baseTokenURI() virtual public pure returns (string memory);
 
     function tokenURI(uint256 _tokenId) override virtual public view returns (string memory) {
-        return string(abi.encodePacked(baseTokenURI(), Strings.toString(_tokenId)));
+        return string(abi.encodePacked(baseTokenURI(), StringsUpgradeable.toString(_tokenId)));
     }
 
     /**
