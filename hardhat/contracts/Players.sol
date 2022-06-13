@@ -36,21 +36,21 @@ contract Players is Ownable {
     constructor () {
     }
 
-    function setBackendAddress(address _address) public {
+    function setBackendAddress(address _address) public onlyOwner {
         backendAddress = _address;
     }
 
     /**
         We set the Nft Contract, this can also be done in the constructor
      */
-    function setNftAddress(address _nftContractAddress) public {
+    function setNftAddress(address _nftContractAddress) public onlyOwner {
         nftContract = IPlanet(_nftContractAddress);
     }
 
     /**
         We set the Worldcontract Contract, this can also be done in the constructor
      */
-    function setWorldAddress(address _worldAddress) public {
+    function setWorldAddress(address _worldAddress) public onlyOwner {
         worldContract = IWorld(_worldAddress);
     }
 
