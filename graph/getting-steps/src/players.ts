@@ -17,17 +17,17 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity = new StepTrackingEntity(event.transaction.from.toHex())
     entity.numSyncs = BigInt.fromI32(0)
     entity.totalSteps = BigInt.fromI32(0)
-    entity.timestamp = BigInt.fromI32(0)
+    entity.weekNum = BigInt.fromI32(0)
   }
 
   let startTimeUnix = "1655210217"
   let startingTimestamp = BigInt.fromString(startTimeUnix) // unix time when contract deployed - to update
   let stepsAddedTimestamp = BigInt.fromString(event.params.timestamp.toString())
-  let delta = stepsAddedTimestamp.minus(startingTimestamp).div(BigInt.fromI32(60))
-  //  Math.floor(week_num - week_1_timestamp)
-  // entity.timestamp = week_num - week_1_timestamp
+  let delta_in_seconds = stepsAddedTimestamp.minus(startingTimestamp)
+  let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
+  // TODO: check whether appropriately rounds up / down once more than 1 week has passed
 
-  entity.timestamp = delta
+  entity.weekNum = delta_in_weeks +  BigInt.fromI32(1)
 
   // entity.timestamp = moment.unix(event.params.timestamp);
 
