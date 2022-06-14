@@ -12,12 +12,17 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity = new StepTrackingEntity(event.transaction.from.toHex())
     entity.numSyncs = BigInt.fromI32(0)
     entity.totalSteps = BigInt.fromI32(0)
+    entity.timestamp = BigInt.fromI32(0)
   }
+
+  entity.timestamp = event.params.timestamp
+
+  // TODO: use timetsamp to parse into weeks, rather than save as paramter
+  // let week_number = timestamp // TODO: convert timestamp into a week number
 
   entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
 
   entity.totalSteps = entity.totalSteps + event.params.stepsTaken
-  entity.player = event.params.player
 
   entity.save()
 

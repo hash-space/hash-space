@@ -6,9 +6,9 @@ dataSources:
     name: Players
     network: mumbai
     source:
-      address: "0xd2116b44571CB73Aff01b122224C9D7937cD44F1"
+      address: "0x4D2b0dc7B4Bf43Ef56E0Da0aD3AeA7800C65852C"
       abi: Players
-      startBlock: 26655283
+      startBlock: 26741082
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -19,6 +19,6 @@ dataSources:
         - name: Players
           file: Players/abis/Players.json
       eventHandlers:
-        - event: StepsAdded(uint256,address)
+        - event: StepsAdded(uint256,address,uint256)
           handler: handleStepsAdded
       file: Players/Players.wasm

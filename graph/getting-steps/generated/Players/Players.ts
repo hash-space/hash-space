@@ -52,6 +52,10 @@ export class StepsAdded__Params {
   get player(): Address {
     return this._event.parameters[1].value.toAddress();
   }
+
+  get timestamp(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
 }
 
 export class TreasuryFunded extends ethereum.Event {
