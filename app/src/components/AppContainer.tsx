@@ -31,19 +31,12 @@ const theme = createTheme({
 const APIURL = 'https://api-mumbai.lens.dev/';
 
 const getAuth = async ({ authState }) => {
-  if (!authState) {
-    const token = Cookies.get('accessToken');
-    if (token) {
-      return { token };
-    }
-    return null;
-  }
-
   return null;
 };
 
 const addAuthToOperation = ({ authState, operation }) => {
-  if (!authState || !authState.token) {
+  const token = Cookies.get('accessToken');
+  if (!token) {
     return operation;
   }
 
@@ -58,7 +51,7 @@ const addAuthToOperation = ({ authState, operation }) => {
       ...fetchOptions,
       headers: {
         ...fetchOptions.headers,
-        Authorization: `Bearer ${authState.token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   });
@@ -76,7 +69,7 @@ const client = createClient({
         );
 
         if (isAuthError) {
-          //Cookies.remove('accessToken');
+          Cookies.remove('accessToken');
         }
       },
     }),

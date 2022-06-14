@@ -6,8 +6,17 @@ import { useAuthLens } from '../src/hooks/useAuthLens';
 import { create } from 'ipfs-http-client';
 import omitDeep from 'omit-deep';
 import lensAbi from './lensAbi.json';
-import { Button, FormControl, TextField, Box, MenuItem } from '@mui/material';
-import { useState } from 'react';
+import {
+  Button,
+  FormControl,
+  TextField,
+  Box,
+  MenuItem,
+  Grid,
+  Alert,
+} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 const omit = (object: any, name: string) => {
@@ -104,22 +113,36 @@ export default function Lens() {
   const [createPostResult, createPost] = useMutation(
     CREATE_POST_TYPED_DATA_MUTATION
   );
+  const [isLoading, setLoading] = useState(false);
   const [postText, setPostText] = useState('');
   const [selectedProfile, setProfile] = useState('');
   const ethersAppContext = useEthersAppContext();
   const auth = useAuthLens();
-  const [profiles] = useQuery({
+  const [profiles, getProfiles] = useQuery({
     query: CURRENT_USER_QUERY,
+    requestPolicy: 'network-only',
     variables: { ownedBy: ethersAppContext.account },
-    pause: !auth.isAuthenticated,
+    pause: false,
   });
   const profilesArray = profiles?.data?.profiles?.items || [];
   const selectedProfileObject = profilesArray.find(
     (profile) => profile.id === selectedProfile
   );
   const nounce = profiles?.data?.userSigNonces?.lensHubOnChainSigNonce;
+  const noProfile = profiles.data && profilesArray.length == 0;
+
+  useEffect(() => {
+    getProfiles();
+  }, [auth.isAuthenticated, getProfiles]);
+
+  const disablePostButton = !(
+    selectedProfile &&
+    auth.isAuthenticated &&
+    postText.length > 1
+  );
 
   const upload = () => {
+    setLoading(true);
     uploadToIPFS(postText).then((contentURI) =>
       createPost({
         options: { overrideSigNonce: nounce },
@@ -180,32 +203,45 @@ export default function Lens() {
         .then((tx) => {
           return tx.wait();
         })
+        .finally(() => {
+          setLoading(false);
+        })
     );
   };
   return (
     <PageWrapper>
-      {!auth.isAuthenticated && (
-        <button onClick={() => auth.auth()}>auth</button>
-      )}
-      <FormControl fullWidth>
+      <FormControl
+        fullWidth
+        sx={{
+          position: 'relative',
+          display: auth.isAuthenticated ? undefined : 'none',
+        }}>
+        {!noProfile && (
+          <TextField
+            id="outlined-select-currency"
+            select
+            disabled={!auth.isAuthenticated}
+            label="Profile"
+            onChange={(e) => {
+              setProfile(e.target.value);
+            }}
+            value={selectedProfile}>
+            {profilesArray.map((profile) => (
+              <MenuItem key={profile.id} value={profile.id}>
+                {profile.handle}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+        {noProfile && (
+          <Alert severity="error">
+            You dont seem to have a lens profile, please create one first on
+            lenster.xyz or claim.lens.xyz
+          </Alert>
+        )}
+        <Box sx={{ height: 10 }} />
         <TextField
-          id="outlined-select-currency"
-          select
-          disabled={!auth.isAuthenticated}
-          label="Profile"
-          onChange={(e) => {
-            setProfile(e.target.value);
-          }}
-          value={selectedProfile}>
-          {profilesArray.map((profile) => (
-            <MenuItem key={profile.id} value={profile.id}>
-              {profile.handle}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Box height="10" />
-        <TextField
-          disabled={!selectedProfile}
+          disabled={!selectedProfile || !auth.isAuthenticated}
           id="outlined-multiline-static"
           label="Content"
           multiline
@@ -213,10 +249,36 @@ export default function Lens() {
           defaultValue=""
           onBlur={(e) => setPostText(e.target.value)}
         />
-        <Button variant="outlined" onClick={() => upload()}>
-          Upload
-        </Button>
+        <Box sx={{ height: 10 }} />
+        <LoadingButton
+          disabled={disablePostButton}
+          variant="outlined"
+          loading={isLoading}
+          onClick={() => upload()}>
+          Post on Lens
+        </LoadingButton>
       </FormControl>
+      {!auth.isAuthenticated && (
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Button fullWidth variant="outlined" onClick={() => auth.auth()}>
+              Post on Lens
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                window.open(
+                  'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&ref_src=twsrc%5Etfw'
+                );
+              }}>
+              Post on Twitter
+            </Button>
+          </Grid>
+        </Grid>
+      )}
     </PageWrapper>
   );
 }

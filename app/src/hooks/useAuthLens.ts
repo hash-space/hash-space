@@ -53,7 +53,9 @@ export function useAuthLens() {
             res.data.authenticate.accessToken,
             COOKIE_CONFIG
           );
-          setAuth(true);
+          setTimeout(() => {
+            setAuth(true);
+          });
         });
     }
   }, [challangeResult.data]);
@@ -62,8 +64,6 @@ export function useAuthLens() {
     const interval = setInterval(() => {
       if (!Cookies.get('accessToken')) {
         setAuth(false);
-      } else {
-        setAuth(true);
       }
     }, 1000);
     return () => {
