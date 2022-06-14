@@ -20,11 +20,14 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity.timestamp = BigInt.fromI32(0)
   }
 
-  let start_time_unix = "1655206617"
-  let week_1_timestamp = BigInt.fromString(start_time_unix) // unix time when contract deployed - to update
-  let week_num = BigInt.fromString(event.params.timestamp.toString())
-  // let delta: any = week_num - week_1_timestamp
+  let startTimeUnix = "1655210217"
+  let startingTimestamp = BigInt.fromString(startTimeUnix) // unix time when contract deployed - to update
+  let stepsAddedTimestamp = BigInt.fromString(event.params.timestamp.toString())
+  let delta = stepsAddedTimestamp.minus(startingTimestamp).div(BigInt.fromI32(60))
+  //  Math.floor(week_num - week_1_timestamp)
   // entity.timestamp = week_num - week_1_timestamp
+
+  entity.timestamp = delta
 
   // entity.timestamp = moment.unix(event.params.timestamp);
 
