@@ -1,11 +1,10 @@
 import { gql, useMutation, useQuery } from 'urql';
 import { v4 as uuidv4 } from 'uuid';
-import { PageWrapper } from '../src/components/PageWrapper';
 import { useEthersAppContext } from 'eth-hooks/context';
-import { useAuthLens } from '../src/hooks/useAuthLens';
+import { useAuthLens } from '../hooks/useAuthLens';
 import { create } from 'ipfs-http-client';
 import omitDeep from 'omit-deep';
-import lensAbi from './lensAbi.json';
+import lensAbi from '../abi/lensAbi.json';
 import {
   Button,
   FormControl,
@@ -14,6 +13,7 @@ import {
   MenuItem,
   Grid,
   Alert,
+  Typography,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useEffect, useState } from 'react';
@@ -109,7 +109,7 @@ async function uploadToIPFS(postContent: string) {
 
 const LENS_ADDRESS = '0x60Ae865ee4C725cd04353b5AAb364553f56ceF82';
 
-export default function Lens() {
+export default function ShareContainer() {
   const [createPostResult, createPost] = useMutation(
     CREATE_POST_TYPED_DATA_MUTATION
   );
@@ -140,6 +140,8 @@ export default function Lens() {
     auth.isAuthenticated &&
     postText.length > 1
   );
+
+  const processChange = debounce((text) => setPostText(text));
 
   const upload = () => {
     setLoading(true);
@@ -209,10 +211,11 @@ export default function Lens() {
     );
   };
   return (
-    <PageWrapper>
+    <div>
       <FormControl
         fullWidth
         sx={{
+          padding: 2,
           position: 'relative',
           display: auth.isAuthenticated ? undefined : 'none',
         }}>
@@ -247,7 +250,7 @@ export default function Lens() {
           multiline
           rows={4}
           defaultValue=""
-          onBlur={(e) => setPostText(e.target.value)}
+          onChange={(e) => processChange(e.target.value)}
         />
         <Box sx={{ height: 10 }} />
         <LoadingButton
@@ -259,26 +262,41 @@ export default function Lens() {
         </LoadingButton>
       </FormControl>
       {!auth.isAuthenticated && (
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Button fullWidth variant="outlined" onClick={() => auth.auth()}>
-              Post on Lens
-            </Button>
+        <>
+          <Typography variant="body1" gutterBottom>
+            Share your thoughts on:
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Button fullWidth variant="outlined" onClick={() => auth.auth()}>
+                Lens
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  window.open(
+                    'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&ref_src=twsrc%5Etfw'
+                  );
+                }}>
+                Twitter
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => {
-                window.open(
-                  'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&ref_src=twsrc%5Etfw'
-                );
-              }}>
-              Post on Twitter
-            </Button>
-          </Grid>
-        </Grid>
+        </>
       )}
-    </PageWrapper>
+    </div>
   );
+}
+
+function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
 }
