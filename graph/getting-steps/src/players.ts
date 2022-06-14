@@ -5,6 +5,11 @@ import {
 } from "../generated/Players/Players"
 import { StepTrackingEntity } from "../generated/schema"
 
+// import dayjs from '../node_modules/dayjs'
+// dayjs().format()
+// import moment from 'moment';
+// moment.format()
+
 export function handleStepsAdded(event: StepsAdded): void {
   let entity = StepTrackingEntity.load(event.transaction.from.toHex())
 
@@ -15,10 +20,17 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity.timestamp = BigInt.fromI32(0)
   }
 
-  entity.timestamp = event.params.timestamp
+  let start_time_unix = "1655206617"
+  let week_1_timestamp = BigInt.fromString(start_time_unix) // unix time when contract deployed - to update
+  let week_num = BigInt.fromString(event.params.timestamp.toString())
+  // let delta: any = week_num - week_1_timestamp
+  // entity.timestamp = week_num - week_1_timestamp
 
-  // TODO: use timetsamp to parse into weeks, rather than save as paramter
+  // entity.timestamp = moment.unix(event.params.timestamp);
+
+  // TODO: use timestamp to parse into weeks, rather than save as parameter
   // let week_number = timestamp // TODO: convert timestamp into a week number
+  // May want to subtract timestamp from the start of subgraph, to get week numbers
 
   entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
 

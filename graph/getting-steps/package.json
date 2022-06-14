@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",
-    "@graphprotocol/graph-ts": "0.27.0"
+    "@graphprotocol/graph-ts": "0.27.0",
+    "dayjs": "^1.11.3",
+    "moment": "^2.29.3"
   }
 }
