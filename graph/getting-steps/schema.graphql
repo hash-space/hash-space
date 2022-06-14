@@ -2,5 +2,10 @@ type StepTrackingEntity @entity {
   id: ID!
   numSyncs: BigInt!
   totalSteps: BigInt!
-  weekNum: BigInt!
+  weeklySteps: [StepCount!]
+}
+
+type StepCount @entity {
+  id: ID!
+  totalWeeklySteps: BigInt!
 }

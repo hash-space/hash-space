@@ -17,8 +17,9 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity = new StepTrackingEntity(event.transaction.from.toHex())
     entity.numSyncs = BigInt.fromI32(0)
     entity.totalSteps = BigInt.fromI32(0)
-    entity.weekNum = BigInt.fromI32(0)
+    // entity.weekNum = BigInt.fromI32(0)
   }
+
 
   let startTimeUnix = "1655210217"
   let startingTimestamp = BigInt.fromString(startTimeUnix) // unix time when contract deployed - to update
@@ -26,14 +27,18 @@ export function handleStepsAdded(event: StepsAdded): void {
   let delta_in_seconds = stepsAddedTimestamp.minus(startingTimestamp)
   let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
   // TODO: check whether appropriately rounds up / down once more than 1 week has passed
+  // It appears to give floor (ie. round down), which is desired behaviour
 
-  entity.weekNum = delta_in_weeks +  BigInt.fromI32(1)
+  let weekNum = delta_in_weeks +  BigInt.fromI32(1)
 
-  // entity.timestamp = moment.unix(event.params.timestamp);
+  // TODO: index array in graphQL
+  // if (!entity.weeklySteps[weekNum]) {
+  //   entity.weeklySteps[weekNum] = new StepCount(event.transaction.from.toHex())
+  //   entity.weeklySteps[weekNum].totalWeeklySteps = BigInt.fromI32(0)
+  // }
 
-  // TODO: use timestamp to parse into weeks, rather than save as parameter
-  // let week_number = timestamp // TODO: convert timestamp into a week number
-  // May want to subtract timestamp from the start of subgraph, to get week numbers
+  // entity.weeklySteps[weekNum].totalWeeklySteps = BigInt.fromI32(0)
+
 
   entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
 
