@@ -2,5 +2,11 @@ type StepTrackingEntity @entity {
   id: ID!
   numSyncs: BigInt!
   totalSteps: BigInt!
-  player: Bytes! # address
+  weeklySteps: [StepCount!]!
+  player: Bytes! # address # (may be unnecessary, given ID?)
+}
+
+type StepCount {
+  weekNumber: BigInt!
+  weeklySteps: BigInt!
 }

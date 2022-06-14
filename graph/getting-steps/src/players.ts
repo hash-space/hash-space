@@ -41,7 +41,7 @@ export function handleStepsAdded(event: StepsAdded): void {
   // state variables and other data:
   //
   // - contract.NFTPRICE(...)
-  // - contract.checkContractBalance(...)
+  // - contract.checkContractBalance(...)s
   // - contract.determineStartingPosition(...)
   // - contract.indexStartingPosition(...)
   // - contract.owner(...)
