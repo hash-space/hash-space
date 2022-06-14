@@ -3,11 +3,11 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "hardhat/console.sol";
 
-
-contract WorldMapCreator is IWorld {
+contract WorldMapCreator is IWorld, Ownable {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
@@ -27,7 +27,7 @@ contract WorldMapCreator is IWorld {
         _planetFactory = new PlanetFactory();
     }
 
-    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {
+    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public onlyOwner {
         // TODO: consider having the world index randomly generated
         require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
 
@@ -44,7 +44,7 @@ contract WorldMapCreator is IWorld {
     }
 
     function manualCreatePlanet(uint _worldMapIndex,
-                uint _xCoord, uint _yCoord, uint _planetType) public returns (uint) {
+                uint _xCoord, uint _yCoord, uint _planetType) public onlyOwner returns (uint) {
         require(existingWorlds[_worldMapIndex].Length > 0, "world does not exist");
 
         planetIndex += 1;
@@ -75,7 +75,7 @@ contract WorldMapCreator is IWorld {
         return existingWorlds[_selectedWorldIndex];
     }
 
-    function deleteWorld(uint256 _selectedWorldIndex) public { // TODO: make only owner /restricted
+    function deleteWorld(uint256 _selectedWorldIndex) public onlyOwner {
         delete(existingWorlds[_selectedWorldIndex]);
     }
 

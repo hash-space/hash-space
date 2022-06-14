@@ -85,7 +85,6 @@ export function usePlayerContract() {
 
   useEffect(() => {
     if (playerObject) {
-      console.log(playerObject);
       setPlayerState({
         lastQueried: parseNumber(playerObject[2]),
         playerId: parseNumber(playerObject[0]),
@@ -97,6 +96,10 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     authContext.addTx(
       uploadIPFS().then((metadata) => {
         return playersContract.registerProfile(metadata.url, {
@@ -107,8 +110,22 @@ export function usePlayerContract() {
   }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
-    (steps: number) => {
-      authContext.addTx(playersContract.syncSteps(steps));
+    (stepString: string) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      const splitString = stepString.split('-') as any[];
+      authContext.addTx(
+        playersContract.syncSteps(
+          splitString[0],
+          splitString[1],
+          splitString[2],
+          splitString[3],
+          splitString[4],
+          splitString[5]
+        )
+      );
     },
     [playersContract, authContext]
   );
@@ -121,6 +138,10 @@ export function usePlayerContract() {
       shipId: number,
       worldId: number
     ) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       authContext.addTx(
         playersContract.moveShip(x, y, planetId, shipId, worldId)
       );

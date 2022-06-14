@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -72,8 +76,11 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     "getPlanets(uint256)": FunctionFragment;
     "getWorldMap(uint256)": FunctionFragment;
     "manualCreatePlanet(uint256,uint256,uint256,uint256)": FunctionFragment;
+    "owner()": FunctionFragment;
     "planetIndex()": FunctionFragment;
     "planetsInWorld(uint256,uint256)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
@@ -85,8 +92,11 @@ export interface WorldMapCreatorInterface extends utils.Interface {
       | "getPlanets"
       | "getWorldMap"
       | "manualCreatePlanet"
+      | "owner"
       | "planetIndex"
       | "planetsInWorld"
+      | "renounceOwnership"
+      | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -117,6 +127,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "manualCreatePlanet",
     values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "planetIndex",
     values?: undefined
@@ -124,6 +135,14 @@ export interface WorldMapCreatorInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "planetsInWorld",
     values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
@@ -151,6 +170,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "manualCreatePlanet",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "planetIndex",
     data: BytesLike
@@ -159,9 +179,33 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "planetsInWorld",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "OwnershipTransferred(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface WorldMapCreator extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -237,6 +281,8 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     planetIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     planetsInWorld(
@@ -244,6 +290,15 @@ export interface WorldMapCreator extends BaseContract {
       arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   defineWorldMap(
@@ -293,6 +348,8 @@ export interface WorldMapCreator extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
   planetIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
   planetsInWorld(
@@ -300,6 +357,15 @@ export interface WorldMapCreator extends BaseContract {
     arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     defineWorldMap(
@@ -349,6 +415,8 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<string>;
+
     planetIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
     planetsInWorld(
@@ -356,9 +424,25 @@ export interface WorldMapCreator extends BaseContract {
       arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+  };
 
   estimateGas: {
     defineWorldMap(
@@ -402,12 +486,23 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     planetIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
     planetsInWorld(
       arg0: BigNumberish,
       arg1: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -453,12 +548,23 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     planetIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     planetsInWorld(
       arg0: BigNumberish,
       arg1: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

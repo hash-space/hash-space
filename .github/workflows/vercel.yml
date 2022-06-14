@@ -2,7 +2,7 @@ name: backend_deploy
 on:
   push:
     branches:
-      - main
+      - doesnotexist
 
 env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}

@@ -1,6 +1,6 @@
-name: pr
+name: v2
 on:
-  pull_request:
+  push:
     branches:
       - v2
 
@@ -9,13 +9,16 @@ env:
   PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
   PRIVATE_KEY_ARBITRUM_NITRO: ${{ secrets.PRIVATE_KEY_ARBITRUM_NITRO }}
 
-concurrency: pr
+concurrency: v2
+
+permissions: write-all
 
 jobs:
-  sanity_check:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v3
         with:
           node-version: 14
@@ -23,11 +26,18 @@ jobs:
       - run: npm install -g npm@8.3.1
       - run: npm -v
 
+      - run: rm -rf ./app/src/generated
+      - run: mkdir ./app/src/generated
+
       - run: npm install
 
       - run: npm run deploy:mumbai
-      # - run: npm run deploy:emerald-test
-      # - run: npm run deploy:arbitrum-nitro
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: '** --force'
+          cwd: './app/src/generated'
 
       - run: npm run build
 
@@ -38,4 +48,4 @@ jobs:
           vercel-org-id: ${{ secrets.ORG_ID}} #Required
           vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
           working-directory: ./app
-          alias-domains: steps-app-dev.vercel.app
+          alias-domains: v2.hashspace.quest
