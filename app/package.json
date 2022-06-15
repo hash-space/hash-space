@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev -p 3001\" \"npx local-ssl-proxy --source 3000 --target 3001\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -45,6 +45,7 @@
   "devDependencies": {
     "@types/node": "^17.0.33",
     "@types/react": "^18.0.9",
+    "concurrently": "^7.2.2",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "next-compose-plugins": "^2.2.1",

@@ -36,7 +36,9 @@ const getAuth = async ({ authState }) => {
 
 const addAuthToOperation = ({ authState, operation }) => {
   const token = Cookies.get('accessToken');
-  if (!token) {
+  const url = operation?.context?.url || '';
+  const isGraphOperation = url.indexOf('api.thegraph.com') !== -1;
+  if (!token || isGraphOperation) {
     return operation;
   }
 
