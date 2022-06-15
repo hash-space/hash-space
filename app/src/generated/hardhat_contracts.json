@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "Starship": {
-          "address": "0xafe67A7381F98711941e9239784E08691bC93FC2",
+          "address": "0x498E1651Fa97681A9883a4fFa6A386489d919659",
           "abi": [
             {
               "inputs": [
@@ -714,7 +714,7 @@
           ]
         },
         "StarToken": {
-          "address": "0x7f57E7E23d85B9aF1833f619B8B922D37290217F",
+          "address": "0xf79771D5A8da5AC5317142749e172c49736d8e21",
           "abi": [
             {
               "inputs": [],
@@ -1053,7 +1053,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x2bCE2eBb2a993546D5Fb172B0B2bc2ac38E111aC",
+          "address": "0x3107e08ad0d9Fe570BAA1A7EdfDB8F99ad2c616D",
           "abi": [
             {
               "inputs": [],
@@ -1367,7 +1367,7 @@
           ]
         },
         "Players": {
-          "address": "0x8c35264B08935C4c82818cfA4Eb76d88F7983606",
+          "address": "0x097652F73BdcF878193B3a0c9e4345C18a2eC1F5",
           "abi": [
             {
               "inputs": [],
@@ -1391,6 +1391,31 @@
                 }
               ],
               "name": "OwnershipTransferred",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "stepsTaken",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "StepsAdded",
               "type": "event"
             },
             {
