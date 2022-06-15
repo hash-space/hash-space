@@ -52,12 +52,10 @@ export type { EIP712Base } from "./contracts/common/meta-transactions/EIP712Base
 export { EIP712Base__factory } from "./factories/contracts/common/meta-transactions/EIP712Base__factory";
 export type { NativeMetaTransaction } from "./contracts/common/meta-transactions/NativeMetaTransaction";
 export { NativeMetaTransaction__factory } from "./factories/contracts/common/meta-transactions/NativeMetaTransaction__factory";
-export type { ERC721Tradable } from "./contracts/ERC721Tradable.sol/ERC721Tradable";
-export { ERC721Tradable__factory } from "./factories/contracts/ERC721Tradable.sol/ERC721Tradable__factory";
-export type { ProxyRegistry } from "./contracts/ERC721Tradable.sol/ProxyRegistry";
-export { ProxyRegistry__factory } from "./factories/contracts/ERC721Tradable.sol/ProxyRegistry__factory";
 export type { ERC721TradableUpgradeable } from "./contracts/ERC721TradableUpgradeable.sol/ERC721TradableUpgradeable";
 export { ERC721TradableUpgradeable__factory } from "./factories/contracts/ERC721TradableUpgradeable.sol/ERC721TradableUpgradeable__factory";
+export type { ProxyRegistry } from "./contracts/ERC721TradableUpgradeable.sol/ProxyRegistry";
+export { ProxyRegistry__factory } from "./factories/contracts/ERC721TradableUpgradeable.sol/ProxyRegistry__factory";
 export type { IPlanet } from "./contracts/interfaces/IPlanet";
 export { IPlanet__factory } from "./factories/contracts/interfaces/IPlanet__factory";
 export type { IWorld } from "./contracts/interfaces/IWorld";

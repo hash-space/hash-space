@@ -3,6 +3,7 @@ require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
 require('hardhat-deploy-ethers');
+require('@openzeppelin/hardhat-upgrades');
 require('dotenv').config();
 
 // You need to export an object to set up your config

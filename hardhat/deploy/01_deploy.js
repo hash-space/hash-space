@@ -1,14 +1,18 @@
+const { ethers } = require('hardhat');
 const hre = require('hardhat');
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  const starship = await deploy('Starship', {
+
+  const starshipcontract = await ethers.getContractFactory("Starships")
+  const starship = await upgrades.deployProxy(starshipcontract, [], {
     from: deployer,
     gasLimit: 8000000,
     args: ['0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101'], // polygon
     log: true,
   });
+  //no need to modify
   await deploy('StarToken', {
     from: deployer,
     gasLimit: 8000000,
@@ -16,14 +20,16 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
 
-  const world = await deploy('WorldMapCreator', {
+  const worldcontract = await ethers.getContractFactory("WorldMapCreator")
+
+  const world = await upgrades.deployProxy(worldcontract, [], {
     from: deployer,
     gasLimit: 4000000,
     args: [],
     log: true,
   });
-
-  const players = await deploy('Players', {
+  const playerscontract = await ethers.getContractFactory("Players")
+  const players = await upgrades.deployProxy(playerscontract, [], {
     from: deployer,
     gasLimit: 4000000,
     args: [],
