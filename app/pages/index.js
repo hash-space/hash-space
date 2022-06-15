@@ -1,11 +1,10 @@
 import dynamic from 'next/dynamic';
 import { useEthersAppContext } from 'eth-hooks/context';
-import { useAuthContext } from '../src/context/auth';
 import { useStateContext } from '../src/context/state';
 import { PageWrapper } from '../src/components/PageWrapper';
 import { Typography, Button, ButtonGroup, Alert } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
-import MoveShipDialog from '../src/components/MoveShipDialog';
+import ShareDialog from '../src/components/ShareDialog';
 import { useRouter } from 'next/router';
 import { getAddress } from '../src/helper/getAddress';
 
@@ -29,7 +28,7 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <SyncStepDialog />
-          <MoveShipDialog />
+          <ShareDialog />
           <Typography variant="h5" gutterBottom component="div">
             <b>HASH SPACE: The DeFi Explorer</b>
           </Typography>
@@ -193,7 +192,9 @@ export default function Home() {
           </Typography>
           <div>
             <ButtonGroup size="large" aria-label="large button group">
-              <Link
+              <a
+                rel="noreferrer"
+                target={'_blank'}
                 href={`https://testnets.opensea.io/assets?search[query]=${getAddress(
                   80001,
                   'Starship'
@@ -201,8 +202,28 @@ export default function Home() {
                 <Button color="secondary" variant="outlined">
                   Mumbai
                 </Button>
-              </Link>
+              </a>
             </ButtonGroup>
+          </div>
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            <b>Share</b>
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Show some love an share us on different social channels
+          </Typography>
+          <div>
+            <Link
+              href={{
+                pathname: '/',
+                query: { modal: 'share' },
+              }}>
+              <Button color="secondary" variant="outlined">
+                Share
+              </Button>
+            </Link>
           </div>
         </Paper>
         <Box sx={{ height: 10 }} />
