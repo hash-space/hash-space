@@ -46,7 +46,7 @@ describe('Player', function () {
     const [owner] = await ethers.getSigners();
     const playerState = await player.players(owner.address);
     const stepString = await signSteps(
-      100,
+      90,
       playerState.lastQueried.toNumber(),
       privateKeyBackend
     );
@@ -55,10 +55,24 @@ describe('Player', function () {
     const stepsResult = await player.players(owner.address);
 
     // assert
-    expect(stepsResult.totalStepsTaken).to.eq(100);
-    expect(stepsResult.stepsAvailable).to.eq(100);
+    expect(stepsResult.totalStepsTaken).to.eq(90);
+    expect(stepsResult.stepsAvailable).to.eq(90);
   });
 
+  it('syncing steps should emit event', async function () {
+    const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      10,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
+    await expect(player.syncSteps(...stepString.split('-')))
+      .to.emit(player, 'StepsAdded')
+    //   .withArgs(10, owner.address, playerState.lastQueried); 
+        // Unable to get current block.timestamp here for comparison
+    });
+   
   it('user should be able to accumulate steps', async function () {
     const [owner] = await ethers.getSigners();
     const playerState = await player.players(owner.address);

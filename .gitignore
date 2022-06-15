@@ -14,3 +14,7 @@ hardhat/deployments
 **.DS_Store
 
 .turbo
+
+
+graph/generated
+graph/build

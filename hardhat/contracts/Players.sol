@@ -33,6 +33,8 @@ contract Players is Ownable {
 
     event TreasuryFunded(uint amountFunded);
 
+    event StepsAdded(uint stepsTaken, address player, uint timestamp);
+
     constructor () {
     }
 
@@ -92,6 +94,7 @@ contract Players is Ownable {
         player.totalStepsTaken += _steps;
         player.stepsAvailable += _steps;
         player.lastQueried = block.timestamp;
+        emit StepsAdded(_steps, msg.sender, block.timestamp);
     }
 
     function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public view {
