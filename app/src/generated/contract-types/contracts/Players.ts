@@ -195,10 +195,12 @@ export interface PlayersInterface extends utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StepsAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
 
@@ -213,6 +215,18 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface StepsAddedEventObject {
+  stepsTaken: BigNumber;
+  player: string;
+  timestamp: BigNumber;
+}
+export type StepsAddedEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  StepsAddedEventObject
+>;
+
+export type StepsAddedEventFilter = TypedEventFilter<StepsAddedEvent>;
 
 export interface TreasuryFundedEventObject {
   amountFunded: BigNumber;
@@ -525,6 +539,17 @@ export interface Players extends BaseContract {
       previousOwner?: string | null,
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
+
+    "StepsAdded(uint256,address,uint256)"(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
+    StepsAdded(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
 
     "TreasuryFunded(uint256)"(amountFunded?: null): TreasuryFundedEventFilter;
     TreasuryFunded(amountFunded?: null): TreasuryFundedEventFilter;
