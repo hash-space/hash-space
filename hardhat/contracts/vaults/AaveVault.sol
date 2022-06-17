@@ -2,12 +2,12 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "../interfaces/IAaveGateway.sol";
 
-contract AaveVault is Ownable, ReentrancyGuard {
+contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     /**
         A-Pol token in aave Aave Polygon (aPolWM...)
@@ -31,7 +31,7 @@ contract AaveVault is Ownable, ReentrancyGuard {
     /**
         The total amount we deposited into the pool
      */
-    uint256 public amountDeposited = 0;
+    uint256 public amountDeposited;
 
    modifier onlyPlayerContract {
       require(msg.sender == PLAYER);
@@ -43,12 +43,13 @@ contract AaveVault is Ownable, ReentrancyGuard {
         address _asset,
         address _pool,
         address _player
-    ) public onlyOwner {
+    ) public {
         GATEWAY = _gateway;
         ASSET = _asset;
         POOL = _pool;
         PLAYER = _player;
         MAX_INT = 2**256 - 1;
+        amountDeposited = 0;
         IERC20(ASSET).approve(GATEWAY, MAX_INT); // allow gateway to spend all our tokens to save gas on withdraw
     }
 

@@ -1,0 +1,294 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x6Ae55E27577652BEe91eC04d0bb67Ee1E4De2164",
+    "txHash": "0x583dbe710773f54c011236f3ba7c1ad730fa2a876d0bb6ff3fa1c661a4a036ca"
+  },
+  "proxies": [
+    {
+      "address": "0xaBbB11586A55eB48bC4d4DbB28637A926eF6aCEe",
+      "txHash": "0xbabed012bee645e3f883ba04f552163049a8501607b6a87d226f7b2af5e5ecf7",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "913cf95f789b5d0fd3b64970fb06cb0da23fc1ca284d681106f1fe13dff39ee0": {
+      "address": "0x79C25C473070e14025e43a77c603D16b0fd84F95",
+      "txHash": "0x75eed4b407148f905a36d2c5687c8090cf88ea7e0ace26843a5251401570f06e",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "ASSET",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:15"
+          },
+          {
+            "label": "GATEWAY",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:20"
+          },
+          {
+            "label": "POOL",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:24"
+          },
+          {
+            "label": "PLAYER",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:28"
+          },
+          {
+            "label": "MAX_INT",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:29"
+          },
+          {
+            "label": "amountDeposited",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:34"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "b8598542f00b4153a344699e82d948b0cb0eabb60df1f85f4c786c9105c77eed": {
+      "address": "0x0917Cb503DcA6D0E8BD88D2Df9D794aa767f6C4D",
+      "txHash": "0xb476e30791f6b49a7dfda271da2cca107575917250b47d363c45d9d3ebdba826",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "ASSET",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:15"
+          },
+          {
+            "label": "GATEWAY",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:20"
+          },
+          {
+            "label": "POOL",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:24"
+          },
+          {
+            "label": "PLAYER",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:28"
+          },
+          {
+            "label": "MAX_INT",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:29"
+          },
+          {
+            "label": "amountDeposited",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:34"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

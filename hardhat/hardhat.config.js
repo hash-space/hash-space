@@ -3,6 +3,7 @@ require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
 require('hardhat-deploy-ethers');
+require('@openzeppelin/hardhat-upgrades');
 require('dotenv').config();
 
 // You need to export an object to set up your config
@@ -18,9 +19,10 @@ module.exports = {
   defaultNetwork: 'localhost',
   networks: {
     hardhat: {
-      forking: {
-        url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
-      },
+      // forking: {
+      //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
+      //   blockNumber: 26787554,
+      // },
     },
     localhost: {
       url: 'http://localhost:8545',
