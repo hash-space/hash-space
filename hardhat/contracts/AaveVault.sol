@@ -46,6 +46,7 @@ contract AaveVault is Ownable, ReentrancyGuard {
 
     /**
         Withdraw only the yield from aave
+        TODO: just allow withdraw by player contract
      */
     function withdraw(address _receiver) public nonReentrant {
         IAaveGateway gatewayContract = IAaveGateway(GATEWAY);
