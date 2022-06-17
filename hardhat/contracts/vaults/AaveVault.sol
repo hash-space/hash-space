@@ -5,9 +5,14 @@ pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../interfaces/IAaveGateway.sol";
 
-contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable {
+contract AaveVaultBase is Initializable {
+
+}
+
+contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultBase {
 
     /**
         A-Pol token in aave Aave Polygon (aPolWM...)
@@ -43,7 +48,7 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         address _asset,
         address _pool,
         address _player
-    ) public {
+    ) public initializer {
         GATEWAY = _gateway;
         ASSET = _asset;
         POOL = _pool;
@@ -51,6 +56,7 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         MAX_INT = 2**256 - 1;
         amountDeposited = 0;
         IERC20(ASSET).approve(GATEWAY, MAX_INT); // allow gateway to spend all our tokens to save gas on withdraw
+        __Ownable_init_unchained();
     }
 
     /**
@@ -65,16 +71,14 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         Withdraw only the yield from aave
      */
     function withdraw(address _receiver) public nonReentrant onlyPlayerContract {
-        IAaveGateway gatewayContract = IAaveGateway(GATEWAY);
-        gatewayContract.withdrawETH(POOL, this.yield(), _receiver);
+        IAaveGateway(GATEWAY).withdrawETH(POOL, this.yield(), _receiver);
     }
 
     /**
         Emergency withdraw function
      */
     function withdrawEmergency() public onlyOwner {
-        IAaveGateway gatewayContract = IAaveGateway(GATEWAY);
-        gatewayContract.withdrawETH(POOL, MAX_INT, msg.sender);
+        IAaveGateway(GATEWAY).withdrawETH(POOL, MAX_INT, msg.sender);
         amountDeposited = 0;
     }
 

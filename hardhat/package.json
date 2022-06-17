@@ -2,7 +2,7 @@
   "name": "hardhat-project",
   "scripts": {
     "compile": "hardhat compile --force",
-    "test": "hardhat test --network hardhat --parallel",
+    "test": "hardhat test --network hardhat",
     "clean": "hardhat clean && yarn shx rm -rf './generated/deployments' && yarn shx rm -rf './generated/cache'",
     "node": "hardhat node --network hardhat --no-deploy",
     "deploy:local": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
@@ -11,6 +11,7 @@
     "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json"
   },
   "devDependencies": {
+    "@eth-optimism/smock": "^1.1.10",
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@openzeppelin/hardhat-upgrades": "^1.19.0",

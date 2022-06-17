@@ -23,6 +23,7 @@ module.exports = {
       //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
       //   blockNumber: 26787554,
       // },
+      gas: 4000000,
     },
     localhost: {
       url: 'http://localhost:8545',
