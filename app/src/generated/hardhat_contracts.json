@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "Starship": {
-          "address": "0x498E1651Fa97681A9883a4fFa6A386489d919659",
+          "address": "0xA87aa533D403f944b902BCA47c0466005B4B165D",
           "abi": [
             {
               "inputs": [
@@ -714,7 +714,7 @@
           ]
         },
         "StarToken": {
-          "address": "0xf79771D5A8da5AC5317142749e172c49736d8e21",
+          "address": "0x1f107444382C73F578041DA3783b717bE0e04DBf",
           "abi": [
             {
               "inputs": [],
@@ -1053,7 +1053,7 @@
           ]
         },
         "WorldMapCreator": {
-          "address": "0x3107e08ad0d9Fe570BAA1A7EdfDB8F99ad2c616D",
+          "address": "0xc87208b8D88c2CDF689DDB7c5C112CB422468e5a",
           "abi": [
             {
               "inputs": [],
@@ -1367,7 +1367,7 @@
           ]
         },
         "Players": {
-          "address": "0x097652F73BdcF878193B3a0c9e4345C18a2eC1F5",
+          "address": "0xCce713C2066b32AA3Bec7aeb8791205CAa8fa816",
           "abi": [
             {
               "inputs": [],
