@@ -5,7 +5,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./interfaces/IAaveGateway.sol";
+import "../interfaces/IAaveGateway.sol";
 
 contract AaveVault is Ownable, ReentrancyGuard {
 
@@ -21,18 +21,34 @@ contract AaveVault is Ownable, ReentrancyGuard {
     /**
         The Aave lending pool we deposit the assets to
      */
-    address POOL = 0x6C9fB0D5bD9429eb9Cd96B85B81d872281771E6B;
-    uint256 MAX_INT = 2**256 - 1;
+    address POOL;
+    /**
+        The address of the player contract
+     */
+    address PLAYER;
+    uint256 MAX_INT;
 
     /**
         The total amount we deposited into the pool
      */
     uint256 public amountDeposited = 0;
 
-    function initialize(address _gateway, address _asset, address _pool) public onlyOwner {
+   modifier onlyPlayerContract {
+      require(msg.sender == PLAYER);
+      _;
+   }
+
+    function initialize(
+        address _gateway,
+        address _asset,
+        address _pool,
+        address _player
+    ) public onlyOwner {
         GATEWAY = _gateway;
         ASSET = _asset;
         POOL = _pool;
+        PLAYER = _player;
+        MAX_INT = 2**256 - 1;
         IERC20(ASSET).approve(GATEWAY, MAX_INT); // allow gateway to spend all our tokens to save gas on withdraw
     }
 
@@ -46,9 +62,8 @@ contract AaveVault is Ownable, ReentrancyGuard {
 
     /**
         Withdraw only the yield from aave
-        TODO: just allow withdraw by player contract
      */
-    function withdraw(address _receiver) public nonReentrant {
+    function withdraw(address _receiver) public nonReentrant onlyPlayerContract {
         IAaveGateway gatewayContract = IAaveGateway(GATEWAY);
         gatewayContract.withdrawETH(POOL, this.yield(), _receiver);
     }
