@@ -3,10 +3,9 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./interfaces/IPlanet.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IPlanet.sol";
 import "./interfaces/IWorld.sol";
-import "hardhat/console.sol";
 
 contract Players is Ownable {
     using Counters for Counters.Counter;
@@ -65,8 +64,8 @@ contract Players is Ownable {
         player.totalStepsTaken = 0;
         player.amountEarned = 0;
 
-        // buying the nft TODO: send money to treasury. Implemented in withdraw function
         require(msg.value == NFTPRICE, "Not enought/too much ether sent");
+
         uint256 shipId = nftContract.mint(msg.sender, _tokenURI);
         (uint startingX, uint startingY) = determineStartingPosition();
         nftContract.setLocation(shipId, msg.sender, startingX, startingY);

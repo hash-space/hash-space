@@ -7,12 +7,13 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../interfaces/IAaveGateway.sol";
+import "../interfaces/IHashVault.sol";
 
 contract AaveVaultBase is Initializable {
 
 }
 
-contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultBase {
+contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultBase, IHashVault {
 
     /**
         A-Pol token in aave Aave Polygon (aPolWM...)
@@ -62,7 +63,7 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
     /**
         Deposit $ into aave
      */
-    function deposit() public payable nonReentrant {
+    function deposit() public payable override nonReentrant {
        IAaveGateway(GATEWAY).depositETH{value: msg.value}(POOL, address(this), 0);
        amountDeposited += msg.value;
     }
@@ -70,7 +71,8 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
     /**
         Withdraw only the yield from aave
      */
-    function withdraw(address _receiver) public nonReentrant onlyPlayerContract {
+    function withdraw(address _receiver) public override nonReentrant onlyPlayerContract {
+        // TODO: withdraw coins to this contract first, then forward to receiver
         IAaveGateway(GATEWAY).withdrawETH(POOL, this.yield(), _receiver);
     }
 

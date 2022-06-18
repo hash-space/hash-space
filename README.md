@@ -41,6 +41,15 @@ cd hash-space
 npm install
 ```
 
+#### Clean Monorepo
+
+In case you run into package errors. This removes all node_module folders
+
+```sh
+npm run clean
+npm install
+```
+
 #### Deploy contracts
 
 In one terminal:

@@ -11,7 +11,8 @@
     "deploy:local": "turbo run deploy:local",
     "deploy:mumbai": "turbo run deploy:mumbai",
     "deploy:emerald-test": "turbo run deploy:emerald-test",
-    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro"
+    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro",
+    "clean": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules"
   },
   "repository": {
     "type": "git",

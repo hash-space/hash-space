@@ -1,3 +1,5 @@
+//SPDX-License-Identifier: Unlicense
+
 pragma solidity >=0.8.0 <0.9.0;
 
 interface IPlanet {
@@ -18,6 +20,8 @@ interface IPlanet {
         uint y
     ) external;
 
-    /** mints a new nft ship */
+    /**
+      mints a new nft ship
+     */
     function mint(address player, string memory _tokenURI) external returns (uint256);
 }
