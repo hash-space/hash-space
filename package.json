@@ -1,6 +1,6 @@
 {
   "name": "hash-space",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets, get yield bounties, flying around in a spaceship powered with footsteps.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,6 @@
     "*"
   ],
   "dependencies": {
-    "turbo": "^1.2.14"
+    "turbo": "1.2.8"
   }
 }
