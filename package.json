@@ -3,6 +3,10 @@
   "version": "1.0.1",
   "description": "Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets, get yield bounties, flying around in a spaceship powered with footsteps.",
   "main": "index.js",
+  "engines": {
+    "node": "16.x",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
