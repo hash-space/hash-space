@@ -39,10 +39,12 @@ export interface PlayersInterface extends utils.Interface {
     "players(address)": FunctionFragment;
     "registerProfile(string)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setBackendAddress(address)": FunctionFragment;
     "setNftAddress(address)": FunctionFragment;
     "setWorldAddress(address)": FunctionFragment;
-    "syncSteps(uint256)": FunctionFragment;
+    "syncSteps(bytes32,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "verifySteps(bytes32,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
   };
 
   getFunction(
@@ -57,10 +59,12 @@ export interface PlayersInterface extends utils.Interface {
       | "players"
       | "registerProfile"
       | "renounceOwnership"
+      | "setBackendAddress"
       | "setNftAddress"
       | "setWorldAddress"
       | "syncSteps"
       | "transferOwnership"
+      | "verifySteps"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
@@ -101,6 +105,10 @@ export interface PlayersInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setBackendAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setNftAddress",
     values: [string]
   ): string;
@@ -110,11 +118,29 @@ export interface PlayersInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "syncSteps",
-    values: [BigNumberish]
+    values: [
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "verifySteps",
+    values: [
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
 
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
@@ -146,6 +172,10 @@ export interface PlayersInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setBackendAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setNftAddress",
     data: BytesLike
   ): Result;
@@ -158,13 +188,19 @@ export interface PlayersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifySteps",
+    data: BytesLike
+  ): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StepsAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
 
@@ -179,6 +215,18 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface StepsAddedEventObject {
+  stepsTaken: BigNumber;
+  player: string;
+  timestamp: BigNumber;
+}
+export type StepsAddedEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  StepsAddedEventObject
+>;
+
+export type StepsAddedEventFilter = TypedEventFilter<StepsAddedEvent>;
 
 export interface TreasuryFundedEventObject {
   amountFunded: BigNumber;
@@ -267,6 +315,11 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -278,7 +331,12 @@ export interface Players extends BaseContract {
     ): Promise<ContractTransaction>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -286,6 +344,16 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
   };
 
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
@@ -336,6 +404,11 @@ export interface Players extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setBackendAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setNftAddress(
     _nftContractAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -347,7 +420,12 @@ export interface Players extends BaseContract {
   ): Promise<ContractTransaction>;
 
   syncSteps(
-    steps: BigNumberish,
+    _hashedMessageBackend: BytesLike,
+    _steps: BigNumberish,
+    _lastQueried: BigNumberish,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -355,6 +433,16 @@ export interface Players extends BaseContract {
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  verifySteps(
+    _hashedMessageBackend: BytesLike,
+    _message: BigNumberish,
+    _lastQueried: BigNumberish,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
 
   callStatic: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
@@ -401,6 +489,11 @@ export interface Players extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    setBackendAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: CallOverrides
@@ -411,10 +504,28 @@ export interface Players extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    syncSteps(steps: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    syncSteps(
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -428,6 +539,17 @@ export interface Players extends BaseContract {
       previousOwner?: string | null,
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
+
+    "StepsAdded(uint256,address,uint256)"(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
+    StepsAdded(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
 
     "TreasuryFunded(uint256)"(amountFunded?: null): TreasuryFundedEventFilter;
     TreasuryFunded(amountFunded?: null): TreasuryFundedEventFilter;
@@ -470,6 +592,11 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -481,13 +608,28 @@ export interface Players extends BaseContract {
     ): Promise<BigNumber>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -535,6 +677,11 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -546,13 +693,28 @@ export interface Players extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

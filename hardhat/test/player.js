@@ -8,6 +8,9 @@ describe('Player', function () {
   let starShip;
   let player;
   let world;
+  let privateKeyBackend =
+    '0x0123456789012345678901234567890123456789012345678901234567890123';
+  let addressBackend = '0x14791697260E4c9A71f18484C9f997B308e59325';
   const worldId = 1;
   const argsStarship = '0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101';
   const [alice, bob, charlie, david] = new MockProvider().getWallets();
@@ -21,6 +24,7 @@ describe('Player', function () {
     starShip = await ShipContract.deploy(argsStarship);
     await player.setNftAddress(starShip.address);
     await starShip.setPlayerContract(player.address);
+    await player.setBackendAddress(addressBackend);
   });
   it('should deploy World', async function () {
     const YourContract = await ethers.getContractFactory('WorldMapCreator');
@@ -39,20 +43,46 @@ describe('Player', function () {
   });
 
   it('user should be able to sync steps', async function () {
-    const res = await player.syncSteps(100);
-    await res.wait();
     const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      90,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
+    const res = await player.syncSteps(...stepString.split('-'));
+    await res.wait();
     const stepsResult = await player.players(owner.address);
 
     // assert
-    expect(stepsResult.totalStepsTaken).to.eq(100);
-    expect(stepsResult.stepsAvailable).to.eq(100);
+    expect(stepsResult.totalStepsTaken).to.eq(90);
+    expect(stepsResult.stepsAvailable).to.eq(90);
   });
 
-  it('user should be able to accumulate steps', async function () {
-    const res = await player.syncSteps(19000);
-    await res.wait();
+  it('syncing steps should emit event', async function () {
     const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      10,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
+    await expect(player.syncSteps(...stepString.split('-')))
+      .to.emit(player, 'StepsAdded')
+    //   .withArgs(10, owner.address, playerState.lastQueried); 
+        // Unable to get current block.timestamp here for comparison
+    });
+   
+  it('user should be able to accumulate steps', async function () {
+    const [owner] = await ethers.getSigners();
+    const playerState = await player.players(owner.address);
+    const stepString = await signSteps(
+      19000,
+      playerState.lastQueried.toNumber(),
+      privateKeyBackend
+    );
+    const res = await player.syncSteps(...stepString.split('-'));
+    await res.wait();
     const stepsResult = await player.players(owner.address);
 
     // assert
@@ -293,3 +323,23 @@ describe('Player', function () {
     expect(counter).to.eq(5);
   });
 });
+
+// this needs to match the implementation in '../../app/src/api/shared'
+async function signSteps(steps, lastTimeSync, privateKey) {
+  let wallet = new ethers.Wallet(privateKey);
+
+  // hash payload
+  let payload = ethers.utils.defaultAbiCoder.encode(
+    ['uint256', 'uint256'],
+    [steps, lastTimeSync]
+  );
+  let payloadHash = ethers.utils.keccak256(payload);
+
+  // sign the binary data
+  let flatSig = await wallet.signMessage(ethers.utils.arrayify(payloadHash));
+
+  let sig = ethers.utils.splitSignature(flatSig);
+
+  // serialize in one long string
+  return [payloadHash, steps, lastTimeSync, sig.v, sig.r, sig.s].join('-');
+}

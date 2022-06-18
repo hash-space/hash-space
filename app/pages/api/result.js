@@ -3,6 +3,7 @@ const {
   getCallbackUrl,
   findBestResult,
   formatData,
+  signSteps,
 } = require('../../src/api/shared');
 const url = require('url');
 const Cookies = require('cookies');
@@ -35,8 +36,11 @@ export default async function handler(req, res) {
     res.redirect(redirectUrl + '?error=error2');
     return;
   }
-
-  res.redirect(
-    redirectUrl + '?steps=' + formatData(result.bucket).totalStepsToday
+  const stepCount = formatData(result.bucket).totalStepsToday;
+  const signedSteps = await signSteps(
+    stepCount,
+    lastSyncParsed,
+    process.env.PRIV_KEY_BACKEND
   );
+  res.redirect(redirectUrl + '?steps=' + signedSteps);
 }

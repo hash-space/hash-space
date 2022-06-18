@@ -1,0 +1,18 @@
+{
+  "name": "hash-space-graph",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "npm run codegen && graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ chris-lovejoy/hash-space",
+    "create-local": "graph create --node http://localhost:8020/ chris-lovejoy/hash-space",
+    "remove-local": "graph remove --node http://localhost:8020/ chris-lovejoy/hash-space",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 chris-lovejoy/hash-space"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.30.4",
+    "@graphprotocol/graph-ts": "0.27.0",
+    "dayjs": "^1.11.3",
+    "moment": "^2.29.3"
+  }
+}
