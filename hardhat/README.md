@@ -35,3 +35,9 @@ test
 ```
 npm run test
 ```
+
+create world + planets
+
+```
+npm run seed:local -- --address #addressOfWorldContract
+```

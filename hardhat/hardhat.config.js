@@ -4,6 +4,7 @@ require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
 require('hardhat-deploy-ethers');
 require('@openzeppelin/hardhat-upgrades');
+require('./tasks/seed');
 require('dotenv').config();
 
 // You need to export an object to set up your config
@@ -19,17 +20,14 @@ module.exports = {
   defaultNetwork: 'localhost',
   networks: {
     hardhat: {
-      // forking: {
-      //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
-      //   blockNumber: 26787554,
-      // },
+      ...(process.env.FORK === 'false' // disable forking for tests
+        ? {}
+        : {
+            forking: {
+              url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
+            },
+          }),
       gas: 4000000,
-    },
-    localhost: {
-      url: 'http://localhost:8545',
-      forking: {
-        url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
-      },
     },
     matic: {
       url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
