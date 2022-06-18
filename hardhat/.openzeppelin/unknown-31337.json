@@ -1,13 +1,63 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x6Ae55E27577652BEe91eC04d0bb67Ee1E4De2164",
-    "txHash": "0x583dbe710773f54c011236f3ba7c1ad730fa2a876d0bb6ff3fa1c661a4a036ca"
+    "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "txHash": "0xad808937b1b1ebe9365fbff11a587c0ca6052598cdd12e8c2f11570b7d06fb8c"
   },
   "proxies": [
     {
       "address": "0xaBbB11586A55eB48bC4d4DbB28637A926eF6aCEe",
       "txHash": "0xbabed012bee645e3f883ba04f552163049a8501607b6a87d226f7b2af5e5ecf7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0xc8b45ea1fb9e866b32ecfd848b5c8179ac14adc28170ee18943d39475c0ef844",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x6f0e3c0572428fe20346478b5337e1ed1f2b2e1f2f2f15e0a9d3869eed1baf04",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "txHash": "0x3b6554dd5c4f1181f80b1758ad08f0a4a3aa6d6851b0de67601553f6f87b0e6a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0xe81c833be81992ba425d07f1027d1163af4d7cea4d64a5c17b0b1125cd66c17f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+      "txHash": "0x8e4b6b85696440fcb9790ea51bcdd1cca78bbc1dcca08a7e41416a611e5aa350",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "txHash": "0xb7b3174676b8c0cdee6fc98f121cde4bc09cd9dc33e716d52190bb886679c16c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "txHash": "0x9a4c1bebec3012a2c9cb1fc693e9369b935d241d9ae8f673be0132ca4835487e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
+      "txHash": "0xe9a5ea442d8ff10079443c6b2e04ae2f0d672b438e346068e3efc86d9d734530",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+      "txHash": "0x0c27d48347fb82da08de9dd8a33861632cdd5129735cf78619a5cdbc9f332311",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
+      "txHash": "0xff613128b4215a529f912d57c7a48048df56bc960c17367ad0a97f56b3a75195",
       "kind": "transparent"
     }
   ],
@@ -260,6 +310,145 @@
             "type": "t_uint256",
             "contract": "AaveVault",
             "src": "contracts/vaults/AaveVault.sol:34"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "e499dd702139dd7b394c5851c89b7e9ba6ac6a7b423b38d2c78e08a24bde28ee": {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0xe6556e97d56cee57ad90ab668cf95a5c6f62138d689c3508f52b2b3362744524",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "ASSET",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:21"
+          },
+          {
+            "label": "GATEWAY",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:26"
+          },
+          {
+            "label": "POOL",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:30"
+          },
+          {
+            "label": "PLAYER",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_address",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:34"
+          },
+          {
+            "label": "MAX_INT",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:35"
+          },
+          {
+            "label": "amountDeposited",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_uint256",
+            "contract": "AaveVault",
+            "src": "contracts/vaults/AaveVault.sol:40"
           }
         ],
         "types": {

@@ -3,6 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
+import "./structs/shared.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "hardhat/console.sol";
@@ -56,9 +57,8 @@ contract WorldMapCreator is IWorld, Ownable {
         return planetIndex;
     }
 
-    function getLocation(uint256 _worldId, uint256 _planetId) public view override returns(uint x, uint y) {
-        SharedStructs.Planet memory planet = _planetFactory.getPlanet(_planetId);
-        return (planet.xCoord, planet.yCoord);
+    function getPlanet(uint _planetId) public override view returns (SharedStructs.Planet memory) {
+        return _planetFactory.getPlanet(_planetId);
     }
 
     function getPlanets(uint256 _worldId) public view returns(SharedStructs.Planet[] memory) {

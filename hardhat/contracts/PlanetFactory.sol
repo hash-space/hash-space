@@ -2,22 +2,8 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "hardhat/console.sol";
+import "./structs/shared.sol";
 
-library SharedStructs {
-        // Define planet information
-    struct Planet {
-        uint planetID; // an ID that is unique across all world maps
-        uint worldMapIndex; // which world map does this planet belong to
-        uint xCoord; // x-axis coordinate in respective world map
-        uint yCoord; // y-axis coordinate in respective world map
-        uint planetType;
-        uint balance; // The total value of tokens inside the planet
-        // address walletAddress; // TODO: consider keeping the money elsewhere
-        // (e.g. in a WorldMap wallet address), and just tracking the amounts here
-    }
-}
-
-// contract PlanetFactory is UsingTellor {
 contract PlanetFactory {
 
     // Define planet types
@@ -73,25 +59,4 @@ contract PlanetFactory {
     function getPlanet(uint _planetId) public view returns (SharedStructs.Planet memory) {
         return existingPlanets[_planetId];
     }
-
-    function retrieveTokens(uint _id) public {
-        // TODO: add require statement that ship location is at planet
-        // then, send all tokens to msg.sender
-    }
-
-    function _retrieveRandomNumber() public view returns (uint256) {
-        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, "TellorRNG")));
-        // TODO: modify to enable multiple modificaitons during the same time stamp
-    }
-
-    // TODO: figure out how to deploy with Tellor, then use this as random number function
-    // function _retrieveRandomNumber(uint256 _timestamp) internal view returns(uint256) {
-    //     bytes memory _queryData = abi.encode("TellorRNG", abi.encode(_timestamp));
-    //     bytes32 _queryId = keccak256(_queryData);
-    //     bytes memory _randomNumberBytes;
-    //     (, _randomNumberBytes, ) = getDataBefore(_queryId, block.timestamp - 10 minutes);
-    //     uint256 _randomNumber = abi.decode(_randomNumberBytes, (uint256));
-    //     return _randomNumber;
-    // }
-
 }

@@ -151,8 +151,8 @@ describe('Aave Vault', function () {
       instance.initialize(
         _mockAaveGateway.address,
         _mockERC20.address,
-        '0x6C9fB0D5bD9429eb9Cd96B85B81d872281771E6B',
-        '0x6C9fB0D5bD9429eb9Cd96B85B81d872281771E6B'
+        POOL,
+        POOL
       )
     ).to.be.reverted;
   });
@@ -174,7 +174,7 @@ async function setup() {
   const instance = await upgrades.deployProxy(Box, [
     _mockAaveGateway.address,
     _mockERC20.address,
-    '0x6C9fB0D5bD9429eb9Cd96B85B81d872281771E6B',
+    POOL,
     playerContract.address,
   ]);
   await instance.deployed();

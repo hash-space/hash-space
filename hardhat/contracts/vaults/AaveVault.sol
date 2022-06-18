@@ -94,7 +94,7 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
     /**
         Returns how much yield we generated with aave
      */
-    function yield() public view returns(uint) {
+    function yield() public override view returns(uint) {
         // prevent overflow
         if (this.balance() <= amountDeposited) {
             return 0;
