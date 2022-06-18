@@ -27,7 +27,7 @@
   "workspaces": [
     "*"
   ],
-  "devDependencies": {
+  "dependencies": {
     "turbo": "^1.2.14"
   }
 }
