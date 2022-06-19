@@ -8,6 +8,7 @@ app/src/generated/*
 
 hardhat/artifacts*
 hardhat/deployments
+!hardhat/generated/deployments
 
 !.env.example
 
