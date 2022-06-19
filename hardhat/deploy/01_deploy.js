@@ -46,7 +46,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     },
   });
 
+  console.log('----------------');
   console.log('vault', vault.address);
+  console.log('players', players.address);
+  console.log('world', world.address);
+  console.log('ship', starship.address);
 
   // link contracts
   const contractPlayers = await hre.ethers.getContract('Players');
