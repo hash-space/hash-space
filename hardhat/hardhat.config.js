@@ -24,7 +24,7 @@ module.exports = {
         ? {}
         : {
             forking: {
-              url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.FORK_KEY}`,
+              url: `https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai`,
             },
           }),
       gas: 4000000,
