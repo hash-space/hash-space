@@ -8,7 +8,7 @@ app/src/generated/*
 
 hardhat/artifacts*
 hardhat/deployments
-!hardhat/generated/deployments
+!hardhat/generated/deployments/matic
 
 !.env.example
 
