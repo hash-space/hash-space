@@ -36,8 +36,14 @@ test
 npm run test
 ```
 
-create world + planets
+create world + planets (localhost)
 
 ```
 npm run seed:local -- --address #addressOfWorldContract
+```
+
+create world + planets (mumbai)
+
+```
+npm run seed:mumbai -- --address #addressOfWorldContract
 ```

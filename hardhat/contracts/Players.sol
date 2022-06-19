@@ -36,7 +36,7 @@ contract Players is Ownable {
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
-    event PlanetConquer(address player, uint amount, uint planetType);
+    event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
 
 
     constructor () {
@@ -169,7 +169,7 @@ contract Players is Ownable {
         if (planetType == 1) {
             uint yield = aaveVaultContract.yield();
 
-            if (yield > 0) {
+            if (yield > 0 && yield > 0.0000002 ether) { // did run into issues with the amount is too low
                 aaveVaultContract.withdraw(msg.sender);
                 players[msg.sender].amountEarned += yield;
                 emit PlanetConquer(msg.sender, yield, planetType);

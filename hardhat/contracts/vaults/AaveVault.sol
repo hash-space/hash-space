@@ -32,7 +32,6 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
         The address of the player contract
      */
     address PLAYER;
-    uint256 MAX_INT;
 
     /**
         The total amount we deposited into the pool
@@ -54,14 +53,14 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
         ASSET = _asset;
         POOL = _pool;
         PLAYER = _player;
-        MAX_INT = 2**256 - 1;
         amountDeposited = 0;
-        IERC20(ASSET).approve(GATEWAY, MAX_INT); // allow gateway to spend all our tokens to save gas on withdraw
+        IERC20(ASSET).approve(GATEWAY, type(uint256).max); // allow gateway to spend all our tokens to save gas on withdraw
         __Ownable_init_unchained();
     }
 
     /**
         Deposit $ into aave
+        Everyone can deposit
      */
     function deposit() public payable override nonReentrant {
        IAaveGateway(GATEWAY).depositETH{value: msg.value}(POOL, address(this), 0);
@@ -73,14 +72,14 @@ contract AaveVault is OwnableUpgradeable, ReentrancyGuardUpgradeable, AaveVaultB
      */
     function withdraw(address _receiver) public override nonReentrant onlyPlayerContract {
         // TODO: withdraw coins to this contract first, then forward to receiver
-        IAaveGateway(GATEWAY).withdrawETH(POOL, this.yield(), _receiver);
+        IAaveGateway(GATEWAY).withdrawETH(POOL, yield(), _receiver);
     }
 
     /**
         Emergency withdraw function
      */
     function withdrawEmergency() public onlyOwner {
-        IAaveGateway(GATEWAY).withdrawETH(POOL, MAX_INT, msg.sender);
+        IAaveGateway(GATEWAY).withdrawETH(POOL, type(uint256).max, msg.sender);
         amountDeposited = 0;
     }
 
