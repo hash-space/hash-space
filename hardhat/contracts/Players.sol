@@ -96,7 +96,8 @@ contract Players is Ownable {
         indexPlayerIds.increment();
         player.playerId = indexPlayerIds.current();
         player.timeJoined = block.timestamp;
-        player.lastQueried = block.timestamp - (60*60*12); // give the user 12 hour window, so that he does not sign up with zero steps
+        // give the user 12 hour window, so that he does not sign up with zero steps
+        player.lastQueried = block.timestamp - (60*60*12);
         player.stepsAvailable = 0;
         player.totalStepsTaken = 0;
         player.amountEarned = 0;
@@ -105,7 +106,14 @@ contract Players is Ownable {
     /**
         Sync the steps for the user
     */
-    function syncSteps(bytes32 _hashedMessageBackend, uint256 _steps, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public {
+    function syncSteps(
+        bytes32 _hashedMessageBackend,
+        uint256 _steps,
+        uint256 _lastQueried,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
+    ) public {
         // verify
         PersonProfile storage player = players[msg.sender];
         require(player.playerId != 0, "you need to be registered");
@@ -120,7 +128,14 @@ contract Players is Ownable {
         emit StepsAdded(_steps, msg.sender, block.timestamp);
     }
 
-    function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public view {
+    function verifySteps(
+        bytes32 _hashedMessageBackend,
+        uint256 _message,
+        uint256 _lastQueried,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
+    ) public view {
 
         bytes32 hashedMessageSol = keccak256(abi.encode(_message, _lastQueried));
         require(hashedMessageSol == _hashedMessageBackend, "payload was modified");
@@ -173,6 +188,7 @@ contract Players is Ownable {
                 aaveVaultContract.withdraw(msg.sender);
                 players[msg.sender].amountEarned += yield;
                 emit PlanetConquer(msg.sender, yield, planetType);
+                return;
             }
         }
         emit PlanetConquer(msg.sender, 0, planetType);
