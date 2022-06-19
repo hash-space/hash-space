@@ -8,14 +8,14 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "node": "turbo run node",
-    "dev": "turbo run dev",
-    "deploy:local": "turbo run deploy:local",
-    "deploy:mumbai": "turbo run deploy:mumbai",
-    "deploy:emerald-test": "turbo run deploy:emerald-test",
-    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro",
+    "build": "lerna run build --parallel",
+    "test": "lerna run test --stream",
+    "node": "lerna run node --stream",
+    "dev": "lerna run dev --stream",
+    "deploy:local": "lerna run deploy:local",
+    "deploy:mumbai": "lerna run deploy:mumbai",
+    "deploy:emerald-test": "lerna run deploy:emerald-test",
+    "deploy:arbitrum-nitro": "lerna run deploy:arbitrum-nitro",
     "clean": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules"
   },
   "repository": {
@@ -31,7 +31,7 @@
   "workspaces": [
     "*"
   ],
-  "dependencies": {
-    "turbo": "1.2.8"
+  "devDependencies": {
+    "lerna": "^5.1.4"
   }
 }
