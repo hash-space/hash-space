@@ -12,6 +12,8 @@
     "test": "lerna run test --stream",
     "node": "lerna run node --stream",
     "dev": "lerna run dev --stream",
+    "seed:local": "hardhat hello --network localhost",
+    "seed:mumbai": "hardhat hello --network matic",
     "deploy:local": "lerna run deploy:local --stream",
     "deploy:mumbai": "lerna run deploy:mumbai --stream",
     "deploy:emerald-test": "lerna run deploy:emerald-test --stream",
