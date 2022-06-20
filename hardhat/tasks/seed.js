@@ -1,6 +1,6 @@
 const { task, types } = require('hardhat/config');
 
-task('hello', 'seeds worlds')
+task('seed', 'seeds worlds')
   .addParam('address', 'The address of the contract', '', types.string)
   .setAction(async ({ address }, hre) => {
     if (!address) throw new Error('needs address');
