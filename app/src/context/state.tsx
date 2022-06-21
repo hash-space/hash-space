@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+} from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
 import { useContractReader } from 'eth-hooks';
@@ -53,9 +59,24 @@ export function useStateContext() {
 }
 
 export const StateContext: React.FC<IProps> = (props) => {
+  const ethersAppContext = useEthersAppContext();
   const playerContract = usePlayerContract();
   const shipsContract = useNftContract();
   const worldContract = useWorldContract();
+  const isLoggedInRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      isLoggedInRef.current !== ethersAppContext.active &&
+      !ethersAppContext.active
+    ) {
+      playerContract.reset();
+      shipsContract.reset();
+      worldContract.reset();
+    } else {
+      isLoggedInRef.current = ethersAppContext.active;
+    }
+  }, [ethersAppContext.active]);
 
   return (
     <_Context.Provider value={{ playerContract, shipsContract, worldContract }}>
@@ -64,16 +85,22 @@ export const StateContext: React.FC<IProps> = (props) => {
   );
 };
 
+const PLAYER_DEFAULT = {
+  playerId: 0,
+  isSignedUp: false,
+  lastQueried: 0,
+  stepsAvailable: 0,
+  amountEarned: '0.00',
+};
+
 export function usePlayerContract() {
   const authContext = useAuthContext();
   const ethersAppContext = useEthersAppContext();
-  const [playerState, setPlayerState] = useState<IPlayerState>({
-    playerId: 0,
-    isSignedUp: false,
-    lastQueried: 0,
-    stepsAvailable: 0,
-    amountEarned: '0.00',
-  });
+  const [playerState, setPlayerState] = useState<IPlayerState>(PLAYER_DEFAULT);
+
+  const reset = useCallback(() => {
+    setPlayerState(PLAYER_DEFAULT);
+  }, [setPlayerState]);
 
   const playersContract = useAppContracts('Players', ethersAppContext.chainId);
 
@@ -150,6 +177,7 @@ export function usePlayerContract() {
   );
 
   return {
+    reset,
     playerState,
     playerRegister,
     playerSyncSteps,
@@ -163,6 +191,10 @@ export function useNftContract() {
   const [ships, setShips] = useState<IShip[]>([]);
 
   const contract = useAppContracts('Starship', ethersAppContext.chainId);
+
+  const reset = useCallback(() => {
+    setShips([]);
+  }, [setShips]);
 
   const [shipList] = useContractReader(contract, contract?.getShips, []);
 
@@ -184,6 +216,7 @@ export function useNftContract() {
   }, [shipList, ethersAppContext.account]);
 
   return {
+    reset,
     ships,
     connected: !!contract,
   };
@@ -194,6 +227,10 @@ export function useWorldContract() {
   const [planets, setPlanets] = useState<IPlanet[]>([]);
 
   const contract = useAppContracts('WorldMapCreator', ethersAppContext.chainId);
+
+  const reset = useCallback(() => {
+    setPlanets([]);
+  }, [setPlanets]);
 
   const [list] = useContractReader(contract, contract?.getPlanets, [1]);
 
@@ -217,6 +254,7 @@ export function useWorldContract() {
   }, [list, ethersAppContext.account]);
 
   return {
+    reset,
     planets,
     connected: !!contract,
   };
