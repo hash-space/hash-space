@@ -109,7 +109,11 @@ async function uploadToIPFS(postContent: string) {
 
 const LENS_ADDRESS = '0x60Ae865ee4C725cd04353b5AAb364553f56ceF82';
 
-export default function ShareContainer() {
+interface IShareProps {
+  defaultText: string;
+}
+
+export default function ShareContainer(props: IShareProps) {
   const [createPostResult, createPost] = useMutation(
     CREATE_POST_TYPED_DATA_MUTATION
   );
@@ -215,7 +219,7 @@ export default function ShareContainer() {
       <FormControl
         fullWidth
         sx={{
-          padding: 2,
+          padding: 0,
           position: 'relative',
           display: auth.isAuthenticated ? undefined : 'none',
         }}>
@@ -249,7 +253,7 @@ export default function ShareContainer() {
           label="Content"
           multiline
           rows={4}
-          defaultValue=""
+          defaultValue={props.defaultText}
           onChange={(e) => processChange(e.target.value)}
         />
         <Box sx={{ height: 10 }} />
@@ -263,13 +267,16 @@ export default function ShareContainer() {
       </FormControl>
       {!auth.isAuthenticated && (
         <>
-          <Typography variant="body1" gutterBottom>
-            Share your thoughts on:
-          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Button fullWidth variant="outlined" onClick={() => auth.auth()}>
-                Lens
+              <Button
+                disabled={!ethersAppContext.active}
+                fullWidth
+                variant="outlined"
+                onClick={() => auth.auth()}>
+                {!ethersAppContext.active
+                  ? 'Lens (connect wallet first)'
+                  : 'Lens'}
               </Button>
             </Grid>
             <Grid item xs={6}>
@@ -278,7 +285,8 @@ export default function ShareContainer() {
                 variant="outlined"
                 onClick={() => {
                   window.open(
-                    'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&ref_src=twsrc%5Etfw'
+                    'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&text=' +
+                      encodeURIComponent(props.defaultText)
                   );
                 }}>
                 Twitter

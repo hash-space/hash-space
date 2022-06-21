@@ -36,7 +36,7 @@ contract Players is Ownable {
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
-    event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
+    event PlanetConquer(address indexed player, uint amount, uint planetType); // TODO: add planetId
 
 
     constructor () {
@@ -211,7 +211,7 @@ contract Players is Ownable {
         }
     }
 
-    function determineStartingPosition() public returns(uint x, uint y) {
+    function determineStartingPosition() internal returns(uint x, uint y) {
 
         indexStartingPosition.increment();
         uint positionIndex = indexStartingPosition.current();

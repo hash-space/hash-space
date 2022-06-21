@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
-import { useContractReader } from 'eth-hooks';
+import { useBlockNumber, useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
 import { uploadIPFS } from '../helper/uploadIPFS';
@@ -92,6 +92,40 @@ const PLAYER_DEFAULT = {
   stepsAvailable: 0,
   amountEarned: '0.00',
 };
+
+export function useConquerEvent() {
+  const [amount, setAmount] = useState<null | ethers.BigNumber>();
+  const [planetType, setPlanet] = useState<null | ethers.BigNumber>();
+  const ethersAppContext = useEthersAppContext();
+  const playersContract = useAppContracts('Players', ethersAppContext.chainId);
+
+  useBlockNumber(ethersAppContext.provider, async (blockNumber) => {
+    const filter = playersContract?.filters[
+      'PlanetConquer(address,uint256,uint256)'
+    ](ethersAppContext.account);
+    const result = await playersContract?.queryFilter(
+      filter,
+      blockNumber,
+      blockNumber
+    );
+    if (result && result[0]) {
+      setAmount(result[0].args.amount);
+      setPlanet(result[0].args.planetType);
+    }
+  });
+
+  const reset = useCallback(() => {
+    setAmount(null);
+    setPlanet(null);
+  }, [setAmount, setPlanet]);
+
+  return {
+    reset,
+    isSet: !!amount,
+    amount,
+    planetType,
+  };
+}
 
 export function usePlayerContract() {
   const authContext = useAuthContext();

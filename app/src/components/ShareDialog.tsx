@@ -28,7 +28,7 @@ export default function ShareDialog() {
         aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">Share</DialogTitle>
         <DialogContent>
-          <ShareContainer />
+          <ShareContainer defaultText="" />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="text">
