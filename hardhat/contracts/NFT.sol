@@ -9,6 +9,8 @@ import "./interfaces/IPlanet.sol";
 import "./ERC721Tradable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
+// TODO: move location state to world contract, similar like planet factory
+// TODO: IPlanet interface is wrongly named
 
 contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     using Counters for Counters.Counter;

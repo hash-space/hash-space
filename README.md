@@ -41,6 +41,15 @@ cd hash-space
 npm install
 ```
 
+#### Clean Monorepo
+
+In case you run into package errors. This removes all node_module folders
+
+```sh
+npm run clean
+npm install
+```
+
 #### Deploy contracts
 
 In one terminal:
@@ -62,6 +71,16 @@ npm run deploy:mumbai
 npm run deploy:emerald-test
 npm run deploy:arbitrum-nitro
 ```
+
+
+#### Seed world
+After deployting the contract, you can seed a world with planets in the appropriate world as follows:
+
+```sh
+npm run seed:local -- --address <addressOfWorldContract>
+npm run seed:mumbai -- --address <addressOfWorldContract>
+```
+
 
 #### Run front-end
 

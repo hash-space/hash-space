@@ -18,9 +18,9 @@ describe('World', function () {
     const planetIdRes = await world.manualCreatePlanet(1, xCoord, yCoord, 22);
     await planetIdRes.wait();
     const planetId = await world.planetIndex();
-    const res = await world.getLocation(worldId, planetId);
-    expect(res[0]).to.eq(BigNumber.from(xCoord));
-    expect(res[1]).to.eq(BigNumber.from(yCoord));
+    const res = await world.getPlanet(planetId);
+    expect(res.xCoord).to.eq(xCoord);
+    expect(res.yCoord).to.eq(yCoord);
   });
 
   it('can get list of planets', async function () {

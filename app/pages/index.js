@@ -61,9 +61,9 @@ export default function Home() {
               <div>{JSON.stringify(playerContract.playerState)}</div>
               <button
                 onClick={() => {
-                  location.href = `/api/sign?steps=5000&lastTimeSync=${playerContract.playerState?.lastQueried}&secret=${secret}`;
+                  location = `${location.protocol}//${location.host}/api/sign?steps=50000&lastTimeSync=${playerContract.playerState?.lastQueried}&secret=${secret}`;
                 }}>
-                get 5000 steps
+                get 50000 steps
               </button>
               <h1>ships</h1>
               <ul>

@@ -3,10 +3,10 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./interfaces/IPlanet.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IPlanet.sol";
 import "./interfaces/IWorld.sol";
-import "hardhat/console.sol";
+import "./interfaces/IHashVault.sol";
 
 contract Players is Ownable {
     using Counters for Counters.Counter;
@@ -30,14 +30,22 @@ contract Players is Ownable {
 
     IPlanet nftContract;
     IWorld worldContract;
+    IHashVault aaveVaultContract;
 
     event TreasuryFunded(uint amountFunded);
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
+    event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
+
+
     constructor () {
     }
 
+    /**
+        The address of our web2 backend.
+        Messages from the backend which are verified in this contract
+     */
     function setBackendAddress(address _address) public onlyOwner {
         backendAddress = _address;
     }
@@ -57,32 +65,55 @@ contract Players is Ownable {
     }
 
     /**
+        We set the Worldcontract Contract, this can also be done in the constructor
+     */
+    function setAaveVault(address _address) public onlyOwner {
+        aaveVaultContract = IHashVault(_address);
+    }
+
+    /**
         Creates the user profile of the user and mints a starship nft
         and forwards $$ to the treasury
      */
     function registerProfile(string memory _tokenURI) public payable
      {
-        PersonProfile storage player = players[msg.sender];
-        require(player.playerId == 0, "you already signed up");
-        indexPlayerIds.increment();
-        player.playerId = indexPlayerIds.current();
-        player.timeJoined = block.timestamp;
-        player.lastQueried = block.timestamp - (60*60*12); // give the user 12 hour window, so that he does not sign up with zero steps
-        player.stepsAvailable = 0;
-        player.totalStepsTaken = 0;
-        player.amountEarned = 0;
+        _createProfile();
 
-        // buying the nft TODO: send money to treasury. Implemented in withdraw function
         require(msg.value == NFTPRICE, "Not enought/too much ether sent");
+
+        // put coins to work in vault
+        aaveVaultContract.deposit{value: msg.value}();
+
+        // mint ship
         uint256 shipId = nftContract.mint(msg.sender, _tokenURI);
         (uint startingX, uint startingY) = determineStartingPosition();
         nftContract.setLocation(shipId, msg.sender, startingX, startingY);
     }
 
+    function _createProfile() private {
+        PersonProfile storage player = players[msg.sender];
+        require(player.playerId == 0, "you already signed up");
+        indexPlayerIds.increment();
+        player.playerId = indexPlayerIds.current();
+        player.timeJoined = block.timestamp;
+        // give the user 12 hour window, so that he does not sign up with zero steps
+        player.lastQueried = block.timestamp - (60*60*12);
+        player.stepsAvailable = 0;
+        player.totalStepsTaken = 0;
+        player.amountEarned = 0;
+    }
+
     /**
         Sync the steps for the user
     */
-    function syncSteps(bytes32 _hashedMessageBackend, uint256 _steps, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public {
+    function syncSteps(
+        bytes32 _hashedMessageBackend,
+        uint256 _steps,
+        uint256 _lastQueried,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
+    ) public {
         // verify
         PersonProfile storage player = players[msg.sender];
         require(player.playerId != 0, "you need to be registered");
@@ -97,7 +128,14 @@ contract Players is Ownable {
         emit StepsAdded(_steps, msg.sender, block.timestamp);
     }
 
-    function verifySteps(bytes32 _hashedMessageBackend, uint256 _message, uint256 _lastQueried, uint8 _v, bytes32 _r, bytes32 _s) public view {
+    function verifySteps(
+        bytes32 _hashedMessageBackend,
+        uint256 _message,
+        uint256 _lastQueried,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
+    ) public view {
 
         bytes32 hashedMessageSol = keccak256(abi.encode(_message, _lastQueried));
         require(hashedMessageSol == _hashedMessageBackend, "payload was modified");
@@ -134,32 +172,26 @@ contract Players is Ownable {
         nftContract.setLocation(_shipId, msg.sender, x, y);
 
         // check if we landed on a planet
-        (uint xCoordPlanet, uint yCoordPlanet) = worldContract.getLocation(_worldId, _planetId);
+        SharedStructs.Planet memory planet = worldContract.getPlanet(_planetId);
 
-        if (x == xCoordPlanet && y == yCoordPlanet) {
-            payout();
-            // TODO: update amount for withdrawal away from hard-coded amount
+        if (x == planet.xCoord && y == planet.yCoord) {
+            _payout(planet.planetType);
         }
     }
 
-    function payout() internal {
-        // Check whether any yield available
-        uint balance = address(this).balance;
-        uint reward = 0.005 ether;
-        // TODO: consider moving reward specification into move ship function call
+    function _payout(uint planetType) internal {
+        // route to vaults
+        if (planetType == 1) {
+            uint yield = aaveVaultContract.yield();
 
-        // TODO: add randomness to whether somebody gets the reward
-
-        if (balance > reward) {
-            // User withdraws tokens
-            (bool sent,) = msg.sender.call{value: reward}("");
-            require(sent, "Failed to withdraw token");
-            players[msg.sender].amountEarned += reward;
+            if (yield > 0 && yield > 0.0000002 ether) { // did run into issues with the amount is too low
+                aaveVaultContract.withdraw(msg.sender);
+                players[msg.sender].amountEarned += yield;
+                emit PlanetConquer(msg.sender, yield, planetType);
+                return;
+            }
         }
-    }
-
-    function fundTreasury() public payable {
-        emit TreasuryFunded(msg.value);
+        emit PlanetConquer(msg.sender, 0, planetType);
     }
 
     function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
@@ -193,10 +225,4 @@ contract Players is Ownable {
 
         return (startingX, startingY);
     }
-
-    function checkContractBalance() public view returns (uint) {
-        uint contractBalance = address(this).balance;
-        return contractBalance;
-    }
-
 }
