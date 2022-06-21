@@ -2,7 +2,7 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum  
     name: Players
     network: mumbai
     source:
@@ -15,10 +15,13 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - StepsAdded
+        - PlanetConquer
       abis:
         - name: Players
           file: ./abis/Players.json
       eventHandlers:
         - event: StepsAdded(uint256,address,uint256)
           handler: handleStepsAdded
+        - event: PlanetConquer(address,uint256,uint256)
+          handler: handlePlanetConquer
       file: ./src/players.ts
