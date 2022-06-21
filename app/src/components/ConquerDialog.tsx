@@ -24,7 +24,9 @@ export default function ConquerDialog() {
         </DialogTitle>
         <DialogContent>
           {!isSuccess && (
-            <div>but you didn't earn any yield, better luck next time.</div>
+            <div>
+              but you didn&apos;t earn any yield, better luck next time.
+            </div>
           )}
           {isSuccess && (
             <div>
