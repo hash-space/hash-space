@@ -30,15 +30,14 @@ import type {
 export interface PlayersInterface extends utils.Interface {
   functions: {
     "NFTPRICE()": FunctionFragment;
-    "checkContractBalance()": FunctionFragment;
     "determineStartingPosition()": FunctionFragment;
-    "fundTreasury()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "players(address)": FunctionFragment;
     "registerProfile(string)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setAaveVault(address)": FunctionFragment;
     "setBackendAddress(address)": FunctionFragment;
     "setNftAddress(address)": FunctionFragment;
     "setWorldAddress(address)": FunctionFragment;
@@ -50,15 +49,14 @@ export interface PlayersInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "NFTPRICE"
-      | "checkContractBalance"
       | "determineStartingPosition"
-      | "fundTreasury"
       | "indexStartingPosition"
       | "moveShip"
       | "owner"
       | "players"
       | "registerProfile"
       | "renounceOwnership"
+      | "setAaveVault"
       | "setBackendAddress"
       | "setNftAddress"
       | "setWorldAddress"
@@ -69,15 +67,7 @@ export interface PlayersInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "checkContractBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "determineStartingPosition",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "fundTreasury",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -103,6 +93,10 @@ export interface PlayersInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setAaveVault",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "setBackendAddress",
@@ -145,15 +139,7 @@ export interface PlayersInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "checkContractBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "determineStartingPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "fundTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -169,6 +155,10 @@ export interface PlayersInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAaveVault",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -195,11 +185,13 @@ export interface PlayersInterface extends utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "PlanetConquer(address,uint256,uint256)": EventFragment;
     "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PlanetConquer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StepsAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
@@ -215,6 +207,18 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface PlanetConquerEventObject {
+  player: string;
+  amount: BigNumber;
+  planetType: BigNumber;
+}
+export type PlanetConquerEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  PlanetConquerEventObject
+>;
+
+export type PlanetConquerEventFilter = TypedEventFilter<PlanetConquerEvent>;
 
 export interface StepsAddedEventObject {
   stepsTaken: BigNumber;
@@ -267,14 +271,8 @@ export interface Players extends BaseContract {
   functions: {
     NFTPRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     indexStartingPosition(
@@ -312,6 +310,11 @@ export interface Players extends BaseContract {
     ): Promise<ContractTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setAaveVault(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -358,14 +361,8 @@ export interface Players extends BaseContract {
 
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-  checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
   determineStartingPosition(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  fundTreasury(
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
@@ -401,6 +398,11 @@ export interface Players extends BaseContract {
   ): Promise<ContractTransaction>;
 
   renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setAaveVault(
+    _address: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -447,13 +449,9 @@ export interface Players extends BaseContract {
   callStatic: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
     determineStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
-    fundTreasury(overrides?: CallOverrides): Promise<void>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -488,6 +486,8 @@ export interface Players extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    setAaveVault(_address: string, overrides?: CallOverrides): Promise<void>;
 
     setBackendAddress(
       _address: string,
@@ -540,6 +540,17 @@ export interface Players extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
+    "PlanetConquer(address,uint256,uint256)"(
+      player?: null,
+      amount?: null,
+      planetType?: null
+    ): PlanetConquerEventFilter;
+    PlanetConquer(
+      player?: null,
+      amount?: null,
+      planetType?: null
+    ): PlanetConquerEventFilter;
+
     "StepsAdded(uint256,address,uint256)"(
       stepsTaken?: null,
       player?: null,
@@ -558,14 +569,8 @@ export interface Players extends BaseContract {
   estimateGas: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
@@ -589,6 +594,11 @@ export interface Players extends BaseContract {
     ): Promise<BigNumber>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setAaveVault(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -636,16 +646,8 @@ export interface Players extends BaseContract {
   populateTransaction: {
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    checkContractBalance(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     determineStartingPosition(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     indexStartingPosition(
@@ -674,6 +676,11 @@ export interface Players extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setAaveVault(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -72,7 +72,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     "defineWorldMap(uint256,uint256,uint256)": FunctionFragment;
     "deleteWorld(uint256)": FunctionFragment;
     "existingWorlds(uint256)": FunctionFragment;
-    "getLocation(uint256,uint256)": FunctionFragment;
+    "getPlanet(uint256)": FunctionFragment;
     "getPlanets(uint256)": FunctionFragment;
     "getWorldMap(uint256)": FunctionFragment;
     "manualCreatePlanet(uint256,uint256,uint256,uint256)": FunctionFragment;
@@ -88,7 +88,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
       | "defineWorldMap"
       | "deleteWorld"
       | "existingWorlds"
-      | "getLocation"
+      | "getPlanet"
       | "getPlanets"
       | "getWorldMap"
       | "manualCreatePlanet"
@@ -112,8 +112,8 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getLocation",
-    values: [BigNumberish, BigNumberish]
+    functionFragment: "getPlanet",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getPlanets",
@@ -157,10 +157,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "existingWorlds",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLocation",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "getPlanet", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getPlanets", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getWorldMap",
@@ -257,11 +254,10 @@ export interface WorldMapCreator extends BaseContract {
       }
     >;
 
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
+    ): Promise<[SharedStructs.PlanetStructOutput]>;
 
     getPlanets(
       _worldId: BigNumberish,
@@ -324,11 +320,10 @@ export interface WorldMapCreator extends BaseContract {
     }
   >;
 
-  getLocation(
-    _worldId: BigNumberish,
+  getPlanet(
     _planetId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
+  ): Promise<SharedStructs.PlanetStructOutput>;
 
   getPlanets(
     _worldId: BigNumberish,
@@ -391,11 +386,10 @@ export interface WorldMapCreator extends BaseContract {
       }
     >;
 
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
+    ): Promise<SharedStructs.PlanetStructOutput>;
 
     getPlanets(
       _worldId: BigNumberish,
@@ -462,8 +456,7 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -524,8 +517,7 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
