@@ -55,3 +55,10 @@ type StepTrackingEntity @entity {
   week51Steps: BigInt
   week52Steps: BigInt
 }
+
+
+type ConquerPlanetEntity @entity {
+  id: ID!
+  
+}
+

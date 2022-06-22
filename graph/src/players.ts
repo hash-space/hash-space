@@ -4,7 +4,7 @@ import {
   StepsAdded,
   PlanetConquer
 } from "../generated/Players/Players"
-import { StepTrackingEntity } from "../generated/schema"
+import { StepTrackingEntity, ConquerPlanetEntity } from "../generated/schema"
 
 export function handleStepsAdded(event: StepsAdded): void {
   let entity = StepTrackingEntity.load(event.transaction.from.toHex())
@@ -32,7 +32,9 @@ export function handleStepsAdded(event: StepsAdded): void {
   entity.save()
 }
 
-// export function handlePlanetConquer(event: PlanetConquer): void {
+export function handlePlanetConquer(event: PlanetConquer): void {
+  let entity = ConquerPlanetEntity.load(event.transaction.from.toHex())
   
-// }
+  entity.save()
+}
 
