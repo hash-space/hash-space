@@ -1,6 +1,6 @@
 import { StepsAdded } from '../generated/Players/Players'
 import { Address, ethereum } from "@graphprotocol/graph-ts";
-import { newMockEvent, test, assert, logStore } from "matchstick-as/assembly/index";
+import { newMockEvent, test, assert, logStore, clearStore } from "matchstick-as/assembly/index";
 import { handleStepsAdded } from '../src/players'
 import { StepTrackingEntity } from "../generated/schema"
 
@@ -23,15 +23,29 @@ test("Can handle StepsAdded", () => {
 
     handleStepsAdded(newStepsAddedEvent);
     logStore(); // optional: to view the entity
-    
+
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "5");
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "id", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a");
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "1");
 
+    clearStore(); // clear logs - necessary to prevent carry forward to next test
+})
+
+test("Can handle two stepsAdded events correctly", () => {
+    let newStepsAddedEvent1 = createNewStepsAddedEvent(60, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10);
+    let newStepsAddedEvent2 = createNewStepsAddedEvent(35, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 11);
+
+    handleStepsAdded(newStepsAddedEvent1);
+    handleStepsAdded(newStepsAddedEvent2);
+    logStore(); // optional: to view the entity
+
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "95");
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "id", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a");
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "2");
 })
 
 
-// test("")
+
 
 
 // TODO: add further tests for graph logic
