@@ -7,12 +7,10 @@ import { StepTrackingEntity } from "../generated/schema"
 export function createNewStepsAddedEvent(stepsTaken: i32, player: string, timestamp: i32): StepsAdded {
     let newStepsAddedEvent = changetype<StepsAdded>(newMockEvent())
     newStepsAddedEvent.parameters = new Array()
-    // let idParam = new ethereum.EventParam("id", ethereum.Value.fromAddress(Address.fromString(player)))
     let stepsTakenParam = new ethereum.EventParam("stepsTaken", ethereum.Value.fromI32(stepsTaken))
     let playerParam = new ethereum.EventParam("player", ethereum.Value.fromAddress(Address.fromString(player)))
     let timestampParam = new ethereum.EventParam("timestamp", ethereum.Value.fromI32(timestamp))
 
-    // newStepsAddedEvent.parameters.push(idParam)
     newStepsAddedEvent.parameters.push(stepsTakenParam)
     newStepsAddedEvent.parameters.push(playerParam)
     newStepsAddedEvent.parameters.push(timestampParam)
@@ -20,20 +18,16 @@ export function createNewStepsAddedEvent(stepsTaken: i32, player: string, timest
     return newStepsAddedEvent
 } 
 
-
 test("Can handle StepsAdded", () => {
     let newStepsAddedEvent = createNewStepsAddedEvent(5, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 5);
 
     handleStepsAdded(newStepsAddedEvent);
 
-    logStore();
-
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "5")
-
-    // assert.equals(ethereum.Value.fromI32(1),ethereum.Value.fromI32(1))
-    // assert.equals(ethereum.Value.fromI32(StepTrackingEntity.totalSteps.data), ethereum.Value.fromI32(5));
-
 })
 
 
 // TODO: add further tests for graph logic
+// (1) adding multiple steps syncs, tallied correctly
+// (2) **deal with different number of weeks, with manual modification of time**
+// (3) deal with non-step events
