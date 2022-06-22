@@ -70,8 +70,4 @@ test("Can add stepsAdded to appropriate week", () => {
 
 })
 
-
-// TODO: add further tests for graph logic
-// (1) adding multiple steps syncs, tallied correctly
-// (2) **deal with different number of weeks, with manual modification of time**
-// (3) deal with non-step events
+// TODO: add tests for planet conquering
