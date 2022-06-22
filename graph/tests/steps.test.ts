@@ -22,7 +22,7 @@ test("Can handle StepsAdded", () => {
     let newStepsAddedEvent = createNewStepsAddedEvent(5, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10);
 
     handleStepsAdded(newStepsAddedEvent);
-    logStore(); // optional: to view the entity
+    // logStore(); // optional: to view the entity
 
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "5");
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "id", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a");
@@ -37,13 +37,35 @@ test("Can handle two stepsAdded events correctly", () => {
 
     handleStepsAdded(newStepsAddedEvent1);
     handleStepsAdded(newStepsAddedEvent2);
-    logStore(); // optional: to view the entity
+    // logStore(); // optional: to view the entity
 
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "95");
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "id", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a");
     assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "2");
+
+    clearStore();
 })
 
+test("Can add stepsAdded to appropriate week", () => {
+    // arrange
+    let newStepsAddedEvent_weeka = createNewStepsAddedEvent(60, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655815016);
+    let newStepsAddedEvent_weekb = createNewStepsAddedEvent(65, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655815017);
+    let newStepsAddedEvent_weekc = createNewStepsAddedEvent(70, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655917730);
+    // let newStepsAddedEvent_week2 = createNewStepsAddedEvent(45, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10); 604800
+
+    // act
+    handleStepsAdded(newStepsAddedEvent_weeka);
+    handleStepsAdded(newStepsAddedEvent_weekb);
+    handleStepsAdded(newStepsAddedEvent_weekc);
+    logStore();
+
+    // assert
+    clearStore();
+
+})
+
+
+// TODO: add week 1 + week 2 tests, by specifying correct timestamps in unix
 
 
 

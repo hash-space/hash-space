@@ -8,6 +8,7 @@ import { StepTrackingEntity, ConquerPlanetEntity } from "../generated/schema"
 
 // TODO: add helper function here to calculate which week we're in, or 
 // load it from outside
+// probably use from below
 
 export function handleStepsAdded(event: StepsAdded): void {
   let entity = StepTrackingEntity.load(event.transaction.from.toHex())
@@ -18,9 +19,12 @@ export function handleStepsAdded(event: StepsAdded): void {
     entity.totalSteps = BigInt.fromI32(0)
   }
 
+  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
+  entity.totalSteps = entity.totalSteps + event.params.stepsTaken
+
   // Get the week number of this version of the game
-  let startTimeUnix = "1655210217"
-  let startingTimestamp = BigInt.fromString(startTimeUnix) // unix time when contract deployed - to update
+  let startTimeUnix = "1655210217" // unix seconds between game beginning (contract deployment) and 1970 
+  let startingTimestamp = BigInt.fromString(startTimeUnix)
   let stepsAddedTimestamp = BigInt.fromString(event.params.timestamp.toString())
   let delta_in_seconds = stepsAddedTimestamp.minus(startingTimestamp)
   let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
@@ -28,9 +32,17 @@ export function handleStepsAdded(event: StepsAdded): void {
   // It appears to give floor (ie. round down), which is desired behaviour
   let weekNum = delta_in_weeks +  BigInt.fromI32(1);
 
+  if (entity.isSet(`week${weekNum}Steps`)) {
+    let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)
+
+    let newStepsThisWeek = event.params.stepsTaken
+    // TODO: figure out how to combine the existing steps and new steps (having Type issues)
+
+    entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
+
+  } else {
   entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken))
-  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
-  entity.totalSteps = entity.totalSteps + event.params.stepsTaken
+  }
 
   entity.save()
 }
