@@ -6,6 +6,9 @@ import {
 } from "../generated/Players/Players"
 import { StepTrackingEntity, ConquerPlanetEntity } from "../generated/schema"
 
+// TODO: add helper function here to calculate which week we're in, or 
+// load it from outside
+
 export function handleStepsAdded(event: StepsAdded): void {
   let entity = StepTrackingEntity.load(event.transaction.from.toHex())
 
@@ -35,6 +38,17 @@ export function handleStepsAdded(event: StepsAdded): void {
 export function handlePlanetConquer(event: PlanetConquer): void {
   let entity = ConquerPlanetEntity.load(event.transaction.from.toHex())
   
+  if (!entity) {
+    entity = new ConquerPlanetEntity(event.transaction.from.toHex())
+    entity.numSyncs = BigInt.fromI32(0)
+    entity.totalYield = BigInt.fromI32(0)
+  }
+
+  // TODO: add in the weekly yield calculations 
+
+  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
+  entity.totalYield = entity.totalYield + event.params.amount
+
   entity.save()
 }
 

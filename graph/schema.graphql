@@ -56,9 +56,18 @@ type StepTrackingEntity @entity {
   week52Steps: BigInt
 }
 
-
 type ConquerPlanetEntity @entity {
   id: ID!
-  
+  numSyncs: BigInt!
+  totalYield: BigInt!
+  week1Yield: BigInt
+  week2Yield: BigInt
+  week3Yield: BigInt
+  week4Yield: BigInt
+  week5Yield: BigInt
+  week6Yield: BigInt
+  week7Yield: BigInt
+  week8Yield: BigInt
+  week9Yield: BigInt
+  week10Yield: BigInt
 }
-
