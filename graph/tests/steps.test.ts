@@ -51,7 +51,7 @@ test("Can add stepsAdded to appropriate week", () => {
     let newStepsAddedEvent_weeka = createNewStepsAddedEvent(60, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655815016);
     let newStepsAddedEvent_weekb = createNewStepsAddedEvent(65, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655815017);
     let newStepsAddedEvent_weekc = createNewStepsAddedEvent(70, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 1655917730);
-    // let newStepsAddedEvent_week2 = createNewStepsAddedEvent(45, "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10); 604800
+       // Note: week a and week b are 1 second either side of the week 1 / week 2 boundary
 
     // act
     handleStepsAdded(newStepsAddedEvent_weeka);
@@ -60,14 +60,15 @@ test("Can add stepsAdded to appropriate week", () => {
     logStore();
 
     // assert
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalSteps", "195");
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "3");
+    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "week1Steps", "60");
+    // assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "week2Steps", "135");
+        // TODO: resolve multi-sync in same week, then uncomment above (currently failing)
+
     clearStore();
 
 })
-
-
-// TODO: add week 1 + week 2 tests, by specifying correct timestamps in unix
-
-
 
 
 // TODO: add further tests for graph logic
