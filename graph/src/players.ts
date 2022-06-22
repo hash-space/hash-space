@@ -33,15 +33,18 @@ export function handleStepsAdded(event: StepsAdded): void {
   let weekNum = delta_in_weeks +  BigInt.fromI32(1);
 
   if (entity.isSet(`week${weekNum}Steps`)) {
-    let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)
+    let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)?.data
 
-    let newStepsThisWeek = event.params.stepsTaken
+    let newStepsThisWeek = event.params.stepsTaken // .plus(BigInt.fromI32(prevStepsThisWeek))
     // TODO: figure out how to combine the existing steps and new steps (having Type issues)
 
+    // entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
     entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
 
+
   } else {
-  entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken))
+  entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken)) 
+    // TODO: resolve issue leading to this being null
   }
 
   entity.save()

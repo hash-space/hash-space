@@ -56,7 +56,7 @@ type StepTrackingEntity @entity {
   week52Steps: BigInt
 }
 
-type ConquerPlanetEntity @entity {
+type PlanetConquerEntity @entity {
   id: ID!
   numSyncs: BigInt!
   totalYield: BigInt!
