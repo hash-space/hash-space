@@ -8,6 +8,7 @@
     "seed:local": "hardhat seed --network localhost",
     "deploy:local": "hardhat --network localhost deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:mumbai": "hardhat --network matic deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:mumbai-fresh": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "seed:mumbai": "hardhat seed --network matic",
     "deploy:emerald-test": "hardhat --network emerald_testnet deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --write true --export-all ../app/src/generated/hardhat_contracts.json"
