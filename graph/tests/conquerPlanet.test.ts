@@ -48,5 +48,4 @@ test("Tallies yield amount correctly", () => {
     assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "3");
 
     clearStore();
-
 })

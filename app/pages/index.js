@@ -14,7 +14,9 @@ const EpnsButtonNoSSR = dynamic(() => import('../src/components/EpnsButton'), {
 });
 import { Container, Paper, Box } from '@mui/material';
 import { getCallbackUrl } from '../src/helper/callbackUrl';
-import { LeaderBoard } from '../src/components/Leaderboard';
+import { StepLeaderBoard } from '../src/components/StepLeaderboard';
+import { YieldLeaderBoard } from '../src/components/YieldLeaderboard';
+
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
@@ -218,7 +220,7 @@ export default function Home() {
           <div>
             <Link
               href={{
-                pathname: '/',
+                pathname: '/',  
                 query: { modal: 'share' },
               }}>
               <Button color="secondary" variant="outlined">
@@ -233,9 +235,13 @@ export default function Home() {
             <b>Leaderboard</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            The top 10 users this week are
+            The most steps were taken this week by:
           </Typography>
-          <LeaderBoard />
+          <StepLeaderBoard />
+          <Typography variant="body1" gutterBottom>
+            The most yield (all-time) was earned by:
+          </Typography>
+          <YieldLeaderBoard />
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>

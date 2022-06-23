@@ -12,6 +12,7 @@ export const QUERY = gql`
   query Board($orderBy: String!) {
     stepTrackingEntities(orderBy: $orderBy, first: 10) {
       id
+      totalSteps
       week1Steps
       week2Steps
       week3Steps
@@ -24,15 +25,15 @@ export const QUERY = gql`
   }
 `;
 
-export function LeaderBoard() {
-  const week = 'week1Steps';
+export function StepLeaderBoard() {
+  const rank_metric = 'totalSteps';
   const [users, _] = useQuery({
     query: QUERY,
     requestPolicy: 'network-only',
-    variables: { orderBy: week },
+    variables: { orderBy: rank_metric },
     context: useMemo(
       () => ({
-        url: 'https://api.thegraph.com/subgraphs/name/chris-lovejoy/hash-space',
+        url: 'https://api.thegraph.com/subgraphs/name/hash-space/hash-space',
       }),
       []
     ),
@@ -40,7 +41,7 @@ export function LeaderBoard() {
   const entries = users?.data?.stepTrackingEntities || [];
   const mappedRows = entries.map((entry) => ({
     address: entry.id,
-    steps: entry[week],
+    steps: entry[rank_metric],
   }));
 
   return (
