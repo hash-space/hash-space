@@ -1,69 +1,47 @@
-import { BigInt, Value } from "@graphprotocol/graph-ts"
-import {
-  Players,
-  StepsAdded,
-  PlanetConquer
-} from "../generated/Players/Players"
-import { StepTrackingEntity, PlanetConquerEntity } from "../generated/schema"
-
-// TODO: add helper function here to calculate which week we're in, or 
-// load it from outside
-// probably use from below
+import { BigInt, Value } from '@graphprotocol/graph-ts';
+import { StepsAdded } from '../generated/Players/Players';
+import { StepTrackingEntity } from '../generated/schema';
+// import { log } from '@graphprotocol/graph-ts';
 
 export function handleStepsAdded(event: StepsAdded): void {
-  let entity = StepTrackingEntity.load(event.transaction.from.toHex())
+  let entity = StepTrackingEntity.load(event.transaction.from.toHex());
 
   if (!entity) {
-    entity = new StepTrackingEntity(event.transaction.from.toHex())
-    entity.numSyncs = BigInt.fromI32(0)
-    entity.totalSteps = BigInt.fromI32(0)
+    entity = new StepTrackingEntity(event.transaction.from.toHex());
+    entity.numSyncs = BigInt.fromI32(0);
+    entity.totalSteps = BigInt.fromI32(0);
   }
 
-  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
-  entity.totalSteps = entity.totalSteps + event.params.stepsTaken
+  entity.numSyncs = entity.numSyncs.plus(BigInt.fromI32(1));
+  entity.totalSteps = entity.totalSteps.plus(event.params.stepsTaken);
 
-  // Get the week number of this version of the game
-  let startTimeUnix = "1655210217" // unix seconds between game beginning (contract deployment) and 1970 
-  let startingTimestamp = BigInt.fromString(startTimeUnix)
-  let stepsAddedTimestamp = BigInt.fromString(event.params.timestamp.toString())
-  let delta_in_seconds = stepsAddedTimestamp.minus(startingTimestamp)
-  let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
+  var currentDate = new Date(
+    event.params.timestamp.times(BigInt.fromString('1000')).toI64()
+  );
+  const firstJanThisYear = new Date(0);
+  firstJanThisYear.setUTCDate(1);
+  firstJanThisYear.setUTCFullYear(currentDate.getUTCFullYear());
+  firstJanThisYear.setUTCHours(1);
+  firstJanThisYear.setUTCMinutes(1);
+  firstJanThisYear.setUTCSeconds(1);
 
-  // let weekNum = delta_in_weeks +  BigInt.fromI32(1);
-  let weekNum = BigInt.fromI32(1);
+  var diff = (currentDate.getTime() - firstJanThisYear.getTime()) as f64;
+  var dayNumber = Math.floor(diff / (24 * 60 * 60 * 1000));
+  var weekNum = BigInt.fromI32(Math.ceil(dayNumber / 7) as i32).toI32();
+  var keyName = `week${weekNum}Steps`;
 
-  // TODO: resolve compilation issues with the below code
-  // if (entity.isSet(`week${weekNum}Steps`)) {
-  //   let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)?.data
+  if (entity.isSet(keyName)) {
+    let prevStepsThisWeek = entity.get(keyName);
+    if (!prevStepsThisWeek) throw new Error('error');
 
-  //   let newStepsThisWeek = event.params.stepsTaken // .plus(BigInt.fromI32(prevStepsThisWeek))
-  //   // TODO: figure out how to combine the existing steps and new steps (having Type issues)
+    let newStepsThisWeek = event.params.stepsTaken.plus(
+      prevStepsThisWeek.toBigInt()
+    );
 
-  //   // entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
-  //   entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
-
-  // } else {
-  // entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken)) 
-  //   // TODO: resolve issue leading to this being null
-  // }
-
-  entity.save()
-}
-
-export function handlePlanetConquer(event: PlanetConquer): void {
-  let entity = PlanetConquerEntity.load(event.transaction.from.toHex())
-  
-  if (!entity) {
-    entity = new PlanetConquerEntity(event.transaction.from.toHex())
-    entity.numSyncs = BigInt.fromI32(0)
-    entity.totalYield = BigInt.fromI32(0)
+    entity.set(keyName, Value.fromBigInt(newStepsThisWeek));
+  } else {
+    entity.set(keyName, Value.fromBigInt(event.params.stepsTaken));
   }
 
-  // TODO: add in the weekly yield calculations 
-
-  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
-  entity.totalYield = entity.totalYield + event.params.amount
-
-  entity.save()
+  entity.save();
 }
-
