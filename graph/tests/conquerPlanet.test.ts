@@ -4,15 +4,15 @@ import { newMockEvent, test, assert, logStore, clearStore } from "matchstick-as/
 import { handlePlanetConquer } from '../src/players'
 import { PlanetConquerEntity } from "../generated/schema"
 
-export function createPlanetConquerEvent(player: string, amount: uint, planetType: i32): PlanetConquer {
+export function createPlanetConquerEvent(player: string, amount: i32, planetType: i32): PlanetConquer {
     let newPlanetConquerEvent = changetype<PlanetConquer>(newMockEvent())
     newPlanetConquerEvent.parameters = new Array()
     let amountParam = new ethereum.EventParam("amount", ethereum.Value.fromI32(amount))
     let playerParam = new ethereum.EventParam("player", ethereum.Value.fromAddress(Address.fromString(player)))
     let planetTypeParam = new ethereum.EventParam("planetType", ethereum.Value.fromI32(planetType))
 
-    newPlanetConquerEvent.parameters.push(amountParam)
     newPlanetConquerEvent.parameters.push(playerParam)
+    newPlanetConquerEvent.parameters.push(amountParam)
     newPlanetConquerEvent.parameters.push(planetTypeParam)
 
     return newPlanetConquerEvent
@@ -24,6 +24,6 @@ test("Can handle planet conquer event", () => {
     handlePlanetConquer(newPlanetConquerEvent);
     logStore();
 
-    assert.fieldEquals("StepTrackingEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "planetType", "1");
+    assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalYield", "10");
     clearStore();
 })

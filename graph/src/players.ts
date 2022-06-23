@@ -28,12 +28,11 @@ export function handleStepsAdded(event: StepsAdded): void {
   let stepsAddedTimestamp = BigInt.fromString(event.params.timestamp.toString())
   let delta_in_seconds = stepsAddedTimestamp.minus(startingTimestamp)
   let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
-  // TODO: check whether appropriately rounds up / down once more than 1 week has passed
-  // It appears to give floor (ie. round down), which is desired behaviour
+
   // let weekNum = delta_in_weeks +  BigInt.fromI32(1);
   let weekNum = BigInt.fromI32(1);
 
-  // For some reason, compilation very slow when I add this
+  // TODO: resolve compilation issues with the below code
   // if (entity.isSet(`week${weekNum}Steps`)) {
   //   let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)?.data
 
