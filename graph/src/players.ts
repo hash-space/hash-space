@@ -4,7 +4,7 @@ import {
   StepsAdded,
   PlanetConquer
 } from "../generated/Players/Players"
-import { StepTrackingEntity, ConquerPlanetEntity } from "../generated/schema"
+import { StepTrackingEntity, PlanetConquerEntity } from "../generated/schema"
 
 // TODO: add helper function here to calculate which week we're in, or 
 // load it from outside
@@ -30,31 +30,32 @@ export function handleStepsAdded(event: StepsAdded): void {
   let delta_in_weeks = delta_in_seconds.div(BigInt.fromI32(60*60*24*7))
   // TODO: check whether appropriately rounds up / down once more than 1 week has passed
   // It appears to give floor (ie. round down), which is desired behaviour
-  let weekNum = delta_in_weeks +  BigInt.fromI32(1);
+  // let weekNum = delta_in_weeks +  BigInt.fromI32(1);
+  let weekNum = BigInt.fromI32(1);
 
-  if (entity.isSet(`week${weekNum}Steps`)) {
-    let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)?.data
+  // For some reason, compilation very slow when I add this
+  // if (entity.isSet(`week${weekNum}Steps`)) {
+  //   let prevStepsThisWeek = entity.get(`week${weekNum}Steps`)?.data
 
-    let newStepsThisWeek = event.params.stepsTaken // .plus(BigInt.fromI32(prevStepsThisWeek))
-    // TODO: figure out how to combine the existing steps and new steps (having Type issues)
+  //   let newStepsThisWeek = event.params.stepsTaken // .plus(BigInt.fromI32(prevStepsThisWeek))
+  //   // TODO: figure out how to combine the existing steps and new steps (having Type issues)
 
-    // entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
-    entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
+  //   // entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
+  //   entity.set(`week${weekNum}Steps`, Value.fromBigInt(newStepsThisWeek))
 
-
-  } else {
-  entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken)) 
-    // TODO: resolve issue leading to this being null
-  }
+  // } else {
+  // entity.set(`week${weekNum}Steps`, Value.fromBigInt(event.params.stepsTaken)) 
+  //   // TODO: resolve issue leading to this being null
+  // }
 
   entity.save()
 }
 
 export function handlePlanetConquer(event: PlanetConquer): void {
-  let entity = ConquerPlanetEntity.load(event.transaction.from.toHex())
+  let entity = PlanetConquerEntity.load(event.transaction.from.toHex())
   
   if (!entity) {
-    entity = new ConquerPlanetEntity(event.transaction.from.toHex())
+    entity = new PlanetConquerEntity(event.transaction.from.toHex())
     entity.numSyncs = BigInt.fromI32(0)
     entity.totalYield = BigInt.fromI32(0)
   }
