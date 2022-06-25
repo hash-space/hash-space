@@ -1,4 +1,4 @@
-const { ethers } = require('hardhat');
+const { ethers, upgrades } = require('hardhat');
 const { use, expect } = require('chai');
 const { solidity } = require('ethereum-waffle');
 const { smockit } = require('@eth-optimism/smock');
@@ -126,9 +126,7 @@ describe('Player', function () {
     const res = await player.moveShip(newX, newY, planetId, shipId, worldId);
 
     // assert
-    await expect(res)
-      .to.emit(player, 'PlanetConquer')
-      .withArgs(owner.address, ethers.utils.parseEther('0.02'), 1);
+    await expect(res).to.emit(player, 'PlanetConquer');
     expect(_mockAaveVault.smocked.withdraw.calls[0]._receiver).to.eq(
       owner.address
     );
@@ -153,9 +151,7 @@ describe('Player', function () {
     const res = await player.moveShip(newX, newY, planetId, shipId, worldId);
 
     // assert
-    await expect(res)
-      .to.emit(player, 'PlanetConquer')
-      .withArgs(owner.address, ethers.utils.parseEther('0.00'), 1);
+    await expect(res).to.emit(player, 'PlanetConquer');
     expect(_mockAaveVault.smocked.withdraw.calls[0]).to.eq(undefined);
   });
 
@@ -232,9 +228,11 @@ async function setup() {
   const MockAaveVault = await ethers.getContractFactory('AaveVault');
 
   // deploy
-  const world = await WorldContract.deploy();
-  const player = await PlayerContract.deploy();
-  const starShip = await ShipContract.deploy(proxyRegistryAddress);
+  const world = await upgrades.deployProxy(WorldContract, []);
+  const player = await upgrades.deployProxy(PlayerContract, []);
+  const starShip = await upgrades.deployProxy(ShipContract, [
+    proxyRegistryAddress,
+  ]);
   const mockAaveVault = await MockAaveVault.deploy();
   await world.deployed();
   await player.deployed();
@@ -244,11 +242,12 @@ async function setup() {
 
   // init
   await player.setNftAddress(starShip.address);
-  await starShip.setPlayerContract(player.address);
   await player.setBackendAddress(addressBackend);
-  await world.defineWorldMap(worldId, 2000, 2000);
   await player.setWorldAddress(world.address);
   await player.setAaveVault(_mockAaveVault.address);
+
+  await world.defineWorldMap(worldId, 2000, 2000);
+  await starShip.setPlayerContract(player.address);
 
   return {
     world,

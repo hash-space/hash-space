@@ -8,6 +8,7 @@ env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
   PRIVATE_KEY_OASIS: ${{ secrets.PRIVATE_KEY_OASIS }}
   PRIVATE_KEY_ARBITRUM_NITRO: ${{ secrets.PRIVATE_KEY_ARBITRUM_NITRO }}
+  POLYGONSCAN_API_KEY: ${{ secrets.POLYGONSCAN_API_KEY }}
 
 concurrency: pr
 
@@ -44,9 +45,7 @@ jobs:
 
       - run: npm install
 
-      - run: npm run compile
-      # - run: npm run deploy:emerald-test
-      # - run: npm run deploy:arbitrum-nitro
+      - run: npm run deploy:mumbai-fresh
 
       - run: npm run build
 

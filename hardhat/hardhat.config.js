@@ -4,6 +4,7 @@ require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
 require('hardhat-deploy-ethers');
 require('@openzeppelin/hardhat-upgrades');
+require('@nomiclabs/hardhat-etherscan');
 require('./tasks/seed');
 require('dotenv').config();
 
@@ -75,5 +76,12 @@ module.exports = {
   typechain: {
     outDir: '../app/src/generated/contract-types',
     target: 'ethers-v5',
+  },
+  etherscan: {
+    apiKey: {
+      //polygon
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+    },
   },
 };

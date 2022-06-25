@@ -69,9 +69,8 @@ export const QUERY = gql`
   }
 `;
 
-
 export function YieldLeaderBoard() {
-  const rank_metric = 'totalYield'; // TODO: update to specific week
+  const rank_metric = 'totalYield';
   const [users, _] = useQuery({
     query: QUERY,
     requestPolicy: 'network-only',
