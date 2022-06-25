@@ -156,25 +156,6 @@ export default function Home() {
           <Typography variant="h5" gutterBottom component="div">
             <b>Support us</b>
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            Support future game development by donating to our
-            <a href="https://gitcoin.co/grants/6326/hash-space-the-defi-explorer-a-game-to-educate-an">
-              {' '}
-              Gitcoin Grant
-            </a>
-            . All donations are matched by a pool of <b>over $3.5 million</b> -
-            meaning a $1 donation could lead to us receiving more than $50.
-          </Typography>
-          <div>
-            <Link
-              href={
-                'https://gitcoin.co/grants/6326/hash-space-the-defi-explorer-a-game-to-educate-an'
-              }>
-              <Button color="secondary" variant="outlined">
-                Support us
-              </Button>
-            </Link>
-          </div>
           <Box sx={{ height: 10 }} />
           <Typography variant="body1" gutterBottom>
             Show some love and share us on different social channels
