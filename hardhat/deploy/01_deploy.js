@@ -3,6 +3,8 @@ const hre = require('hardhat');
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
+  const isLocal =
+    hre.network.name === 'hardhat' || hre.network.name === 'localhost';
   const backendAddress = '0x1712C64a90164e03A2B61ee0f66712da3355a932';
   // aave
   const gatewayAddress = '0x2a58E9bbb5434FdA7FF78051a4B82cb0EF669C17';
@@ -75,6 +77,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         },
       },
     },
+    waitConfirmations: isLocal ? undefined : 5, // for polyscan to catch up
   });
 
   let contracts = {};
@@ -113,7 +116,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   ]);
 
   // verify
-  if (hre.network.name !== 'hardhat' && hre.network.name !== 'localhost') {
+  if (!isLocal) {
     await tryCatch(() =>
       hre.run('verify:verify', {
         address: vault.implementation,
