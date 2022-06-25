@@ -3,18 +3,11 @@ import { TNetworkInfo } from 'eth-hooks/models';
 import UAuthSPA from '@uauth/js'
 import * as UAuthWeb3Modal from '@uauth/web3modal'
 
-// For Testing (will be deleted soon)
-// clientID: 'd78ad08c-276a-4c70-b03d-fe53c22ab758',
-// redirectUri: 'http://localhost:3001/',
-
 const uauthOptions: UAuthWeb3Modal.IUAuthOptions = {
-  clientID: process.env.UD_CLIENT_ID!,
-  redirectUri: process.env.UD_REDIRECT_URI!,
+  clientID: process.env.NEXT_PUBLIC_UD_CLIENT_ID!,
+  redirectUri: process.env.NEXT_PUBLIC_UD_REDIRECT_URI!,
   scope: 'openid wallet',
 }
-
-
-
 
 console.log(uauthOptions)
 export const web3ModalConfigKeys = {
