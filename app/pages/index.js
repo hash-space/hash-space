@@ -17,7 +17,6 @@ const EpnsButtonNoSSR = dynamic(() => import('../src/components/EpnsButton'), {
   ssr: false,
 });
 import { Container, Paper, Box } from '@mui/material';
-import { getCallbackUrl } from '../src/helper/callbackUrl';
 import { StepLeaderBoard } from '../src/components/StepLeaderboard';
 import { YieldLeaderBoard } from '../src/components/YieldLeaderboard';
 

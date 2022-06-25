@@ -13,6 +13,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { useStateContext } from '../context/state';
 import { useAuthContext } from '../context/auth';
 import { useEthersAppContext } from 'eth-hooks/context';
+import { getCallbackUrl } from '../helper/callbackUrl';
 
 export function PlayInstructionSimple() {
   const [expanded, setExpanded] = React.useState(false);
@@ -154,10 +155,10 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            To play the game you will need a starship NFT. On registration,
-            the NFT is minted to your wallet. We charge a fee of 0.01
-            MATIC for the NFT to fill our treasury. The treasuries&apos; balance gets
-            invested in yield-farming providers. You can then farm that yield from
+            To play the game you will need a starship NFT. On registration, the
+            NFT is minted to your wallet. We charge a fee of 0.01 MATIC for the
+            NFT to fill our treasury. The treasuries&apos; balance gets invested
+            in yield-farming providers. You can then farm that yield from
             different planets.
           </Typography>
           <Button
@@ -212,6 +213,15 @@ export function PlayInstruction() {
                 disabled={!registered}
                 color="secondary"
                 variant="outlined"
+                onClick={() => {
+                  const url = new URL('/api/auth', getCallbackUrl());
+                  url.searchParams.set(
+                    'lastSync',
+                    playerContract.playerState.lastQueried
+                  );
+                  url.searchParams.set('redirectUrl', location.href);
+                  location.href = url.href;
+                }}
                 size="small">
                 Sync steps
               </Button>
@@ -239,10 +249,10 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            Click on a planet to conquer it with your starship. The
-            different colors of planets indicate the different providers of
-            yield farming strategies. Every planet you conquer may potentially
-            provide you the farming yield of that planet&apos;s provider.
+            Click on a planet to conquer it with your starship. The different
+            colors of planets indicate the different providers of yield farming
+            strategies. Every planet you conquer may potentially provide you the
+            farming yield of that planet&apos;s provider.
           </Typography>
           <Link
             href={{
