@@ -45,8 +45,8 @@ export function PlayInstructionSimple() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            Connect your wallet so hash-space can communicate with the
-            corresponding blockchain via your wallets rpc provider.
+            Connect your wallet so Hash Space can communicate with the
+            corresponding blockchain via your wallets&apos; RPC provider.
           </Typography>
           <Button
             disabled={walletConnected}
@@ -125,8 +125,8 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            Connect your wallet so hash-space can communicate with the
-            corresponding blockchain via your wallets rpc provider.
+            Connect your wallet so Hash Space can communicate with the
+            corresponding blockchain via your wallets&apos; RPC provider.
           </Typography>
           <Button
             disabled={walletConnected}
@@ -154,11 +154,11 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            To play the game you will need a starship NFT. On registration you
-            will get the NFT minted to your wallet. We charge a fee of 0.01
-            MATIC for the NFT to fill our treasury. The treasuries balance gets
-            invested in yield farming proviers. You can the farm that yield from
-            planets in Step 5.
+            To play the game you will need a starship NFT. On registration,
+            the NFT is minted to your wallet. We charge a fee of 0.01
+            MATIC for the NFT to fill our treasury. The treasuries&apos; balance gets
+            invested in yield-farming providers. You can then farm that yield from
+            different planets.
           </Typography>
           <Button
             disabled={registered || !walletConnected}
@@ -191,9 +191,9 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Your NFT starship can only travel with the power of your foot-steps.
-            To fuel your starship we need to pull your foot-steps for your
-            smart-device and sync them to the blockchain. The more you walk the
+            Your NFT starship can only travel with the power of your footsteps.
+            Therefore, to fuel your starship, we pull your footsteps from your
+            smart device and sync them to the blockchain. The more you walk, the
             more distant planets you can reach.
           </Typography>
           <ol>
@@ -239,10 +239,10 @@ export function PlayInstruction() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography gutterBottom>
-            Click on a planet to conquer a planet with your starship. The
+            Click on a planet to conquer it with your starship. The
             different colors of planets indicate the different providers of
-            yield farming startegies. Every planet you conquer can potentially
-            yield you the farming yield of a provider.
+            yield farming strategies. Every planet you conquer may potentially
+            provide you the farming yield of that planet&apos;s provider.
           </Typography>
           <Link
             href={{
