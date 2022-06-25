@@ -37,7 +37,7 @@ contract Players is Initializable, OwnableUpgradeable {
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
-    event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
+    event PlanetConquer(address indexed player, uint amount, uint planetType, uint timestamp); // TODO: add planetId
 
 
     function initialize() public initializer {
@@ -190,11 +190,11 @@ contract Players is Initializable, OwnableUpgradeable {
             if (yield > 0 && yield > 0.0000002 ether) { // did run into issues with the amount is too low
                 IHashVault(AAVE_VAULT).withdraw(msg.sender);
                 players[msg.sender].amountEarned += yield;
-                emit PlanetConquer(msg.sender, yield, planetType);
+                emit PlanetConquer(msg.sender, yield, planetType, block.timestamp);
                 return;
             }
         }
-        emit PlanetConquer(msg.sender, 0, planetType);
+        emit PlanetConquer(msg.sender, 0, planetType, block.timestamp);
     }
 
     function get_abs_diff(uint val1, uint val2) private pure returns (uint) {
@@ -214,7 +214,7 @@ contract Players is Initializable, OwnableUpgradeable {
         }
     }
 
-    function determineStartingPosition() public returns(uint x, uint y) {
+    function determineStartingPosition() internal returns(uint x, uint y) {
 
         indexStartingPosition.increment();
         uint positionIndex = indexStartingPosition.current();

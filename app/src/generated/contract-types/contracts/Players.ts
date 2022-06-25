@@ -30,7 +30,6 @@ import type {
 export interface PlayersInterface extends utils.Interface {
   functions: {
     "NFTPRICE()": FunctionFragment;
-    "determineStartingPosition()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -49,7 +48,6 @@ export interface PlayersInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "NFTPRICE"
-      | "determineStartingPosition"
       | "indexStartingPosition"
       | "moveShip"
       | "owner"
@@ -66,10 +64,6 @@ export interface PlayersInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "determineStartingPosition",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "indexStartingPosition",
     values?: undefined
@@ -139,10 +133,6 @@ export interface PlayersInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "determineStartingPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "indexStartingPosition",
     data: BytesLike
   ): Result;
@@ -185,7 +175,7 @@ export interface PlayersInterface extends utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
-    "PlanetConquer(address,uint256,uint256)": EventFragment;
+    "PlanetConquer(address,uint256,uint256,uint256)": EventFragment;
     "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
@@ -212,9 +202,10 @@ export interface PlanetConquerEventObject {
   player: string;
   amount: BigNumber;
   planetType: BigNumber;
+  timestamp: BigNumber;
 }
 export type PlanetConquerEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
+  [string, BigNumber, BigNumber, BigNumber],
   PlanetConquerEventObject
 >;
 
@@ -270,10 +261,6 @@ export interface Players extends BaseContract {
 
   functions: {
     NFTPRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     indexStartingPosition(
       overrides?: CallOverrides
@@ -361,10 +348,6 @@ export interface Players extends BaseContract {
 
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-  determineStartingPosition(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
   moveShip(
@@ -448,10 +431,6 @@ export interface Players extends BaseContract {
 
   callStatic: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    determineStartingPosition(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -540,15 +519,17 @@ export interface Players extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
-    "PlanetConquer(address,uint256,uint256)"(
-      player?: null,
+    "PlanetConquer(address,uint256,uint256,uint256)"(
+      player?: string | null,
       amount?: null,
-      planetType?: null
+      planetType?: null,
+      timestamp?: null
     ): PlanetConquerEventFilter;
     PlanetConquer(
-      player?: null,
+      player?: string | null,
       amount?: null,
-      planetType?: null
+      planetType?: null,
+      timestamp?: null
     ): PlanetConquerEventFilter;
 
     "StepsAdded(uint256,address,uint256)"(
@@ -568,10 +549,6 @@ export interface Players extends BaseContract {
 
   estimateGas: {
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -645,10 +622,6 @@ export interface Players extends BaseContract {
 
   populateTransaction: {
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     indexStartingPosition(
       overrides?: CallOverrides

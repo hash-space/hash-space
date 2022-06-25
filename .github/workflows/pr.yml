@@ -44,7 +44,7 @@ jobs:
 
       - run: npm install
 
-      # - run: npm run deploy:mumbai
+      - run: npm run compile
       # - run: npm run deploy:emerald-test
       # - run: npm run deploy:arbitrum-nitro
 
