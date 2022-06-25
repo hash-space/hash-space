@@ -11,13 +11,13 @@ import {
 } from '@mui/material';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../context/auth';
-import { usePlayerContract } from '../context/state';
+import { useStateContext } from '../context/state';
 import Link from 'next/link';
 
 export default function HeadBar() {
   const ethersAppContext = useEthersAppContext();
   const authContext = useAuthContext();
-  const playerContract = usePlayerContract();
+  const { playerContract } = useStateContext();
 
   return (
     <AppBar position="static">

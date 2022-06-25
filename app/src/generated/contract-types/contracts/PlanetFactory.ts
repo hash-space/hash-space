@@ -51,28 +51,20 @@ export declare namespace SharedStructs {
 
 export interface PlanetFactoryInterface extends utils.Interface {
   functions: {
-    "_retrieveRandomNumber()": FunctionFragment;
     "createPlanet(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "existingPlanets(uint256)": FunctionFragment;
     "getPlanet(uint256)": FunctionFragment;
     "planetTypes(uint256)": FunctionFragment;
-    "retrieveTokens(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "_retrieveRandomNumber"
       | "createPlanet"
       | "existingPlanets"
       | "getPlanet"
       | "planetTypes"
-      | "retrieveTokens"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "_retrieveRandomNumber",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "createPlanet",
     values: [
@@ -95,15 +87,7 @@ export interface PlanetFactoryInterface extends utils.Interface {
     functionFragment: "planetTypes",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "retrieveTokens",
-    values: [BigNumberish]
-  ): string;
 
-  decodeFunctionResult(
-    functionFragment: "_retrieveRandomNumber",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "createPlanet",
     data: BytesLike
@@ -115,10 +99,6 @@ export interface PlanetFactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getPlanet", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "planetTypes",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "retrieveTokens",
     data: BytesLike
   ): Result;
 
@@ -152,8 +132,6 @@ export interface PlanetFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    _retrieveRandomNumber(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     createPlanet(
       _planetID: BigNumberish,
       _worldMapIndex: BigNumberish,
@@ -192,14 +170,7 @@ export interface PlanetFactory extends BaseContract {
         image_link: string;
       }
     >;
-
-    retrieveTokens(
-      _id: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
-
-  _retrieveRandomNumber(overrides?: CallOverrides): Promise<BigNumber>;
 
   createPlanet(
     _planetID: BigNumberish,
@@ -240,14 +211,7 @@ export interface PlanetFactory extends BaseContract {
     }
   >;
 
-  retrieveTokens(
-    _id: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
-    _retrieveRandomNumber(overrides?: CallOverrides): Promise<BigNumber>;
-
     createPlanet(
       _planetID: BigNumberish,
       _worldMapIndex: BigNumberish,
@@ -286,15 +250,11 @@ export interface PlanetFactory extends BaseContract {
         image_link: string;
       }
     >;
-
-    retrieveTokens(_id: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    _retrieveRandomNumber(overrides?: CallOverrides): Promise<BigNumber>;
-
     createPlanet(
       _planetID: BigNumberish,
       _worldMapIndex: BigNumberish,
@@ -317,19 +277,10 @@ export interface PlanetFactory extends BaseContract {
     planetTypes(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    retrieveTokens(
-      _id: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    _retrieveRandomNumber(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     createPlanet(
       _planetID: BigNumberish,
       _worldMapIndex: BigNumberish,
@@ -352,11 +303,6 @@ export interface PlanetFactory extends BaseContract {
     planetTypes(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    retrieveTokens(
-      _id: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -211,7 +211,7 @@ contract Players is Ownable {
         }
     }
 
-    function determineStartingPosition() public returns(uint x, uint y) {
+    function determineStartingPosition() internal returns(uint x, uint y) {
 
         indexStartingPosition.increment();
         uint positionIndex = indexStartingPosition.current();

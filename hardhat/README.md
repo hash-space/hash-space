@@ -24,6 +24,12 @@ deploy the contract to mumbai
 npm run deploy:mumbai
 ```
 
+deploy the contract to mumbai freshly (without reusing any contracts)
+
+```
+npm run deploy:mumbai-fresh
+```
+
 clean compiled output (run this as needed)
 
 ```
