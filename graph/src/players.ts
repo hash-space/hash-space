@@ -63,10 +63,24 @@ export function handlePlanetConquer(event: PlanetConquer): void {
     entity.totalYield = BigInt.fromI32(0)
   }
 
-  // TODO: add in the weekly yield calculations - copy from above
-
   entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
   entity.totalYield = entity.totalYield + event.params.amount
+
+  var weekNum = BigInt.fromI32(getCurrentWeek(event.params.timestamp))
+  var keyName = `week${weekNum}Yield`;
+
+  if (entity.isSet(keyName)) {
+    let prevYieldThisWeek = entity.get(keyName);
+    if (!prevYieldThisWeek) throw new Error('error');
+
+    let newYieldThisWeek = event.params.amount.plus(
+      prevYieldThisWeek.toBigInt()
+    );
+
+    entity.set(keyName, Value.fromBigInt(newYieldThisWeek));
+  } else {
+    entity.set(keyName, Value.fromBigInt(event.params.amount));
+  }
 
   entity.save()
 }

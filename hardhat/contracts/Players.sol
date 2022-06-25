@@ -36,7 +36,7 @@ contract Players is Ownable {
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
-    event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
+    event PlanetConquer(address player, uint amount, uint planetType, uint timestamp); // TODO: add planetId
 
 
     constructor () {
@@ -187,11 +187,11 @@ contract Players is Ownable {
             if (yield > 0 && yield > 0.0000002 ether) { // did run into issues with the amount is too low
                 aaveVaultContract.withdraw(msg.sender);
                 players[msg.sender].amountEarned += yield;
-                emit PlanetConquer(msg.sender, yield, planetType);
+                emit PlanetConquer(msg.sender, yield, planetType, block.timestamp);
                 return;
             }
         }
-        emit PlanetConquer(msg.sender, 0, planetType);
+        emit PlanetConquer(msg.sender, 0, planetType, block.timestamp);
     }
 
     function get_abs_diff(uint val1, uint val2) private pure returns (uint) {

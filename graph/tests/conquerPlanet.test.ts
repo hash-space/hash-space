@@ -4,22 +4,24 @@ import { newMockEvent, test, assert, logStore, clearStore } from "matchstick-as/
 import { handlePlanetConquer } from '../src/players'
 import { PlanetConquerEntity } from "../generated/schema"
 
-export function createPlanetConquerEvent(player: string, amount: i32, planetType: i32): PlanetConquer {
+export function createPlanetConquerEvent(player: string, amount: i32, planetType: i32, timestamp: i32): PlanetConquer {
     let newPlanetConquerEvent = changetype<PlanetConquer>(newMockEvent())
     newPlanetConquerEvent.parameters = new Array()
     let amountParam = new ethereum.EventParam("amount", ethereum.Value.fromI32(amount))
     let playerParam = new ethereum.EventParam("player", ethereum.Value.fromAddress(Address.fromString(player)))
     let planetTypeParam = new ethereum.EventParam("planetType", ethereum.Value.fromI32(planetType))
+    let timestampParam = new ethereum.EventParam("timestamp", ethereum.Value.fromI32(timestamp))
 
     newPlanetConquerEvent.parameters.push(playerParam)
     newPlanetConquerEvent.parameters.push(amountParam)
     newPlanetConquerEvent.parameters.push(planetTypeParam)
+    newPlanetConquerEvent.parameters.push(timestampParam)
 
     return newPlanetConquerEvent
 } 
 
 test("Can handle planet conquer event", () => {
-    let newPlanetConquerEvent = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10, 1)
+    let newPlanetConquerEvent = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 10, 1, 10)
 
     handlePlanetConquer(newPlanetConquerEvent);
     logStore();
@@ -33,9 +35,9 @@ test("Can handle planet conquer event", () => {
 
 test("Tallies yield amount correctly", () => {
     // arrange
-    let newStepsAddedEvent1 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 25, 1);
-    let newStepsAddedEvent2 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 45, 1);
-    let newStepsAddedEvent3 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 50, 1);
+    let newStepsAddedEvent1 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 25, 1, 10);
+    let newStepsAddedEvent2 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 45, 1, 11);
+    let newStepsAddedEvent3 = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 50, 1, 12);
 
     // act
     handlePlanetConquer(newStepsAddedEvent1);
