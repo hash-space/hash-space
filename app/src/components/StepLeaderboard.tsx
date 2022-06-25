@@ -21,12 +21,56 @@ export const QUERY = gql`
       week6Steps
       week7Steps
       week8Steps
+      week9Steps
+      week10Steps
+      week11Steps
+      week12Steps
+      week13Steps
+      week14Steps
+      week15Steps
+      week16Steps
+      week17Steps
+      week18Steps
+      week19Steps
+      week20Steps
+      week21Steps
+      week22Steps
+      week23Steps
+      week24Steps
+      week25Steps
+      week26Steps
+      week27Steps
+      week28Steps
+      week29Steps
+      week30Steps
+      week31Steps
+      week32Steps
+      week33Steps
+      week34Steps
+      week35Steps
+      week36Steps
+      week37Steps
+      week38Steps
+      week39Steps
+      week40Steps
+      week41Steps
+      week42Steps
+      week43Steps
+      week44Steps
+      week45Steps
+      week46Steps
+      week47Steps
+      week48Steps
+      week49Steps
+      week50Steps
+      week51Steps
+      week52Steps
     }
   }
 `;
 
 export function StepLeaderBoard() {
-  const rank_metric = 'totalSteps';
+  const rank_metric = 'week25Steps'; // TO DO: remove hard-coding of week
   const [users, _] = useQuery({
     query: QUERY,
     requestPolicy: 'network-only',

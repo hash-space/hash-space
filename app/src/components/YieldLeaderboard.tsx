@@ -13,12 +13,65 @@ export const QUERY = gql`
     planetConquerEntities(orderBy: $orderBy, first: 10) {
       id
       totalYield
+      week1Yield
+      week2Yield
+      week3Yield
+      week4Yield
+      week5Yield
+      week6Yield
+      week7Yield
+      week8Yield
+      week9Yield
+      week10Yield
+      week11Yield
+      week12Yield
+      week13Yield
+      week14Yield
+      week15Yield
+      week16Yield
+      week17Yield
+      week18Yield
+      week19Yield
+      week20Yield
+      week21Yield
+      week22Yield
+      week23Yield
+      week24Yield
+      week25Yield
+      week26Yield
+      week27Yield
+      week28Yield
+      week29Yield
+      week30Yield
+      week31Yield
+      week32Yield
+      week33Yield
+      week34Yield
+      week35Yield
+      week36Yield
+      week37Yield
+      week38Yield
+      week39Yield
+      week40Yield
+      week41Yield
+      week42Yield
+      week43Yield
+      week44Yield
+      week45Yield
+      week46Yield
+      week47Yield
+      week48Yield
+      week49Yield
+      week50Yield
+      week51Yield
+      week52Yield
     }
   }
 `;
 
+
 export function YieldLeaderBoard() {
-  const rank_metric = 'totalYield';
+  const rank_metric = 'totalYield'; // TODO: update to specific week
   const [users, _] = useQuery({
     query: QUERY,
     requestPolicy: 'network-only',
