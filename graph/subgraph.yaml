@@ -6,9 +6,9 @@ dataSources:
     name: Players
     network: mumbai
     source:
-      address: '0xac63CF2fEc11208136cf1B14d09afD74dc58347e' # Update to the 'live' mumbai address
+      address: '0x156268b5b620929Ca21339C434Cdd8c24c3cd98e' # Update to the 'live' mumbai address
       abi: Players
-      startBlock: 26847586 # Update along with the contract address
+      startBlock: 26904280 # Update along with the contract address
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
