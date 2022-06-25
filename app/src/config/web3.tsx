@@ -4,10 +4,13 @@ import UAuthSPA from '@uauth/js'
 import * as UAuthWeb3Modal from '@uauth/web3modal'
 
 const uauthOptions: UAuthWeb3Modal.IUAuthOptions = {
-  clientID: process.env.NEXT_PUBLIC_UD_CLIENT_ID!,
-  redirectUri: process.env.NEXT_PUBLIC_UD_REDIRECT_URI!,
+  clientID: "6fa9361b-69ad-4fce-8ee0-97b25b5e57fe",
+  // clientID: process.env.UD_CLIENT_ID!,
+  redirectUri: "http://localhost:3001/",
+  // redirectUri: process.env.UD_REDIRECT_URI!,
   scope: 'openid wallet',
 }
+
 
 console.log(uauthOptions)
 export const web3ModalConfigKeys = {
