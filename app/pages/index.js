@@ -2,6 +2,10 @@ import dynamic from 'next/dynamic';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useStateContext } from '../src/context/state';
 import { PageWrapper } from '../src/components/PageWrapper';
+import {
+  PlayInstruction,
+  PlayInstructionSimple,
+} from '../src/components/PlayInstruction';
 import { Typography, Button, ButtonGroup, Alert } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
 import ShareDialog from '../src/components/ShareDialog';
@@ -16,7 +20,6 @@ import { Container, Paper, Box } from '@mui/material';
 import { getCallbackUrl } from '../src/helper/callbackUrl';
 import { StepLeaderBoard } from '../src/components/StepLeaderboard';
 import { YieldLeaderBoard } from '../src/components/YieldLeaderboard';
-
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
@@ -39,7 +42,7 @@ export default function Home() {
             <b>
               <em>
                 Learn about DeFi and earn yield while exploring different
-                worlds.
+                planets.
               </em>
             </b>
             <br />
@@ -111,123 +114,28 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            <b>PLAY</b>
+            <b>Play</b>
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            Explore different DeFi galaxies by connecting to different chains:
+          <Alert severity="warning">Only on Polygon Mumbai</Alert>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1">
+            Explore different DeFi planets and earn yield
           </Typography>
-          <ol>
-            <li>
-              <b>The Polygon Planetary System</b> (on Polygon Mumbai)
-            </li>
-            <li>
-              <b>The Oasis Constellation</b> (on Oasis Emerald Testnet)
-            </li>
-            <li>
-              <b>The Arbitrum Nitro Nebula</b> (on Arbitrum Nitro Devnet)
-            </li>
-          </ol>
-          <Typography variant="body1" gutterBottom>
-            <em>
-              Note: requires 0.01 MATIC / ROSE / ETH to register (in order to
-              mint the starship NFT).
-            </em>
-          </Typography>
-          <div>
-            {!playerContract.playerState.isSignedUp && ethersAppContext.active && (
-              <Button
-                color="secondary"
-                variant="outlined"
-                onClick={playerContract.playerRegister}>
-                Register
-              </Button>
-            )}
-            {playerContract.playerState.isSignedUp && (
-              <>
-                <ButtonGroup size="large" aria-label="large button group">
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    onClick={() => {
-                      const url = new URL('/api/auth', getCallbackUrl());
-                      url.searchParams.set(
-                        'lastSync',
-                        playerContract.playerState.lastQueried
-                      );
-                      url.searchParams.set('redirectUrl', location.href);
-                      location.href = url.href;
-                    }}>
-                    Sync your steps
-                  </Button>
-                  <Link
-                    href={{
-                      pathname: '/game',
-                    }}>
-                    <Button color="secondary" variant="outlined">
-                      Go to game
-                    </Button>
-                  </Link>
-                </ButtonGroup>
-                <Typography variant="body1" gutterBottom>
-                  <br />
-                  In order to sync your steps:
-                </Typography>
-                <ol>
-                  <li>
-                    Download the google fit app{' '}
-                    <a href="http://onelink.to/yrjrzp">here (link)</a>
-                  </li>
-                  <li>Grant permissions to pull your step data</li>
-                  <li>Sync your steps into the game</li>
-                </ol>
-              </>
-            )}
-          </div>
+          <Box sx={{ height: 10 }} />
+          <PlayInstruction />
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            <b>NFT Collection / OpenSea</b>
+            <b>View Game</b>
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            You&apos;ll receive a starship NFT on registration. View the full
-            collection and trade starships on the following networks:
+          <Alert severity="warning">Only on Polygon Mumbai</Alert>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1">
+            See what other players are up to and discover the galaxy of planets
           </Typography>
-          <div>
-            <ButtonGroup size="large" aria-label="large button group">
-              <a
-                rel="noreferrer"
-                target={'_blank'}
-                href={`https://testnets.opensea.io/assets?search[query]=${getAddress(
-                  80001,
-                  'Starship'
-                )}`}>
-                <Button color="secondary" variant="outlined">
-                  Mumbai
-                </Button>
-              </a>
-            </ButtonGroup>
-          </div>
-        </Paper>
-        <Box sx={{ height: 10 }} />
-        <Paper style={{ padding: '10px' }}>
-          <Typography variant="h5" gutterBottom component="div">
-            <b>Share</b>
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Show some love and share us on different social channels
-          </Typography>
-          <div>
-            <Link
-              href={{
-                pathname: '/',  
-                query: { modal: 'share' },
-              }}>
-              <Button color="secondary" variant="outlined">
-                Share
-              </Button>
-            </Link>
-          </div>
+          <Box sx={{ height: 10 }} />
+          <PlayInstructionSimple />
         </Paper>
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
@@ -266,6 +174,46 @@ export default function Home() {
                 Support us
               </Button>
             </Link>
+          </div>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1" gutterBottom>
+            Show some love and share us on different social channels
+          </Typography>
+          <div>
+            <Link
+              href={{
+                pathname: '/',
+                query: { modal: 'share' },
+              }}>
+              <Button color="secondary" variant="outlined">
+                Share
+              </Button>
+            </Link>
+          </div>
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            <b>NFT Collection / OpenSea</b>
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            You&apos;ll receive a starship NFT on registration. View the full
+            collection and trade starships on the following networks:
+          </Typography>
+          <div>
+            <ButtonGroup size="large" aria-label="large button group">
+              <a
+                rel="noreferrer"
+                target={'_blank'}
+                href={`https://testnets.opensea.io/assets?search[query]=${getAddress(
+                  80001,
+                  'Starship'
+                )}`}>
+                <Button color="secondary" variant="outlined">
+                  Mumbai
+                </Button>
+              </a>
+            </ButtonGroup>
           </div>
         </Paper>
         <Box sx={{ height: 10 }} />
