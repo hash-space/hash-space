@@ -7,6 +7,7 @@
     "node": "hardhat node --network hardhat --no-deploy",
     "seed:local": "hardhat seed --network localhost",
     "deploy:local": "hardhat --network localhost deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:local-fresh": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:mumbai": "hardhat --network matic deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "deploy:mumbai-fresh": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
     "seed:mumbai": "hardhat seed --network matic",

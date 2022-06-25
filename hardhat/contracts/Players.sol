@@ -2,14 +2,16 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IPlanet.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./interfaces/IShip.sol";
 import "./interfaces/IWorld.sol";
 import "./interfaces/IHashVault.sol";
 
-contract Players is Ownable {
-    using Counters for Counters.Counter;
+
+contract Players is Initializable, OwnableUpgradeable {
+   using CountersUpgradeable for CountersUpgradeable.Counter;
 
     uint256 constant public NFTPRICE = 0.01 ether;
 
@@ -22,15 +24,14 @@ contract Players is Ownable {
             uint256 amountEarned;
     }
 
-    Counters.Counter indexPlayerIds;
-    Counters.Counter public indexStartingPosition;
-    address backendAddress;
+    CountersUpgradeable.Counter indexPlayerIds;
+    CountersUpgradeable.Counter public indexStartingPosition;
+    address public BACKEND;
+    address public NFT;
+    address public WORLD;
+    address public AAVE_VAULT;
 
     mapping (address => PersonProfile) public players;
-
-    IPlanet nftContract;
-    IWorld worldContract;
-    IHashVault aaveVaultContract;
 
     event TreasuryFunded(uint amountFunded);
 
@@ -39,7 +40,12 @@ contract Players is Ownable {
     event PlanetConquer(address player, uint amount, uint planetType); // TODO: add planetId
 
 
-    constructor () {
+    function initialize() public initializer {
+        __Ownable_init();
+    }
+
+    function test() public returns(uint) {
+        return 0;
     }
 
     /**
@@ -47,28 +53,25 @@ contract Players is Ownable {
         Messages from the backend which are verified in this contract
      */
     function setBackendAddress(address _address) public onlyOwner {
-        backendAddress = _address;
+        BACKEND = _address;
     }
 
     /**
-        We set the Nft Contract, this can also be done in the constructor
+        We set the Nft Contract
      */
     function setNftAddress(address _nftContractAddress) public onlyOwner {
-        nftContract = IPlanet(_nftContractAddress);
+        NFT = _nftContractAddress;
     }
 
     /**
-        We set the Worldcontract Contract, this can also be done in the constructor
+        We set the Worldcontract Contract
      */
     function setWorldAddress(address _worldAddress) public onlyOwner {
-        worldContract = IWorld(_worldAddress);
+        WORLD = _worldAddress;
     }
 
-    /**
-        We set the Worldcontract Contract, this can also be done in the constructor
-     */
     function setAaveVault(address _address) public onlyOwner {
-        aaveVaultContract = IHashVault(_address);
+        AAVE_VAULT = _address;
     }
 
     /**
@@ -82,12 +85,12 @@ contract Players is Ownable {
         require(msg.value == NFTPRICE, "Not enought/too much ether sent");
 
         // put coins to work in vault
-        aaveVaultContract.deposit{value: msg.value}();
+        IHashVault(AAVE_VAULT).deposit{value: msg.value}();
 
         // mint ship
-        uint256 shipId = nftContract.mint(msg.sender, _tokenURI);
+        uint256 shipId = IShip(NFT).mint(msg.sender, _tokenURI);
         (uint startingX, uint startingY) = determineStartingPosition();
-        nftContract.setLocation(shipId, msg.sender, startingX, startingY);
+        IShip(NFT).setLocation(shipId, msg.sender, startingX, startingY);
     }
 
     function _createProfile() private {
@@ -144,7 +147,7 @@ contract Players is Ownable {
         bytes32 prefixedHashMessage = keccak256(abi.encodePacked(prefix, _hashedMessageBackend));
         address signer = ecrecover(prefixedHashMessage, _v, _r, _s);
 
-        require(signer == address(backendAddress), "wrong signer");
+        require(signer == address(BACKEND), "wrong signer");
     }
 
     /**
@@ -155,7 +158,7 @@ contract Players is Ownable {
     function moveShip(uint x, uint y, uint _planetId, uint _shipId, uint _worldId) public payable {
 
         // current location of the ship
-        (uint xCoordShip, uint yCoordShip) = nftContract.getLocation(_shipId);
+        (uint xCoordShip, uint yCoordShip) = IShip(NFT).getLocation(_shipId);
 
         // calculate distance moved
         uint travelX = get_abs_diff(xCoordShip, x);
@@ -169,10 +172,10 @@ contract Players is Ownable {
         players[msg.sender].stepsAvailable -= travelDistance * 10;
 
         // update ship position
-        nftContract.setLocation(_shipId, msg.sender, x, y);
+        IShip(NFT).setLocation(_shipId, msg.sender, x, y);
 
         // check if we landed on a planet
-        SharedStructs.Planet memory planet = worldContract.getPlanet(_planetId);
+        SharedStructs.Planet memory planet = IWorld(WORLD).getPlanet(_planetId);
 
         if (x == planet.xCoord && y == planet.yCoord) {
             _payout(planet.planetType);
@@ -182,10 +185,10 @@ contract Players is Ownable {
     function _payout(uint planetType) internal {
         // route to vaults
         if (planetType == 1) {
-            uint yield = aaveVaultContract.yield();
+            uint yield = IHashVault(AAVE_VAULT).yield();
 
             if (yield > 0 && yield > 0.0000002 ether) { // did run into issues with the amount is too low
-                aaveVaultContract.withdraw(msg.sender);
+                IHashVault(AAVE_VAULT).withdraw(msg.sender);
                 players[msg.sender].amountEarned += yield;
                 emit PlanetConquer(msg.sender, yield, planetType);
                 return;

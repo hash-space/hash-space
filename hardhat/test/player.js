@@ -243,12 +243,14 @@ async function setup() {
   const _mockAaveVault = await smockit(mockAaveVault);
 
   // init
+  await player.initialize();
   await player.setNftAddress(starShip.address);
-  await starShip.setPlayerContract(player.address);
   await player.setBackendAddress(addressBackend);
-  await world.defineWorldMap(worldId, 2000, 2000);
   await player.setWorldAddress(world.address);
   await player.setAaveVault(_mockAaveVault.address);
+
+  await world.defineWorldMap(worldId, 2000, 2000);
+  await starShip.setPlayerContract(player.address);
 
   return {
     world,

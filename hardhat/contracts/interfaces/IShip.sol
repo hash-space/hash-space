@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-interface IPlanet {
+interface IShip {
     /**
       gets the location of the ship
     */

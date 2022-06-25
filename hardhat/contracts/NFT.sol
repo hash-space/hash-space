@@ -5,14 +5,13 @@ pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IPlanet.sol";
+import "./interfaces/IShip.sol";
 import "./ERC721Tradable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 // TODO: move location state to world contract, similar like planet factory
-// TODO: IPlanet interface is wrongly named
 
-contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
+contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IShip {
     using Counters for Counters.Counter;
     Counters.Counter public tokenId;
 
