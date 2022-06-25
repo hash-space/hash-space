@@ -101,7 +101,7 @@ export function useConquerEvent() {
 
   useBlockNumber(ethersAppContext.provider, async (blockNumber) => {
     const filter = playersContract?.filters[
-      'PlanetConquer(address,uint256,uint256)'
+      'PlanetConquer(address,uint256,uint256,uint256)'
     ](ethersAppContext.account);
     const result = await playersContract?.queryFilter(
       filter,
