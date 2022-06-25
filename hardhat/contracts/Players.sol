@@ -44,10 +44,6 @@ contract Players is Initializable, OwnableUpgradeable {
         __Ownable_init();
     }
 
-    function test() public returns(uint) {
-        return 0;
-    }
-
     /**
         The address of our web2 backend.
         Messages from the backend which are verified in this contract

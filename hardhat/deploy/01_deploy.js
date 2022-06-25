@@ -67,11 +67,21 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     },
   });
 
-  console.log('----------------');
-  console.log('vault', vault.address);
-  console.log('players', players.address);
-  console.log('world', world.address);
+  let contracts = {};
+  contracts['vault'] = {
+    proxy: vault.address,
+    implementation: vault.implementation,
+  };
+  contracts['players'] = {
+    proxy: players.address,
+    implementation: players.implementation,
+  };
+  contracts['world'] = {
+    proxy: world.address,
+    implementation: world.implementation,
+  };
   console.log('ship', starship.address);
+  console.table(contracts);
 
   // link contracts
   const contractPlayers = await hre.ethers.getContract('Players');
@@ -88,5 +98,35 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     txNftLink.wait(),
     txBackend.wait(),
   ]);
+
+  // verify
+  if (hre.network.name !== 'hardhat' && hre.network.name !== 'localhost') {
+    await tryCatch(() =>
+      hre.run('verify:verify', {
+        address: vault.implementation,
+        constructorArguments: [],
+      })
+    );
+    await tryCatch(() =>
+      hre.run('verify:verify', {
+        address: players.implementation,
+        constructorArguments: [],
+      })
+    );
+    await tryCatch(() =>
+      hre.run('verify:verify', {
+        address: world.implementation,
+        constructorArguments: [],
+      })
+    );
+  }
 };
 module.exports.tags = ['Starship'];
+
+async function tryCatch(func) {
+  try {
+    await func();
+  } catch (e) {
+    console.log(e);
+  }
+}
