@@ -1,6 +1,6 @@
 import { BigInt, Value } from '@graphprotocol/graph-ts';
-import { StepsAdded } from '../generated/Players/Players';
-import { StepTrackingEntity } from '../generated/schema';
+import { StepsAdded, PlanetConquer } from '../generated/Players/Players';
+import { StepTrackingEntity, PlanetConquerEntity } from '../generated/schema'
 // import { log } from '@graphprotocol/graph-ts';
 
 export function handleStepsAdded(event: StepsAdded): void {
@@ -44,4 +44,21 @@ export function handleStepsAdded(event: StepsAdded): void {
   }
 
   entity.save();
+}
+
+export function handlePlanetConquer(event: PlanetConquer): void {
+  let entity = PlanetConquerEntity.load(event.transaction.from.toHex())
+  
+  if (!entity) {
+    entity = new PlanetConquerEntity(event.transaction.from.toHex())
+    entity.numSyncs = BigInt.fromI32(0)
+    entity.totalYield = BigInt.fromI32(0)
+  }
+
+  // TODO: add in the weekly yield calculations - copy from above
+
+  entity.numSyncs = entity.numSyncs + BigInt.fromI32(1)
+  entity.totalYield = entity.totalYield + event.params.amount
+
+  entity.save()
 }

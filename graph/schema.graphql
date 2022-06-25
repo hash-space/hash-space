@@ -70,4 +70,46 @@ type PlanetConquerEntity @entity {
   week8Yield: BigInt
   week9Yield: BigInt
   week10Yield: BigInt
+  week11Yield: BigInt
+  week12Yield: BigInt
+  week13Yield: BigInt
+  week14Yield: BigInt
+  week15Yield: BigInt
+  week16Yield: BigInt
+  week17Yield: BigInt
+  week18Yield: BigInt
+  week19Yield: BigInt
+  week20Yield: BigInt
+  week21Yield: BigInt
+  week22Yield: BigInt
+  week23Yield: BigInt
+  week24Yield: BigInt
+  week25Yield: BigInt
+  week26Yield: BigInt
+  week27Yield: BigInt
+  week28Yield: BigInt
+  week29Yield: BigInt
+  week30Yield: BigInt
+  week31Yield: BigInt
+  week32Yield: BigInt
+  week33Yield: BigInt
+  week34Yield: BigInt
+  week35Yield: BigInt
+  week36Yield: BigInt
+  week37Yield: BigInt
+  week38Yield: BigInt
+  week39Yield: BigInt
+  week40Yield: BigInt
+  week41Yield: BigInt
+  week42Yield: BigInt
+  week43Yield: BigInt
+  week44Yield: BigInt
+  week45Yield: BigInt
+  week46Yield: BigInt
+  week47Yield: BigInt
+  week48Yield: BigInt
+  week49Yield: BigInt
+  week50Yield: BigInt
+  week51Yield: BigInt
+  week52Yield: BigInt
 }
