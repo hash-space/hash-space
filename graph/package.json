@@ -4,15 +4,17 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "npm run codegen && graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ chris-lovejoy/hash-space",
-    "create-local": "graph create --node http://localhost:8020/ chris-lovejoy/hash-space",
-    "remove-local": "graph remove --node http://localhost:8020/ chris-lovejoy/hash-space",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 chris-lovejoy/hash-space"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ hash-space/hash-space",
+    "create-local": "graph create --node http://localhost:8020/ hash-space/hash-space",
+    "remove-local": "graph remove --node http://localhost:8020/ hash-space/hash-space",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 hash-space/hash-space",
+    "test": "graph test"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",
     "@graphprotocol/graph-ts": "0.27.0",
     "dayjs": "^1.11.3",
+    "matchstick-as": "^0.5.0",
     "moment": "^2.29.3"
   }
 }
