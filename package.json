@@ -38,8 +38,5 @@
   "devDependencies": {
     "lerna": "^5.1.4"
   },
-  "dependencies": {
-    "@uauth/js": "^2.0.0",
-    "@uauth/web3modal": "^2.0.0"
-  }
+  "dependencies": {}
 }

@@ -41,7 +41,9 @@
     "styled-components": "^5.3.5",
     "urql": "^2.2.2",
     "uuid": "^8.3.2",
-    "web3modal": "^1.9.7"
+    "web3modal": "^1.9.7",
+    "@uauth/js": "^2.0.0",
+    "@uauth/web3modal": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.33",
