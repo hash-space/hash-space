@@ -799,7 +799,7 @@
           ]
         },
         "Players": {
-          "address": "0x46f162eFe0364a93Cb3B644989e095f099AcBe75",
+          "address": "0x53f8f6F8dAd2a2Ad547563E600D3176c0377d6F1",
           "abi": [
             {
               "inputs": [],
@@ -829,7 +829,7 @@
               "anonymous": false,
               "inputs": [
                 {
-                  "indexed": false,
+                  "indexed": true,
                   "internalType": "address",
                   "name": "player",
                   "type": "address"
@@ -899,24 +899,6 @@
                 }
               ],
               "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "determineStartingPosition",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "x",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "y",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
