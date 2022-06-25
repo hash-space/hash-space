@@ -3,6 +3,26 @@ import { StepsAdded, PlanetConquer } from '../generated/Players/Players';
 import { StepTrackingEntity, PlanetConquerEntity } from '../generated/schema'
 // import { log } from '@graphprotocol/graph-ts';
 
+
+function getCurrentWeek(timestamp: BigInt): i32 {
+  var currentDate = new Date(
+    timestamp.times(BigInt.fromString('1000')).toI64()
+  );
+  const firstJanThisYear = new Date(0);
+  firstJanThisYear.setUTCDate(1);
+  firstJanThisYear.setUTCFullYear(currentDate.getUTCFullYear());
+  firstJanThisYear.setUTCHours(1);
+  firstJanThisYear.setUTCMinutes(1);
+  firstJanThisYear.setUTCSeconds(1);
+
+  var diff = (currentDate.getTime() - firstJanThisYear.getTime()) as f64;
+  var dayNumber = Math.floor(diff / (24 * 60 * 60 * 1000));
+  let weekNum = BigInt.fromI32(Math.ceil(dayNumber / 7) as i32).toI32();
+
+  return weekNum
+}
+
+
 export function handleStepsAdded(event: StepsAdded): void {
   let entity = StepTrackingEntity.load(event.transaction.from.toHex());
 
@@ -15,19 +35,7 @@ export function handleStepsAdded(event: StepsAdded): void {
   entity.numSyncs = entity.numSyncs.plus(BigInt.fromI32(1));
   entity.totalSteps = entity.totalSteps.plus(event.params.stepsTaken);
 
-  var currentDate = new Date(
-    event.params.timestamp.times(BigInt.fromString('1000')).toI64()
-  );
-  const firstJanThisYear = new Date(0);
-  firstJanThisYear.setUTCDate(1);
-  firstJanThisYear.setUTCFullYear(currentDate.getUTCFullYear());
-  firstJanThisYear.setUTCHours(1);
-  firstJanThisYear.setUTCMinutes(1);
-  firstJanThisYear.setUTCSeconds(1);
-
-  var diff = (currentDate.getTime() - firstJanThisYear.getTime()) as f64;
-  var dayNumber = Math.floor(diff / (24 * 60 * 60 * 1000));
-  var weekNum = BigInt.fromI32(Math.ceil(dayNumber / 7) as i32).toI32();
+  var weekNum = BigInt.fromI32(getCurrentWeek(event.params.timestamp))
   var keyName = `week${weekNum}Steps`;
 
   if (entity.isSet(keyName)) {
