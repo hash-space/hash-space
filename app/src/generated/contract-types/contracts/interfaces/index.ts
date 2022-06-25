@@ -3,5 +3,5 @@
 /* eslint-disable */
 export type { IAaveGateway } from "./IAaveGateway";
 export type { IHashVault } from "./IHashVault";
-export type { IPlanet } from "./IPlanet";
+export type { IShip } from "./IShip";
 export type { IWorld } from "./IWorld";

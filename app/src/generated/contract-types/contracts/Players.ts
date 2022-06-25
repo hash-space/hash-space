@@ -29,8 +29,13 @@ import type {
 
 export interface PlayersInterface extends utils.Interface {
   functions: {
+    "AAVE_VAULT()": FunctionFragment;
+    "BACKEND()": FunctionFragment;
+    "NFT()": FunctionFragment;
     "NFTPRICE()": FunctionFragment;
+    "WORLD()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
+    "initialize()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "players(address)": FunctionFragment;
@@ -47,8 +52,13 @@ export interface PlayersInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "AAVE_VAULT"
+      | "BACKEND"
+      | "NFT"
       | "NFTPRICE"
+      | "WORLD"
       | "indexStartingPosition"
+      | "initialize"
       | "moveShip"
       | "owner"
       | "players"
@@ -63,9 +73,20 @@ export interface PlayersInterface extends utils.Interface {
       | "verifySteps"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "AAVE_VAULT",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "BACKEND", values?: undefined): string;
+  encodeFunctionData(functionFragment: "NFT", values?: undefined): string;
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "WORLD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "indexStartingPosition",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -131,11 +152,16 @@ export interface PlayersInterface extends utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(functionFragment: "AAVE_VAULT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "BACKEND", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "NFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "WORLD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "indexStartingPosition",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "moveShip", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "players", data: BytesLike): Result;
@@ -174,17 +200,26 @@ export interface PlayersInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "PlanetConquer(address,uint256,uint256,uint256)": EventFragment;
     "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PlanetConquer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StepsAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -260,11 +295,23 @@ export interface Players extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<[string]>;
+
+    BACKEND(overrides?: CallOverrides): Promise<[string]>;
+
+    NFT(overrides?: CallOverrides): Promise<[string]>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    WORLD(overrides?: CallOverrides): Promise<[string]>;
 
     indexStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { _value: BigNumber }>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     moveShip(
       x: BigNumberish,
@@ -346,9 +393,21 @@ export interface Players extends BaseContract {
     ): Promise<[void]>;
   };
 
+  AAVE_VAULT(overrides?: CallOverrides): Promise<string>;
+
+  BACKEND(overrides?: CallOverrides): Promise<string>;
+
+  NFT(overrides?: CallOverrides): Promise<string>;
+
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  WORLD(overrides?: CallOverrides): Promise<string>;
+
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   moveShip(
     x: BigNumberish,
@@ -430,9 +489,19 @@ export interface Players extends BaseContract {
   ): Promise<void>;
 
   callStatic: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<string>;
+
+    BACKEND(overrides?: CallOverrides): Promise<string>;
+
+    NFT(overrides?: CallOverrides): Promise<string>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    WORLD(overrides?: CallOverrides): Promise<string>;
+
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
 
     moveShip(
       x: BigNumberish,
@@ -510,6 +579,9 @@ export interface Players extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -548,9 +620,21 @@ export interface Players extends BaseContract {
   };
 
   estimateGas: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    BACKEND(overrides?: CallOverrides): Promise<BigNumber>;
+
+    NFT(overrides?: CallOverrides): Promise<BigNumber>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    WORLD(overrides?: CallOverrides): Promise<BigNumber>;
+
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     moveShip(
       x: BigNumberish,
@@ -621,10 +705,22 @@ export interface Players extends BaseContract {
   };
 
   populateTransaction: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    BACKEND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    NFT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    WORLD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     indexStartingPosition(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     moveShip(

@@ -75,6 +75,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     "getPlanet(uint256)": FunctionFragment;
     "getPlanets(uint256)": FunctionFragment;
     "getWorldMap(uint256)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "manualCreatePlanet(uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "planetIndex()": FunctionFragment;
@@ -91,6 +92,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
       | "getPlanet"
       | "getPlanets"
       | "getWorldMap"
+      | "initialize"
       | "manualCreatePlanet"
       | "owner"
       | "planetIndex"
@@ -122,6 +124,10 @@ export interface WorldMapCreatorInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getWorldMap",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "manualCreatePlanet",
@@ -163,6 +169,7 @@ export interface WorldMapCreatorInterface extends utils.Interface {
     functionFragment: "getWorldMap",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "manualCreatePlanet",
     data: BytesLike
@@ -186,11 +193,20 @@ export interface WorldMapCreatorInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -269,6 +285,10 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[WorldMapCreator.WorldMapStructOutput]>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     manualCreatePlanet(
       _worldMapIndex: BigNumberish,
       _xCoord: BigNumberish,
@@ -334,6 +354,10 @@ export interface WorldMapCreator extends BaseContract {
     _selectedWorldIndex: BigNumberish,
     overrides?: CallOverrides
   ): Promise<WorldMapCreator.WorldMapStructOutput>;
+
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   manualCreatePlanet(
     _worldMapIndex: BigNumberish,
@@ -401,6 +425,8 @@ export interface WorldMapCreator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<WorldMapCreator.WorldMapStructOutput>;
 
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     manualCreatePlanet(
       _worldMapIndex: BigNumberish,
       _xCoord: BigNumberish,
@@ -428,6 +454,9 @@ export interface WorldMapCreator extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -469,6 +498,10 @@ export interface WorldMapCreator extends BaseContract {
     getWorldMap(
       _selectedWorldIndex: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     manualCreatePlanet(
@@ -530,6 +563,10 @@ export interface WorldMapCreator extends BaseContract {
     getWorldMap(
       _selectedWorldIndex: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     manualCreatePlanet(

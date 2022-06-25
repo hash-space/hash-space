@@ -3,5 +3,5 @@
 /* eslint-disable */
 export { IAaveGateway__factory } from "./IAaveGateway__factory";
 export { IHashVault__factory } from "./IHashVault__factory";
-export { IPlanet__factory } from "./IPlanet__factory";
+export { IShip__factory } from "./IShip__factory";
 export { IWorld__factory } from "./IWorld__factory";

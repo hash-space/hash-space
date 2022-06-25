@@ -27,23 +27,7 @@ import type {
   OnEvent,
 } from "../../common";
 
-export declare namespace Starship {
-  export type ShipDataStruct = {
-    x: BigNumberish;
-    y: BigNumberish;
-    owner: string;
-    id: BigNumberish;
-  };
-
-  export type ShipDataStructOutput = [
-    BigNumber,
-    BigNumber,
-    string,
-    BigNumber
-  ] & { x: BigNumber; y: BigNumber; owner: string; id: BigNumber };
-}
-
-export interface StarshipInterface extends utils.Interface {
+export interface ERC721TradableUpgradeableInterface extends utils.Interface {
   functions: {
     "ERC712_VERSION()": FunctionFragment;
     "__ERC721TradableUpgradeable_init_unchained(string,string,address)": FunctionFragment;
@@ -54,26 +38,18 @@ export interface StarshipInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "getChainId()": FunctionFragment;
     "getDomainSeperator()": FunctionFragment;
-    "getLocation(uint256)": FunctionFragment;
     "getNonce(address)": FunctionFragment;
-    "getShips()": FunctionFragment;
-    "initialize(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint(address,string)": FunctionFragment;
     "mintTo(address)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
-    "playerContract()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setLocation(uint256,address,uint256,uint256)": FunctionFragment;
-    "setPlayerContract(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "tokenId()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -91,26 +67,18 @@ export interface StarshipInterface extends utils.Interface {
       | "getApproved"
       | "getChainId"
       | "getDomainSeperator"
-      | "getLocation"
       | "getNonce"
-      | "getShips"
-      | "initialize"
       | "isApprovedForAll"
-      | "mint"
       | "mintTo"
       | "name"
       | "owner"
       | "ownerOf"
-      | "playerContract"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "setLocation"
-      | "setPlayerContract"
       | "supportsInterface"
       | "symbol"
-      | "tokenId"
       | "tokenURI"
       | "totalSupply"
       | "transferFrom"
@@ -150,19 +118,9 @@ export interface StarshipInterface extends utils.Interface {
     functionFragment: "getDomainSeperator",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "getLocation",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "getNonce", values: [string]): string;
-  encodeFunctionData(functionFragment: "getShips", values?: undefined): string;
-  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "mintTo", values: [string]): string;
@@ -171,10 +129,6 @@ export interface StarshipInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "playerContract",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -193,19 +147,10 @@ export interface StarshipInterface extends utils.Interface {
     values: [string, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "setLocation",
-    values: [BigNumberish, string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setPlayerContract",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(functionFragment: "tokenId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
     values: [BigNumberish]
@@ -250,26 +195,15 @@ export interface StarshipInterface extends utils.Interface {
     functionFragment: "getDomainSeperator",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLocation",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getShips", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "playerContract",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -287,19 +221,10 @@ export interface StarshipInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setLocation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setPlayerContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tokenId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -399,12 +324,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface Starship extends BaseContract {
+export interface ERC721TradableUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: StarshipInterface;
+  interface: ERC721TradableUpgradeableInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -463,36 +388,16 @@ export interface Starship extends BaseContract {
 
     getDomainSeperator(overrides?: CallOverrides): Promise<[string]>;
 
-    getLocation(
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
     getNonce(
       user: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { nonce: BigNumber }>;
-
-    getShips(
-      overrides?: CallOverrides
-    ): Promise<[Starship.ShipDataStructOutput[]]>;
-
-    initialize(
-      _proxyRegistryAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
-
-    mint(
-      player: string,
-      _tokenURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     mintTo(
       _to: string,
@@ -507,8 +412,6 @@ export interface Starship extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    playerContract(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -535,19 +438,6 @@ export interface Starship extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setLocation(
-      _tokenId: BigNumberish,
-      _ownerAddress: string,
-      x: BigNumberish,
-      y: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setPlayerContract(
-      _newPlayerContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -555,12 +445,8 @@ export interface Starship extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    tokenId(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
-
     tokenURI(
-      tokenId: BigNumberish,
+      _tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -616,31 +502,13 @@ export interface Starship extends BaseContract {
 
   getDomainSeperator(overrides?: CallOverrides): Promise<string>;
 
-  getLocation(
-    _tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
   getNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  getShips(overrides?: CallOverrides): Promise<Starship.ShipDataStructOutput[]>;
-
-  initialize(
-    _proxyRegistryAddress: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   isApprovedForAll(
     owner: string,
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
-
-  mint(
-    player: string,
-    _tokenURI: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   mintTo(
     _to: string,
@@ -652,8 +520,6 @@ export interface Starship extends BaseContract {
   owner(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  playerContract(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -680,19 +546,6 @@ export interface Starship extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setLocation(
-    _tokenId: BigNumberish,
-    _ownerAddress: string,
-    x: BigNumberish,
-    y: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setPlayerContract(
-    _newPlayerContract: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
@@ -700,9 +553,7 @@ export interface Starship extends BaseContract {
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  tokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  tokenURI(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -756,33 +607,13 @@ export interface Starship extends BaseContract {
 
     getDomainSeperator(overrides?: CallOverrides): Promise<string>;
 
-    getLocation(
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
     getNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    getShips(
-      overrides?: CallOverrides
-    ): Promise<Starship.ShipDataStructOutput[]>;
-
-    initialize(
-      _proxyRegistryAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    mint(
-      player: string,
-      _tokenURI: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     mintTo(_to: string, overrides?: CallOverrides): Promise<void>;
 
@@ -791,8 +622,6 @@ export interface Starship extends BaseContract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    playerContract(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -817,19 +646,6 @@ export interface Starship extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setLocation(
-      _tokenId: BigNumberish,
-      _ownerAddress: string,
-      x: BigNumberish,
-      y: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setPlayerContract(
-      _newPlayerContract: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -837,9 +653,10 @@ export interface Starship extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    tokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    tokenURI(
+      _tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -952,30 +769,12 @@ export interface Starship extends BaseContract {
 
     getDomainSeperator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getLocation(
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    getShips(overrides?: CallOverrides): Promise<BigNumber>;
-
-    initialize(
-      _proxyRegistryAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    mint(
-      player: string,
-      _tokenURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     mintTo(
@@ -991,8 +790,6 @@ export interface Starship extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    playerContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1019,19 +816,6 @@ export interface Starship extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setLocation(
-      _tokenId: BigNumberish,
-      _ownerAddress: string,
-      x: BigNumberish,
-      y: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setPlayerContract(
-      _newPlayerContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1039,10 +823,8 @@ export interface Starship extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
     tokenURI(
-      tokenId: BigNumberish,
+      _tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1104,33 +886,15 @@ export interface Starship extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getLocation(
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getNonce(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getShips(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    initialize(
-      _proxyRegistryAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    mint(
-      player: string,
-      _tokenURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     mintTo(
@@ -1146,8 +910,6 @@ export interface Starship extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    playerContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1174,19 +936,6 @@ export interface Starship extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setLocation(
-      _tokenId: BigNumberish,
-      _ownerAddress: string,
-      x: BigNumberish,
-      y: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setPlayerContract(
-      _newPlayerContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1194,10 +943,8 @@ export interface Starship extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     tokenURI(
-      tokenId: BigNumberish,
+      _tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
