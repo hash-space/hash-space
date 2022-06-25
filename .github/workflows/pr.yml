@@ -45,7 +45,7 @@ jobs:
 
       - run: npm install
 
-      #- run: npm run deploy:mumbai-fresh
+      - run: npm run deploy:mumbai-fresh
 
       - run: npm run build
 
