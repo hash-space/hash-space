@@ -55,6 +55,12 @@ jobs:
           add: '** --force'
           cwd: './app/src/generated'
 
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: '** --force'
+          cwd: './hardhat/generated/deployments/matic'
+
       - run: npm run build
 
       - uses: amondnet/vercel-action@v20 #deploy
