@@ -36,7 +36,7 @@ contract Players is Ownable {
 
     event StepsAdded(uint stepsTaken, address player, uint timestamp);
 
-    event PlanetConquer(address player, uint amount, uint planetType, uint timestamp); // TODO: add planetId
+    event PlanetConquer(address indexed player, uint amount, uint planetType, uint timestamp); // TODO: add planetId
 
 
     constructor () {
