@@ -230,7 +230,9 @@ async function setup() {
   // deploy
   const world = await upgrades.deployProxy(WorldContract, []);
   const player = await upgrades.deployProxy(PlayerContract, []);
-  const starShip = await ShipContract.deploy(proxyRegistryAddress);
+  const starShip = await upgrades.deployProxy(ShipContract, [
+    proxyRegistryAddress,
+  ]);
   const mockAaveVault = await MockAaveVault.deploy();
   await world.deployed();
   await player.deployed();

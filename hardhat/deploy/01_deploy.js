@@ -12,8 +12,18 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const starship = await deploy('Starship', {
     from: deployer,
     gasLimit: 8000000,
-    args: ['0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101'], // polygon
+    args: [],
     log: true,
+    proxy: {
+      owner: deployer,
+      proxyContract: 'OpenZeppelinTransparentProxy',
+      execute: {
+        init: {
+          methodName: 'initialize',
+          args: ['0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101'], // polygon
+        },
+      },
+    },
   });
 
   const world = await deploy('WorldMapCreator', {
@@ -80,7 +90,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     proxy: world.address,
     implementation: world.implementation,
   };
-  console.log('ship', starship.address);
+  contracts['ship'] = {
+    proxy: starship.address,
+    implementation: starship.implementation,
+  };
   console.table(contracts);
 
   // link contracts
@@ -116,6 +129,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     await tryCatch(() =>
       hre.run('verify:verify', {
         address: world.implementation,
+        constructorArguments: [],
+      })
+    );
+    await tryCatch(() =>
+      hre.run('verify:verify', {
+        address: starship.implementation,
         constructorArguments: [],
       })
     );
