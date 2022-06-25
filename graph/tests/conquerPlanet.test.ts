@@ -51,3 +51,26 @@ test("Tallies yield amount correctly", () => {
 
     clearStore();
 })
+
+test("Can add yield amount to appropriate week", () => {
+    // arrange
+    let newYieldAddedEvent_weeka = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 60, 1, 1656003375); // Thu Jun 23 2022 16:56:15 GMT+0000 - week 25
+    let newYieldAddedEvent_weekb = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 65, 1, 1655916975); // Wed Jun 22 2022 16:56:15 GMT+0000 - week 25
+    let newYieldAddedEvent_weekc = createPlanetConquerEvent("0xa16081f360e3847006db660bae1c6d1b2e17ec2a", 70, 1, 1654793775); // Thu Jun 09 2022 16:56:15 GMT+0000 - week 23
+
+    // act
+    handlePlanetConquer(newYieldAddedEvent_weeka);
+    handlePlanetConquer(newYieldAddedEvent_weekb);
+    handlePlanetConquer(newYieldAddedEvent_weekc);
+    logStore();
+
+    // assert
+    assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "totalYield", "195");
+    assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "numSyncs", "3");
+    assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "week25Yield", "125");
+    assert.fieldEquals("PlanetConquerEntity", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a", "week23Yield", "70");
+
+
+    clearStore();
+
+})
