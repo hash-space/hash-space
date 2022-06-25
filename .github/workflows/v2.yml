@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - v2
+  workflow_dispatch:
 
 env:
   PRIVATE_KEY_MUMBAI: ${{ secrets.PRIVATE_KEY_MUMBAI }}
