@@ -799,7 +799,7 @@
           ]
         },
         "Players": {
-          "address": "0x53f8f6F8dAd2a2Ad547563E600D3176c0377d6F1",
+          "address": "0x4eAd4a8958Cb63273237787EB3d3AcC17a23CF9E",
           "abi": [
             {
               "inputs": [],
@@ -844,6 +844,12 @@
                   "indexed": false,
                   "internalType": "uint256",
                   "name": "planetType",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "timestamp",
                   "type": "uint256"
                 }
               ],

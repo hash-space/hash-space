@@ -175,7 +175,7 @@ export interface PlayersInterface extends utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
-    "PlanetConquer(address,uint256,uint256)": EventFragment;
+    "PlanetConquer(address,uint256,uint256,uint256)": EventFragment;
     "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
@@ -202,9 +202,10 @@ export interface PlanetConquerEventObject {
   player: string;
   amount: BigNumber;
   planetType: BigNumber;
+  timestamp: BigNumber;
 }
 export type PlanetConquerEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
+  [string, BigNumber, BigNumber, BigNumber],
   PlanetConquerEventObject
 >;
 
@@ -518,15 +519,17 @@ export interface Players extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
-    "PlanetConquer(address,uint256,uint256)"(
+    "PlanetConquer(address,uint256,uint256,uint256)"(
       player?: string | null,
       amount?: null,
-      planetType?: null
+      planetType?: null,
+      timestamp?: null
     ): PlanetConquerEventFilter;
     PlanetConquer(
       player?: string | null,
       amount?: null,
-      planetType?: null
+      planetType?: null,
+      timestamp?: null
     ): PlanetConquerEventFilter;
 
     "StepsAdded(uint256,address,uint256)"(
