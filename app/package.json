@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev -p 3001\" \"npx local-ssl-proxy --source 3000 --target 3001\"",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next build && next export"
