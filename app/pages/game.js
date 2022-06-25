@@ -3,12 +3,7 @@ import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import { Paper } from '@mui/material';
 import { useWindowSize } from '../src/hooks/useWindowSize';
 import GameComponent from '../src/components/GameComponent';
-import {
-  useWorldContract,
-  useNftContract,
-  usePlayerContract,
-} from '../src/context/state';
-import { useRouter } from 'next/router';
+import { useStateContext } from '../src/context/state';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Alert from '@mui/material/Alert';
@@ -19,15 +14,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { calcDistance, distanceToSteps } from '../src/helper/distance';
 import EventEmitter from 'events';
-// import { json } from 'stream/consumers';
 
 export default function Game() {
   const size = useWindowSize();
   const eventStream = useRef(new EventEmitter());
-  const worldContract = useWorldContract();
-  const nftContract = useNftContract();
-  const playerContract = usePlayerContract();
-  const router = useRouter();
+  const { worldContract, shipsContract, playerContract } = useStateContext();
   const [isOpen, setOpen] = useState(false);
   const [payload, setPayload] = useState(undefined);
 
@@ -54,8 +45,8 @@ export default function Game() {
   }, [playerContract]);
 
   const myShip = useMemo(() => {
-    return nftContract.ships.find((s) => s.isMine);
-  }, [nftContract.ships]);
+    return shipsContract.ships.find((s) => s.isMine);
+  }, [shipsContract.ships]);
 
   const confirmMove = useCallback(() => {
     setOpen(false);
@@ -77,7 +68,7 @@ export default function Game() {
   const isLoaded =
     height > 0 &&
     worldContract.planets.length > 0 &&
-    nftContract.ships.length > 0;
+    shipsContract.ships.length > 0;
 
   return (
     <PageWrapper>
@@ -105,7 +96,7 @@ export default function Game() {
             <div style={{ paddingTop: height }}></div>
             {isLoaded && (
               <GameComponent
-                ships={nftContract.ships}
+                ships={shipsContract.ships}
                 planets={worldContract.planets}
                 steps={playerContract.playerState.stepsAvailable}
                 eventStream={eventStream.current}
