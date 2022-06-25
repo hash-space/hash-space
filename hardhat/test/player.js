@@ -249,6 +249,7 @@ async function setup() {
   await player.setWorldAddress(world.address);
   await player.setAaveVault(_mockAaveVault.address);
 
+  await world.initialize();
   await world.defineWorldMap(worldId, 2000, 2000);
   await starShip.setPlayerContract(player.address);
 

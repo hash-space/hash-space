@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.0 <0.9.0;
 
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
 import "./structs/shared.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "hardhat/console.sol";
 
-contract WorldMapCreator is IWorld, Ownable {
+contract WorldMapCreator is IWorld, Initializable, OwnableUpgradeable {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
@@ -23,7 +23,8 @@ contract WorldMapCreator is IWorld, Ownable {
 
     PlanetFactory _planetFactory;
 
-    constructor() {
+    function initialize() public initializer {
+        __Ownable_init();
         planetIndex = 0;
         _planetFactory = new PlanetFactory();
     }

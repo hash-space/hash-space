@@ -9,6 +9,7 @@ describe('World', function () {
     const WorldMapCreator = await ethers.getContractFactory('WorldMapCreator');
     world = await WorldMapCreator.deploy();
     await world.deployed();
+    await world.initialize();
     await world.defineWorldMap(worldId, 2000, 2000);
   });
 
