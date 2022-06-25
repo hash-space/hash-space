@@ -1,5 +1,13 @@
 import { ICoreOptions } from 'web3modal';
 import { TNetworkInfo } from 'eth-hooks/models';
+import UAuthSPA from '@uauth/js'
+import * as UAuthWeb3Modal from '@uauth/web3modal'
+
+const uauthOptions: UAuthWeb3Modal.IUAuthOptions = {
+  clientID: process.env.UD_CLIENT_ID!,
+  redirectUri: process.env.UD_REDIRECT_URI!,
+  scope: 'openid wallet',
+}
 
 export const web3ModalConfigKeys = {
   coinbaseKey: 'custom-walletlink',
@@ -90,6 +98,14 @@ export const getWeb3ModalConfig = async (): Promise<Partial<ICoreOptions>> => {
   } catch (e) {
     console.log('Failed to load config for web3 connector coinbase: ', e);
   }
+
+
+  providerOptions['custom-uauth'] =  {
+    display: UAuthWeb3Modal.display,
+    connector: UAuthWeb3Modal.connector,
+    package: UAuthSPA,
+    options: uauthOptions,
+  };
 
   return {
     cacheProvider: true,
