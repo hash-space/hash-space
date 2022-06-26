@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 
 export const QUERY = gql`
   query Board($orderBy: String!) {
-    stepTrackingEntities(orderBy: $orderBy, first: 10) {
+    stepTrackingEntities(orderBy: $orderBy, first: 10, orderDirection: "desc") {
       id
       totalSteps
       week1Steps
