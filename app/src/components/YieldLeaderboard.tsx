@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 
 export const QUERY = gql`
   query Board($orderBy: String!) {
-    planetConquerEntities(orderBy: $orderBy, first: 10) {
+    planetConquerEntities(orderBy: $orderBy, first: 10, orderDirection: "desc") {
       id
       totalYield
       week1Yield
@@ -85,7 +85,7 @@ export function YieldLeaderBoard() {
   const entries = users?.data?.planetConquerEntities || [];
   const mappedRows = entries.map((entry) => ({
     address: entry.id,
-    steps: entry[rank_metric],
+    yield: (entry[rank_metric] / 10**18).toFixed(12),
   }));
 
   return (
@@ -95,7 +95,7 @@ export function YieldLeaderBoard() {
           <TableHead>
             <TableRow>
               <TableCell>Address</TableCell>
-              <TableCell align="right">Yield earned (base units)</TableCell>
+              <TableCell align="right">Yield earned (MATIC)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -106,7 +106,7 @@ export function YieldLeaderBoard() {
                 <TableCell component="th" scope="row">
                   {row.address}
                 </TableCell>
-                <TableCell align="right">{row.steps}</TableCell>
+                <TableCell align="right">{row.yield}</TableCell>
               </TableRow>
             ))}
           </TableBody>
