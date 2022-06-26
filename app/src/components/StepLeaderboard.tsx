@@ -70,13 +70,19 @@ export const QUERY = gql`
 `;
 
 function getWeekNumber(d: Date) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  var weekNo = Math.ceil(
-    ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
-  );
-  return weekNo;
+  var currentDate = new Date(d.getTime());
+  const firstJanThisYear = new Date(0);
+  firstJanThisYear.setUTCDate(1);
+  firstJanThisYear.setUTCFullYear(currentDate.getUTCFullYear());
+  firstJanThisYear.setUTCHours(1);
+  firstJanThisYear.setUTCMinutes(1);
+  firstJanThisYear.setUTCSeconds(1);
+
+  var diff = currentDate.getTime() - firstJanThisYear.getTime();
+  var dayNumber = Math.floor(diff / (24 * 60 * 60 * 1000));
+  let weekNum = Math.ceil(dayNumber / 7);
+
+  return weekNum;
 }
 
 export function StepLeaderBoard() {
