@@ -22,6 +22,6 @@ dataSources:
       eventHandlers:
         - event: StepsAdded(uint256,address,uint256)
           handler: handleStepsAdded
-        - event: PlanetConquer(address,uint256,uint256,uint256)
+        - event: PlanetConquer(indexed address,uint256,uint256,uint256)
           handler: handlePlanetConquer
       file: ./src/players.ts

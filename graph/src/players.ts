@@ -1,7 +1,7 @@
 import { BigInt, Value } from '@graphprotocol/graph-ts';
 import { StepsAdded, PlanetConquer } from '../generated/Players/Players';
 import { StepTrackingEntity, PlanetConquerEntity } from '../generated/schema'
-// import { log } from '@graphprotocol/graph-ts';
+import { log } from '@graphprotocol/graph-ts';
 
 
 function getCurrentWeek(timestamp: BigInt): i32 {
