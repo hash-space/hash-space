@@ -9,8 +9,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 export const QUERY = gql`
-  query Board($orderBy: String!) {
-    stepTrackingEntities(orderBy: $orderBy, first: 10, orderDirection: "desc") {
+  query Board($orderBy: String!, $where: StepTrackingEntity_filter!) {
+    stepTrackingEntities(
+      orderBy: $orderBy
+      first: 10
+      orderDirection: "desc"
+      where: $where
+    ) {
       id
       totalSteps
       week1Steps
@@ -91,7 +96,7 @@ export function StepLeaderBoard() {
   const [users, _] = useQuery({
     query: QUERY,
     requestPolicy: 'network-only',
-    variables: { orderBy: rank_metric },
+    variables: { orderBy: rank_metric, where: { [`${rank_metric}_gt`]: 0 } },
     context: useMemo(
       () => ({
         url: 'https://api.thegraph.com/subgraphs/name/hash-space/hash-space',
