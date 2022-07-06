@@ -14,10 +14,33 @@ export default function Challenge() {
                         <b>Have you completed the challenges?</b>
                     </Typography>
                 </Paper>
+                <Box sx={{ height: 10 }} />
+                <Paper style={{ padding: '10px' }}>
+                    <Typography variant="h6" gutterBottom>
+                        CHALLENGE 1: Sync your steps
+                    </Typography>
+                </Paper>
+                <Box sx={{ height: 10 }} />
+                <Paper style={{ padding: '10px' }}>
+                    <Typography variant="h6" gutterBottom>
+                        CHALLENGE 2: Visit 3 planets
+                    </Typography>
+                </Paper>
+                <Box sx={{ height: 10 }} />
+                <Paper style={{ padding: '10px' }}>
+                    <Typography variant="h6" gutterBottom>
+                        CHALLENGE 3: Invite three friends to the game
+                    </Typography>
+                </Paper>
+                <Box sx={{ height: 10 }} />
+                <Paper style={{ padding: '10px' }}>
+                    <Typography variant="h6" gutterBottom>
+                        CHALLENGE 4: Tweet a screenshot from the game
+                    </Typography>
+                </Paper>
             </Container>
         </PageWrapper>
     )
 }
 
-
-
+// TODO: add note that invited friends must sync their steps
