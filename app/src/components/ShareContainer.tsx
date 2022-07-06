@@ -134,7 +134,7 @@ export default function ShareContainer(props: IShareProps) {
   );
   const nounce = profiles?.data?.userSigNonces?.lensHubOnChainSigNonce;
   const noProfile = profiles.data && profilesArray.length == 0;
-  const hashSpaceInviteLink ='https://v2.hashspace.quest/sign_up/?invited_by=' + ethersAppContext.account;
+  const hashSpaceInviteLink ='https://v2.hashspace.quest/join/?invited_by=' + ethersAppContext.account;
 
   useEffect(() => {
     getProfiles();
