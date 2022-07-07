@@ -6,6 +6,8 @@ import { gql, useQuery } from 'urql';
 import { useMemo } from 'react';
 import * as React from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
+import { useState, useEffect } from 'react';
+import { const_web3DialogClosedByUser } from 'eth-hooks/models';
 
 
 
@@ -21,41 +23,104 @@ import { useEthersAppContext } from 'eth-hooks/context';
 //   }
 // `;
 
-
-export const QUERY_1 = gql`
-  query getStepCount($walletAddress: String!) {
+const QUERY_1 = gql`
+  query getData($walletAddress: String!) {
     stepTrackingEntities(
-      first: 5
-      id: $walletAddress
+        first: 1
+        where : {
+            id: $walletAddress
+        }
+        orderBy: totalSteps
+        orderDirection: desc
     ) {
-      id
-      totalSteps
+        id
+        totalSteps
+    }
+    planetConquerEntities(
+        first: 1
+        where : {
+            id: $walletAddress
+        }
+        orderBy: numSyncs
+        orderDirection: desc
+    ) {
+        id
+        numSyncs    
     }
   }
 `;
 
 
-export default function Challenge() {
-    const ethersAppContext = useEthersAppContext();
 
-    const result = useQuery({
+export default function challenge() {
+
+    let totalSteps = 0;
+    let planetsVisited = 0;
+
+    const ethersAppContext = useEthersAppContext();
+    const account = ethersAppContext.account;
+    const [result,_] = useQuery({
         query: QUERY_1,
         requestPolicy: 'network-only',
-        variables: { "walletAddress": "0x21a1bff1838dcb34bdf75fcfac77a6556cfb84a6" },
+        variables: { "walletAddress": account },
         context: useMemo(
             () => ({
               url: 'https://api.thegraph.com/subgraphs/name/hash-space/hash-space',
             }),
             []
         ),
-    });
-    console.log(result)
-    const entries = result?.data?.stepTrackingEntities || [];
-    console.log(entries)
-    // const mappedRows = entries.map((entry) => ({
-        // address: entry.id,
-        // steps: entry.totalSteps,
-    // }));
+    });   
+
+    if(ethersAppContext.account == undefined) {
+        return(
+            <PageWrapper>
+                <Container maxWidth="sm">
+                    <Box sx={{ height: 10 }} />
+                    <Paper style={{ padding: '10px' }}>
+                        <Typography variant="h5" gutterBottom>
+                            <b>Connect your wallet</b>
+                        </Typography>
+                    </Paper>
+                </Container>
+            </PageWrapper>
+        )
+    }
+    
+    if(result.fetching) {
+        return(
+            <PageWrapper>
+                <Container maxWidth="sm">
+                    <Box sx={{ height: 10 }} />
+                    <Paper style={{ padding: '10px' }}>
+                        <Typography variant="h5" gutterBottom>
+                            <b>Loading.........</b>
+                        </Typography>
+                    </Paper>
+                </Container>
+            </PageWrapper>
+        )
+    } else {        
+        if(result.error != undefined) {
+            return(
+                <PageWrapper>
+                    <Container maxWidth="sm">
+                        <Box sx={{ height: 10 }} />
+                        <Paper style={{ padding: '10px' }}>
+                            <Typography variant="h5" gutterBottom>
+                                <b>Something went wrong</b>
+                            </Typography>
+                        </Paper>
+                    </Container>
+                </PageWrapper>
+            )
+        }
+        if(result.data.stepTrackingEntities.length > 0) {
+            totalSteps = result.data.stepTrackingEntities[0]["totalSteps"];
+        }
+        if(result.data.planetConquerEntities.length > 0) {
+            planetsVisited = result.data.planetConquerEntities[0]["numSyncs"];
+        }        
+    }
 
 
     return(
@@ -73,13 +138,13 @@ export default function Challenge() {
                         CHALLENGE 1: Sync your steps
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        You have taken x steps.
+                        You have taken {totalSteps} steps.
                     </Typography>
                 </Paper>
                 <Box sx={{ height: 10 }} />
                 <Paper style={{ padding: '10px' }}>
                     <Typography variant="h6" gutterBottom>
-                        CHALLENGE 2: Visit 3 planets
+                        CHALLENGE 2: Visit {planetsVisited} planets
                     </Typography>
                 </Paper>
                 <Box sx={{ height: 10 }} />
