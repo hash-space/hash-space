@@ -161,9 +161,7 @@ export function PlayInstruction() {
             in yield-farming providers. You can then farm that yield from
             different planets.
           </Typography>
-          <Link href={{
-              pathname: '/join',
-            }}>
+          
             <Button
               disabled={registered || !walletConnected}
               startIcon={registered ? <DoneIcon /> : null}
@@ -173,7 +171,7 @@ export function PlayInstruction() {
               size="small">
               Register
             </Button>
-          </Link>
+          
           {!walletConnected && (
             <Alert sx={{ marginTop: 1 }} severity="error">
               Connect your wallet first
