@@ -116,6 +116,7 @@ export default function challenge() {
         }
         if(result.data.stepTrackingEntities.length > 0) {
             totalSteps = result.data.stepTrackingEntities[0]["totalSteps"];
+            console.log(result.data.stepTrackingEntities)
         }
         if(result.data.planetConquerEntities.length > 0) {
             planetsVisited = result.data.planetConquerEntities[0]["numSyncs"];
@@ -144,7 +145,10 @@ export default function challenge() {
                 <Box sx={{ height: 10 }} />
                 <Paper style={{ padding: '10px' }}>
                     <Typography variant="h6" gutterBottom>
-                        CHALLENGE 2: Visit {planetsVisited} planets
+                        CHALLENGE 2: Visit 3 planets
+                    </Typography>
+                     <Typography variant="body1" gutterBottom>
+                        You have visited {planetsVisited} steps.
                     </Typography>
                 </Paper>
                 <Box sx={{ height: 10 }} />
