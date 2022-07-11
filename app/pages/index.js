@@ -31,6 +31,11 @@ export default function Home() {
     <PageWrapper>
       <Container maxWidth="sm">
         <Box sx={{ height: 10 }} />
+        <Alert variant="outlined" severity="warning">
+          This is the v2 version of hash-space, starships minted in v1 are
+          deprecated. You have to register again to mint a startship to play.
+        </Alert>
+        <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <SyncStepDialog />
           <ShareDialog />
