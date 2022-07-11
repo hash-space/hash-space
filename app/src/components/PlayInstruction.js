@@ -161,15 +161,17 @@ export function PlayInstruction() {
             in yield-farming providers. You can then farm that yield from
             different planets.
           </Typography>
-          <Button
-            disabled={registered || !walletConnected}
-            startIcon={registered ? <DoneIcon /> : null}
-            color="secondary"
-            variant="outlined"
-            onClick={playerContract.playerRegister}
-            size="small">
-            Register
-          </Button>
+          
+            <Button
+              disabled={registered || !walletConnected}
+              startIcon={registered ? <DoneIcon /> : null}
+              color="secondary"
+              variant="outlined"
+              onClick={playerContract.playerRegister}
+              size="small">
+              Register
+            </Button>
+          
           {!walletConnected && (
             <Alert sx={{ marginTop: 1 }} severity="error">
               Connect your wallet first

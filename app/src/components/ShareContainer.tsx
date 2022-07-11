@@ -134,6 +134,7 @@ export default function ShareContainer(props: IShareProps) {
   );
   const nounce = profiles?.data?.userSigNonces?.lensHubOnChainSigNonce;
   const noProfile = profiles.data && profilesArray.length == 0;
+  const hashSpaceInviteLink ='https://v2.hashspace.quest/join/?invited_by=' + ethersAppContext.account;
 
   useEffect(() => {
     getProfiles();
@@ -285,11 +286,73 @@ export default function ShareContainer(props: IShareProps) {
                 variant="outlined"
                 onClick={() => {
                   window.open(
-                    'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&text=' +
-                      encodeURIComponent(props.defaultText)
+                    'https://twitter.com/intent/tweet?screen_name=HashSpaceQuest&text= %0D%0A' +
+                      hashSpaceInviteLink
                   );
                 }}>
                 Twitter
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                data-action="share/whatsapp/share" 
+                onClick={() => {
+                  window.open(
+                    'whatsapp://send?text=Join Hash Space %0D%0A' + "\n" +
+                    hashSpaceInviteLink
+                  );
+                }}>
+                WhatsApp
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  window.open(
+                    'https://t.me/share/url?url=' + hashSpaceInviteLink +'&text=Join Hash Space'
+                  );
+                }}>
+                Telegram
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  window.open(
+                    'https://www.facebook.com/sharer/sharer.php?u='+ hashSpaceInviteLink +'&t=Join Hash Space'
+                  );
+                }}>
+                Facebook
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  window.open(
+                    'http://www.reddit.com/submit?url='+ hashSpaceInviteLink +'&title=Join Hash Space'
+                  );
+                }}>
+                Reddit
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  window.open(
+                    'https://www.linkedin.com/shareArticle?mini=true&url='+ hashSpaceInviteLink +'&t=Join Hash Space'
+                  );
+                }}>
+                LinkedIn
               </Button>
             </Grid>
           </Grid>
