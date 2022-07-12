@@ -1,13 +1,14 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.0 <0.9.0;
 
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./PlanetFactory.sol";
 import "./interfaces/IWorld.sol";
+import "./structs/shared.sol";
 
-import "hardhat/console.sol";
 
-
-contract WorldMapCreator is IWorld {
+contract WorldMapCreator is IWorld, Initializable, OwnableUpgradeable {
 
     struct WorldMap {
         uint256 worldIndex; // The ID for the world that was created
@@ -22,12 +23,13 @@ contract WorldMapCreator is IWorld {
 
     PlanetFactory _planetFactory;
 
-    constructor() {
+    function initialize() public initializer {
+        __Ownable_init();
         planetIndex = 0;
         _planetFactory = new PlanetFactory();
     }
 
-    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public {
+    function defineWorldMap(uint256 _worldIndex, uint256 _length, uint256 _breadth) public onlyOwner {
         // TODO: consider having the world index randomly generated
         require(existingWorlds[_worldIndex].Length == 0, "World already created with that index" );
 
@@ -44,7 +46,7 @@ contract WorldMapCreator is IWorld {
     }
 
     function manualCreatePlanet(uint _worldMapIndex,
-                uint _xCoord, uint _yCoord, uint _planetType) public returns (uint) {
+                uint _xCoord, uint _yCoord, uint _planetType) public onlyOwner returns (uint) {
         require(existingWorlds[_worldMapIndex].Length > 0, "world does not exist");
 
         planetIndex += 1;
@@ -56,9 +58,8 @@ contract WorldMapCreator is IWorld {
         return planetIndex;
     }
 
-    function getLocation(uint256 _worldId, uint256 _planetId) public view override returns(uint x, uint y) {
-        SharedStructs.Planet memory planet = _planetFactory.getPlanet(_planetId);
-        return (planet.xCoord, planet.yCoord);
+    function getPlanet(uint _planetId) public override view returns (SharedStructs.Planet memory) {
+        return _planetFactory.getPlanet(_planetId);
     }
 
     function getPlanets(uint256 _worldId) public view returns(SharedStructs.Planet[] memory) {
@@ -75,7 +76,7 @@ contract WorldMapCreator is IWorld {
         return existingWorlds[_selectedWorldIndex];
     }
 
-    function deleteWorld(uint256 _selectedWorldIndex) public { // TODO: make only owner /restricted
+    function deleteWorld(uint256 _selectedWorldIndex) public onlyOwner {
         delete(existingWorlds[_selectedWorldIndex]);
     }
 

@@ -2,19 +2,28 @@
   "name": "hardhat-project",
   "scripts": {
     "compile": "hardhat compile --force",
-    "test": "hardhat test --network hardhat",
+    "test": "cross-env FORK=false hardhat test --network hardhat",
     "clean": "hardhat clean && yarn shx rm -rf './generated/deployments' && yarn shx rm -rf './generated/cache'",
     "node": "hardhat node --network hardhat --no-deploy",
-    "deploy:local": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
-    "deploy:mumbai": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
-    "deploy:emerald-test": "hardhat --network emerald_testnet deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
-    "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json"
+    "seed:local": "hardhat seed --network localhost",
+    "deploy:local": "hardhat --network localhost deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:local-fresh": "hardhat --network localhost deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:mumbai": "hardhat --network matic deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:mumbai-fresh": "hardhat --network matic deploy --reset --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "seed:mumbai": "hardhat seed --network matic",
+    "deploy:emerald-test": "hardhat --network emerald_testnet deploy --write true --export-all ../app/src/generated/hardhat_contracts.json",
+    "deploy:arbitrum-nitro": "hardhat --network arbitrum_nitro deploy --write true --export-all ../app/src/generated/hardhat_contracts.json"
   },
   "devDependencies": {
+    "@eth-optimism/smock": "^1.1.10",
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/hardhat-upgrades": "^1.19.0",
     "@typechain/ethers-v5": "^10.0.0",
     "@typechain/hardhat": "^6.0.0",
     "chai": "^4.3.6",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.6",
@@ -22,10 +31,10 @@
     "hardhat-deploy": "^0.11.4",
     "hardhat-deploy-ethers": "^0.3.0-beta.13",
     "shx": "^0.3.4",
-    "typechain": "^8.0.0",
-    "@nomiclabs/hardhat-ethers": "^2.0.6"
+    "typechain": "^8.0.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "@openzeppelin/contracts-upgradeable": "^4.6.0"
   }
 }

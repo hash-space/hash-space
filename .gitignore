@@ -3,14 +3,19 @@
 app/out
 hardhat/generated/*
 .env
-app/src/generated/*
+app/src/generated/**
 !app/src/generated/.gitkeep
 
 hardhat/artifacts*
 hardhat/deployments
+!hardhat/generated/deployments/matic
 
 !.env.example
 
 **.DS_Store
 
 .turbo
+
+
+graph/generated
+graph/build

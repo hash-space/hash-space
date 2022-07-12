@@ -12,9 +12,10 @@ import { useStateContext } from '../context/state';
 export default function SyncStepDialog() {
   const router = useRouter();
   const { query, pathname } = router;
-  const steps = parseInt(
-    Array.isArray(query.steps) ? query.steps[0] : query.steps
-  );
+  const stepsString =
+    (Array.isArray(query.steps) ? query.steps[0] : query.steps) || '';
+  const [_, stepsNumber] = stepsString.split('-');
+  const steps = parseInt(stepsNumber);
   const error = Array.isArray(query.error) ? query.error[0] : query.error;
 
   const isOpen = Boolean(steps > 0 || query.error);
@@ -70,7 +71,7 @@ export default function SyncStepDialog() {
               color="secondary"
               variant="outlined"
               onClick={() => {
-                playerContract.playerSyncSteps(steps);
+                playerContract.playerSyncSteps(stepsString);
                 handleClose();
               }}
               autoFocus>

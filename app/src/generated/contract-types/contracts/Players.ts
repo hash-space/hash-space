@@ -29,55 +29,64 @@ import type {
 
 export interface PlayersInterface extends utils.Interface {
   functions: {
+    "AAVE_VAULT()": FunctionFragment;
+    "BACKEND()": FunctionFragment;
+    "NFT()": FunctionFragment;
     "NFTPRICE()": FunctionFragment;
-    "checkContractBalance()": FunctionFragment;
-    "determineStartingPosition()": FunctionFragment;
-    "fundTreasury()": FunctionFragment;
+    "WORLD()": FunctionFragment;
     "indexStartingPosition()": FunctionFragment;
+    "initialize()": FunctionFragment;
     "moveShip(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "players(address)": FunctionFragment;
     "registerProfile(string)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setAaveVault(address)": FunctionFragment;
+    "setBackendAddress(address)": FunctionFragment;
     "setNftAddress(address)": FunctionFragment;
     "setWorldAddress(address)": FunctionFragment;
-    "syncSteps(uint256)": FunctionFragment;
+    "syncSteps(bytes32,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "verifySteps(bytes32,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "AAVE_VAULT"
+      | "BACKEND"
+      | "NFT"
       | "NFTPRICE"
-      | "checkContractBalance"
-      | "determineStartingPosition"
-      | "fundTreasury"
+      | "WORLD"
       | "indexStartingPosition"
+      | "initialize"
       | "moveShip"
       | "owner"
       | "players"
       | "registerProfile"
       | "renounceOwnership"
+      | "setAaveVault"
+      | "setBackendAddress"
       | "setNftAddress"
       | "setWorldAddress"
       | "syncSteps"
       | "transferOwnership"
+      | "verifySteps"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "AAVE_VAULT",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "BACKEND", values?: undefined): string;
+  encodeFunctionData(functionFragment: "NFT", values?: undefined): string;
   encodeFunctionData(functionFragment: "NFTPRICE", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "checkContractBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "determineStartingPosition",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "fundTreasury",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "WORLD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "indexStartingPosition",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -101,6 +110,14 @@ export interface PlayersInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setAaveVault",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setBackendAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setNftAddress",
     values: [string]
   ): string;
@@ -110,30 +127,41 @@ export interface PlayersInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "syncSteps",
-    values: [BigNumberish]
+    values: [
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "verifySteps",
+    values: [
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "AAVE_VAULT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "BACKEND", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "NFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "NFTPRICE", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "checkContractBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "determineStartingPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "fundTreasury",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "WORLD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "indexStartingPosition",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "moveShip", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "players", data: BytesLike): Result;
@@ -143,6 +171,14 @@ export interface PlayersInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAaveVault",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setBackendAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -158,15 +194,32 @@ export interface PlayersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifySteps",
+    data: BytesLike
+  ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "PlanetConquer(address,uint256,uint256,uint256)": EventFragment;
+    "StepsAdded(uint256,address,uint256)": EventFragment;
     "TreasuryFunded(uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PlanetConquer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StepsAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFunded"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -179,6 +232,31 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface PlanetConquerEventObject {
+  player: string;
+  amount: BigNumber;
+  planetType: BigNumber;
+  timestamp: BigNumber;
+}
+export type PlanetConquerEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber],
+  PlanetConquerEventObject
+>;
+
+export type PlanetConquerEventFilter = TypedEventFilter<PlanetConquerEvent>;
+
+export interface StepsAddedEventObject {
+  stepsTaken: BigNumber;
+  player: string;
+  timestamp: BigNumber;
+}
+export type StepsAddedEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  StepsAddedEventObject
+>;
+
+export type StepsAddedEventFilter = TypedEventFilter<StepsAddedEvent>;
 
 export interface TreasuryFundedEventObject {
   amountFunded: BigNumber;
@@ -217,21 +295,23 @@ export interface Players extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<[string]>;
+
+    BACKEND(overrides?: CallOverrides): Promise<[string]>;
+
+    NFT(overrides?: CallOverrides): Promise<[string]>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    WORLD(overrides?: CallOverrides): Promise<[string]>;
 
     indexStartingPosition(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { _value: BigNumber }>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     moveShip(
       x: BigNumberish,
@@ -267,6 +347,16 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setAaveVault(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -278,7 +368,12 @@ export interface Players extends BaseContract {
     ): Promise<ContractTransaction>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -286,21 +381,33 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
   };
+
+  AAVE_VAULT(overrides?: CallOverrides): Promise<string>;
+
+  BACKEND(overrides?: CallOverrides): Promise<string>;
+
+  NFT(overrides?: CallOverrides): Promise<string>;
 
   NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-  checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  determineStartingPosition(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  fundTreasury(
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  WORLD(overrides?: CallOverrides): Promise<string>;
 
   indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   moveShip(
     x: BigNumberish,
@@ -336,6 +443,16 @@ export interface Players extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setAaveVault(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setBackendAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setNftAddress(
     _nftContractAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -347,7 +464,12 @@ export interface Players extends BaseContract {
   ): Promise<ContractTransaction>;
 
   syncSteps(
-    steps: BigNumberish,
+    _hashedMessageBackend: BytesLike,
+    _steps: BigNumberish,
+    _lastQueried: BigNumberish,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -356,18 +478,30 @@ export interface Players extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  verifySteps(
+    _hashedMessageBackend: BytesLike,
+    _message: BigNumberish,
+    _lastQueried: BigNumberish,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   callStatic: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<string>;
+
+    BACKEND(overrides?: CallOverrides): Promise<string>;
+
+    NFT(overrides?: CallOverrides): Promise<string>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    determineStartingPosition(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
-
-    fundTreasury(overrides?: CallOverrides): Promise<void>;
+    WORLD(overrides?: CallOverrides): Promise<string>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
 
     moveShip(
       x: BigNumberish,
@@ -401,6 +535,13 @@ export interface Players extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    setAaveVault(_address: string, overrides?: CallOverrides): Promise<void>;
+
+    setBackendAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: CallOverrides
@@ -411,15 +552,36 @@ export interface Players extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    syncSteps(steps: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    syncSteps(
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -429,24 +591,50 @@ export interface Players extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
+    "PlanetConquer(address,uint256,uint256,uint256)"(
+      player?: string | null,
+      amount?: null,
+      planetType?: null,
+      timestamp?: null
+    ): PlanetConquerEventFilter;
+    PlanetConquer(
+      player?: string | null,
+      amount?: null,
+      planetType?: null,
+      timestamp?: null
+    ): PlanetConquerEventFilter;
+
+    "StepsAdded(uint256,address,uint256)"(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
+    StepsAdded(
+      stepsTaken?: null,
+      player?: null,
+      timestamp?: null
+    ): StepsAddedEventFilter;
+
     "TreasuryFunded(uint256)"(amountFunded?: null): TreasuryFundedEventFilter;
     TreasuryFunded(amountFunded?: null): TreasuryFundedEventFilter;
   };
 
   estimateGas: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    BACKEND(overrides?: CallOverrides): Promise<BigNumber>;
+
+    NFT(overrides?: CallOverrides): Promise<BigNumber>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    checkContractBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    WORLD(overrides?: CallOverrides): Promise<BigNumber>;
 
     indexStartingPosition(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     moveShip(
       x: BigNumberish,
@@ -470,6 +658,16 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setAaveVault(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -481,7 +679,12 @@ export interface Players extends BaseContract {
     ): Promise<BigNumber>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -489,25 +692,35 @@ export interface Players extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    AAVE_VAULT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    BACKEND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    NFT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     NFTPRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    checkContractBalance(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    determineStartingPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    fundTreasury(
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    WORLD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     indexStartingPosition(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     moveShip(
@@ -535,6 +748,16 @@ export interface Players extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setAaveVault(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setBackendAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setNftAddress(
       _nftContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -546,13 +769,28 @@ export interface Players extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     syncSteps(
-      steps: BigNumberish,
+      _hashedMessageBackend: BytesLike,
+      _steps: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    verifySteps(
+      _hashedMessageBackend: BytesLike,
+      _message: BigNumberish,
+      _lastQueried: BigNumberish,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

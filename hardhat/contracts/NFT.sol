@@ -2,17 +2,19 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IPlanet.sol";
-import "./ERC721Tradable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "./interfaces/IShip.sol";
+import "./ERC721TradableUpgradeable.sol";
 
 
-contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
-    using Counters for Counters.Counter;
-    Counters.Counter public tokenId;
+contract Starship is  OwnableUpgradeable, ERC721TradableUpgradeable,
+ERC721URIStorageUpgradeable, IShip{
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter public tokenId;
 
     struct ShipData {
             uint x;
@@ -26,12 +28,18 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     // mapping tokenId to shipData
     mapping (uint256 => ShipData) shipData;
 
-    modifier onlyPlayerContract(){
+    modifier onlyPlayerContract() {
         require (msg.sender == playerContract);
         _;
     }
 
-    constructor(address _proxyRegistryAddress) ERC721Tradable("StarShip", "SHIP", _proxyRegistryAddress) {}
+
+    function initialize(address _proxyRegistryAddress) public initializer {
+        __Context_init_unchained();
+        __ERC165_init_unchained();
+        __ERC721TradableUpgradeable_init_unchained("StarShip", "SHIP", _proxyRegistryAddress);
+    }
+
 
     function getLocation(
         uint256 _tokenId
@@ -40,26 +48,17 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
          return (location.x, location.y);
     }
 
-    function _msgSender() internal override(Context, ERC721Tradable) view returns (address sender)
+    function _msgSender() internal override(ContextUpgradeable, ERC721TradableUpgradeable) view returns (address sender)
     {
         return super.msgSender();
     }
 
-        function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721)
-    {
-        super._burn(tokenId);
-    }
 
-    function tokenURI(uint256 tokenId) public view override(ERC721Tradable, ERC721URIStorage) returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
-
-    function isApprovedForAll(address owner, address operator) override(ERC721, ERC721Tradable) public view returns (bool){
+    function isApprovedForAll(address owner, address operator) override(ERC721Upgradeable, ERC721TradableUpgradeable) public view returns (bool){
         return super.isApprovedForAll(owner, operator);
     }
 
-    function baseTokenURI() override(ERC721Tradable) public pure returns (string memory){
+    function baseTokenURI() override(ERC721TradableUpgradeable) public pure returns (string memory){
         return "ipfs://";
     }
 
@@ -108,12 +107,18 @@ contract Starship is Ownable, ERC721Tradable, ERC721URIStorage, IPlanet {
     /**
         To allow transfer of ships
      */
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override {
+    function _afterTokenTransfer(address from,address to,uint256 tokenId) internal override {
         shipData[tokenId].owner = to;
         shipData[tokenId].id = tokenId;
+    }
+
+            function _burn(uint256 tokenId) internal override(ERC721URIStorageUpgradeable, ERC721Upgradeable)
+    {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721TradableUpgradeable, ERC721URIStorageUpgradeable) returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }

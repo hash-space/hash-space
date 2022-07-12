@@ -24,6 +24,12 @@ deploy the contract to mumbai
 npm run deploy:mumbai
 ```
 
+deploy the contract to mumbai freshly (without reusing any contracts)
+
+```
+npm run deploy:mumbai-fresh
+```
+
 clean compiled output (run this as needed)
 
 ```
@@ -34,4 +40,16 @@ test
 
 ```
 npm run test
+```
+
+create world + planets (localhost)
+
+```
+npm run seed:local -- --address #addressOfWorldContract
+```
+
+create world + planets (mumbai)
+
+```
+npm run seed:mumbai -- --address #addressOfWorldContract
 ```

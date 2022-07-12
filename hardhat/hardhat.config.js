@@ -3,6 +3,9 @@ require('@typechain/hardhat');
 require('@nomiclabs/hardhat-ethers');
 require('hardhat-deploy');
 require('hardhat-deploy-ethers');
+require('@openzeppelin/hardhat-upgrades');
+require('@nomiclabs/hardhat-etherscan');
+require('./tasks/seed');
 require('dotenv').config();
 
 // You need to export an object to set up your config
@@ -17,9 +20,15 @@ require('dotenv').config();
 module.exports = {
   defaultNetwork: 'localhost',
   networks: {
-    hardhat: {},
-    localhost: {
-      url: 'http://localhost:8545',
+    hardhat: {
+      ...(process.env.FORK === 'false' // disable forking for tests
+        ? {}
+        : {
+            forking: {
+              url: `https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai`,
+            },
+          }),
+      gas: 4000000,
     },
     matic: {
       url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
@@ -67,5 +76,12 @@ module.exports = {
   typechain: {
     outDir: '../app/src/generated/contract-types',
     target: 'ethers-v5',
+  },
+  etherscan: {
+    apiKey: {
+      //polygon
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+    },
   },
 };

@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useEthersAppContext } from 'eth-hooks/context';
-import { useAuthContext } from '../src/context/auth';
 import { useStateContext } from '../src/context/state';
 import { PageWrapper } from '../src/components/PageWrapper';
+import {
+  PlayInstruction,
+  PlayInstructionSimple,
+} from '../src/components/PlayInstruction';
 import { Typography, Button, ButtonGroup, Alert } from '@mui/material';
 import SyncStepDialog from '../src/components/SyncStepDialog';
-import MoveShipDialog from '../src/components/MoveShipDialog';
+import ShareDialog from '../src/components/ShareDialog';
 import { useRouter } from 'next/router';
 import { getAddress } from '../src/helper/getAddress';
 
@@ -15,22 +17,28 @@ const EpnsButtonNoSSR = dynamic(() => import('../src/components/EpnsButton'), {
   ssr: false,
 });
 import { Container, Paper, Box } from '@mui/material';
-import { getCallbackUrl } from '../src/helper/callbackUrl';
+import { StepLeaderBoard } from '../src/components/StepLeaderboard';
+import { YieldLeaderBoard } from '../src/components/YieldLeaderboard';
 
 export default function Home() {
   const ethersAppContext = useEthersAppContext();
-  const authContext = useAuthContext();
   const router = useRouter();
-  const isDebug = !!router.query.debug; // enable for debugging
+  const isDebug = !!router.query.debug;
+  const secret = router.query.debug; // enable for debugging
 
   const { playerContract, shipsContract, worldContract } = useStateContext();
   return (
     <PageWrapper>
       <Container maxWidth="sm">
         <Box sx={{ height: 10 }} />
+        <Alert variant="outlined" severity="warning">
+          This is the v2 version of hash-space, starships minted in v1 are
+          deprecated. You have to register again to mint a startship to play.
+        </Alert>
+        <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <SyncStepDialog />
-          <MoveShipDialog />
+          <ShareDialog />
           <Typography variant="h5" gutterBottom component="div">
             <b>HASH SPACE: The DeFi Explorer</b>
           </Typography>
@@ -38,7 +46,7 @@ export default function Home() {
             <b>
               <em>
                 Learn about DeFi and earn yield while exploring different
-                worlds.
+                planets.
               </em>
             </b>
             <br />
@@ -58,6 +66,14 @@ export default function Home() {
           {isDebug && (
             <div>
               <hr></hr>
+              <h1>user</h1>
+              <div>{JSON.stringify(playerContract.playerState)}</div>
+              <button
+                onClick={() => {
+                  location = `${location.protocol}//${location.host}/api/sign?steps=50000&lastTimeSync=${playerContract.playerState?.lastQueried}&secret=${secret}`;
+                }}>
+                get 50000 steps
+              </button>
               <h1>ships</h1>
               <ul>
                 {shipsContract.ships.map((ship) => (
@@ -102,77 +118,62 @@ export default function Home() {
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
-            <b>PLAY</b>
+            <b>Play</b>
+          </Typography>
+          <Alert severity="warning">Only on Polygon Mumbai</Alert>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1">
+            Explore different DeFi planets and earn yield
+          </Typography>
+          <Box sx={{ height: 10 }} />
+          <PlayInstruction />
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            <b>View Game</b>
+          </Typography>
+          <Alert severity="warning">Only on Polygon Mumbai</Alert>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1">
+            See what other players are up to and discover the galaxy of planets
+          </Typography>
+          <Box sx={{ height: 10 }} />
+          <PlayInstructionSimple />
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            <b>Leaderboard</b>
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Explore different DeFi galaxies by connecting to different chains:
+            The most steps were taken this week by:
           </Typography>
-          <ol>
-            <li>
-              <b>The Polygon Planetary System</b> (on Polygon Mumbai)
-            </li>
-            <li>
-              <b>The Oasis Constellation</b> (on Oasis Emerald Testnet)
-            </li>
-            <li>
-              <b>The Arbitrum Nitro Nebula</b> (on Arbitrum Nitro Devnet)
-            </li>
-          </ol>
+          <StepLeaderBoard />
           <Typography variant="body1" gutterBottom>
-            <em>
-              Note: requires 0.01 MATIC / ROSE / ETH to register (in order to mint
-              the starship NFT).
-            </em>
+            The most yield (all-time) was earned by:
+          </Typography>
+          <YieldLeaderBoard />
+        </Paper>
+        <Box sx={{ height: 10 }} />
+        <Paper style={{ padding: '10px' }}>
+          <Typography variant="h5" gutterBottom component="div">
+            <b>Support us</b>
+          </Typography>
+          <Box sx={{ height: 10 }} />
+          <Typography variant="body1" gutterBottom>
+            Show some love and share us on different social channels
           </Typography>
           <div>
-            {!playerContract.playerState.isSignedUp && (
-              <Button
-                color="secondary"
-                variant="outlined"
-                onClick={playerContract.playerRegister}>
-                Register
+            <Link
+              href={{
+                pathname: '/',
+                query: { modal: 'share' },
+              }}>
+              <Button color="secondary" variant="outlined">
+                Share
               </Button>
-            )}
-            {playerContract.playerState.isSignedUp && (
-              <>
-                <ButtonGroup size="large" aria-label="large button group">
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    onClick={() => {
-                      const url = new URL('/api/auth', getCallbackUrl());
-                      url.searchParams.set(
-                        'lastSync',
-                        playerContract.playerState.lastQueried
-                      );
-                      url.searchParams.set('redirectUrl', location.href);
-                      location.href = url.href;
-                    }}>
-                    Sync your steps
-                  </Button>
-                  <Link
-                    href={{
-                      pathname: '/game',
-                    }}>
-                    <Button color="secondary" variant="outlined">
-                      Go to game
-                    </Button>
-                  </Link>
-                </ButtonGroup>
-                <Typography variant="body1" gutterBottom>
-                  <br />
-                  In order to sync your steps:
-                </Typography>
-                <ol>
-                  <li>
-                    Download the google fit app{' '}
-                    <a href="http://onelink.to/yrjrzp">here (link)</a>
-                  </li>
-                  <li>Grant permissions to pull your step data</li>
-                  <li>Sync your steps into the game</li>
-                </ol>
-              </>
-            )}
+            </Link>
           </div>
         </Paper>
         <Box sx={{ height: 10 }} />
@@ -186,7 +187,9 @@ export default function Home() {
           </Typography>
           <div>
             <ButtonGroup size="large" aria-label="large button group">
-              <Link
+              <a
+                rel="noreferrer"
+                target={'_blank'}
                 href={`https://testnets.opensea.io/assets?search[query]=${getAddress(
                   80001,
                   'Starship'
@@ -194,7 +197,7 @@ export default function Home() {
                 <Button color="secondary" variant="outlined">
                   Mumbai
                 </Button>
-              </Link>
+              </a>
             </ButtonGroup>
           </div>
         </Paper>

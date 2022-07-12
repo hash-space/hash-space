@@ -46,6 +46,7 @@ export declare namespace Starship {
 export interface StarshipInterface extends utils.Interface {
   functions: {
     "ERC712_VERSION()": FunctionFragment;
+    "__ERC721TradableUpgradeable_init_unchained(string,string,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "baseTokenURI()": FunctionFragment;
@@ -56,6 +57,7 @@ export interface StarshipInterface extends utils.Interface {
     "getLocation(uint256)": FunctionFragment;
     "getNonce(address)": FunctionFragment;
     "getShips()": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,string)": FunctionFragment;
     "mintTo(address)": FunctionFragment;
@@ -81,6 +83,7 @@ export interface StarshipInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "ERC712_VERSION"
+      | "__ERC721TradableUpgradeable_init_unchained"
       | "approve"
       | "balanceOf"
       | "baseTokenURI"
@@ -91,6 +94,7 @@ export interface StarshipInterface extends utils.Interface {
       | "getLocation"
       | "getNonce"
       | "getShips"
+      | "initialize"
       | "isApprovedForAll"
       | "mint"
       | "mintTo"
@@ -116,6 +120,10 @@ export interface StarshipInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "ERC712_VERSION",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__ERC721TradableUpgradeable_init_unchained",
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "approve",
@@ -148,6 +156,7 @@ export interface StarshipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "getNonce", values: [string]): string;
   encodeFunctionData(functionFragment: "getShips", values?: undefined): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
@@ -218,6 +227,10 @@ export interface StarshipInterface extends utils.Interface {
     functionFragment: "ERC712_VERSION",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "__ERC721TradableUpgradeable_init_unchained",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -243,6 +256,7 @@ export interface StarshipInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getShips", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -303,6 +317,7 @@ export interface StarshipInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "MetaTransactionExecuted(address,address,bytes)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
@@ -310,6 +325,7 @@ export interface StarshipInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MetaTransactionExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
@@ -338,6 +354,13 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface MetaTransactionExecutedEventObject {
   userAddress: string;
@@ -405,6 +428,13 @@ export interface Starship extends BaseContract {
   functions: {
     ERC712_VERSION(overrides?: CallOverrides): Promise<[string]>;
 
+    __ERC721TradableUpgradeable_init_unchained(
+      _name: string,
+      _symbol: string,
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -446,6 +476,11 @@ export interface Starship extends BaseContract {
     getShips(
       overrides?: CallOverrides
     ): Promise<[Starship.ShipDataStructOutput[]]>;
+
+    initialize(
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     isApprovedForAll(
       owner: string,
@@ -546,6 +581,13 @@ export interface Starship extends BaseContract {
 
   ERC712_VERSION(overrides?: CallOverrides): Promise<string>;
 
+  __ERC721TradableUpgradeable_init_unchained(
+    _name: string,
+    _symbol: string,
+    _proxyRegistryAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   approve(
     to: string,
     tokenId: BigNumberish,
@@ -582,6 +624,11 @@ export interface Starship extends BaseContract {
   getNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getShips(overrides?: CallOverrides): Promise<Starship.ShipDataStructOutput[]>;
+
+  initialize(
+    _proxyRegistryAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   isApprovedForAll(
     owner: string,
@@ -674,6 +721,13 @@ export interface Starship extends BaseContract {
   callStatic: {
     ERC712_VERSION(overrides?: CallOverrides): Promise<string>;
 
+    __ERC721TradableUpgradeable_init_unchained(
+      _name: string,
+      _symbol: string,
+      _proxyRegistryAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -712,6 +766,11 @@ export interface Starship extends BaseContract {
     getShips(
       overrides?: CallOverrides
     ): Promise<Starship.ShipDataStructOutput[]>;
+
+    initialize(
+      _proxyRegistryAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     isApprovedForAll(
       owner: string,
@@ -820,6 +879,9 @@ export interface Starship extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "MetaTransactionExecuted(address,address,bytes)"(
       userAddress?: null,
       relayerAddress?: null,
@@ -854,6 +916,13 @@ export interface Starship extends BaseContract {
 
   estimateGas: {
     ERC712_VERSION(overrides?: CallOverrides): Promise<BigNumber>;
+
+    __ERC721TradableUpgradeable_init_unchained(
+      _name: string,
+      _symbol: string,
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     approve(
       to: string,
@@ -891,6 +960,11 @@ export interface Starship extends BaseContract {
     getNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getShips(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: string,
@@ -990,6 +1064,13 @@ export interface Starship extends BaseContract {
   populateTransaction: {
     ERC712_VERSION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    __ERC721TradableUpgradeable_init_unchained(
+      _name: string,
+      _symbol: string,
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -1034,6 +1115,11 @@ export interface Starship extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getShips(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    initialize(
+      _proxyRegistryAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: string,

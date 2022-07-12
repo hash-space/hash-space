@@ -1,7 +1,13 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+} from 'react';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAppContracts } from '../config/contract';
-import { useContractReader } from 'eth-hooks';
+import { useBlockNumber, useContractReader } from 'eth-hooks';
 import * as ethers from 'ethers';
 import { planetCategoryIdToNameMapping } from '../api/mapping/planets';
 import { uploadIPFS } from '../helper/uploadIPFS';
@@ -53,9 +59,24 @@ export function useStateContext() {
 }
 
 export const StateContext: React.FC<IProps> = (props) => {
+  const ethersAppContext = useEthersAppContext();
   const playerContract = usePlayerContract();
   const shipsContract = useNftContract();
   const worldContract = useWorldContract();
+  const isLoggedInRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      isLoggedInRef.current !== ethersAppContext.active &&
+      !ethersAppContext.active
+    ) {
+      playerContract.reset();
+      shipsContract.reset();
+      worldContract.reset();
+    } else {
+      isLoggedInRef.current = ethersAppContext.active;
+    }
+  }, [ethersAppContext.active]);
 
   return (
     <_Context.Provider value={{ playerContract, shipsContract, worldContract }}>
@@ -64,16 +85,56 @@ export const StateContext: React.FC<IProps> = (props) => {
   );
 };
 
+const PLAYER_DEFAULT = {
+  playerId: 0,
+  isSignedUp: false,
+  lastQueried: 0,
+  stepsAvailable: 0,
+  amountEarned: '0.00',
+};
+
+export function useConquerEvent() {
+  const [amount, setAmount] = useState<null | ethers.BigNumber>();
+  const [planetType, setPlanet] = useState<null | ethers.BigNumber>();
+  const ethersAppContext = useEthersAppContext();
+  const playersContract = useAppContracts('Players', ethersAppContext.chainId);
+
+  useBlockNumber(ethersAppContext.provider, async (blockNumber) => {
+    const filter = playersContract?.filters[
+      'PlanetConquer(address,uint256,uint256,uint256)'
+    ](ethersAppContext.account);
+    const result = await playersContract?.queryFilter(
+      filter,
+      blockNumber,
+      blockNumber
+    );
+    if (result && result[0]) {
+      setAmount(result[0].args.amount);
+      setPlanet(result[0].args.planetType);
+    }
+  });
+
+  const reset = useCallback(() => {
+    setAmount(null);
+    setPlanet(null);
+  }, [setAmount, setPlanet]);
+
+  return {
+    reset,
+    isSet: !!amount,
+    amount,
+    planetType,
+  };
+}
+
 export function usePlayerContract() {
   const authContext = useAuthContext();
   const ethersAppContext = useEthersAppContext();
-  const [playerState, setPlayerState] = useState<IPlayerState>({
-    playerId: 0,
-    isSignedUp: false,
-    lastQueried: 0,
-    stepsAvailable: 0,
-    amountEarned: '0.00',
-  });
+  const [playerState, setPlayerState] = useState<IPlayerState>(PLAYER_DEFAULT);
+
+  const reset = useCallback(() => {
+    setPlayerState(PLAYER_DEFAULT);
+  }, [setPlayerState]);
 
   const playersContract = useAppContracts('Players', ethersAppContext.chainId);
 
@@ -85,7 +146,6 @@ export function usePlayerContract() {
 
   useEffect(() => {
     if (playerObject) {
-      console.log(playerObject);
       setPlayerState({
         lastQueried: parseNumber(playerObject[2]),
         playerId: parseNumber(playerObject[0]),
@@ -97,6 +157,10 @@ export function usePlayerContract() {
   }, [playerObject]);
 
   const playerRegister = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     authContext.addTx(
       uploadIPFS().then((metadata) => {
         return playersContract.registerProfile(metadata.url, {
@@ -107,8 +171,22 @@ export function usePlayerContract() {
   }, [playersContract, authContext]);
 
   const playerSyncSteps = useCallback(
-    (steps: number) => {
-      authContext.addTx(playersContract.syncSteps(steps));
+    (stepString: string) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      const splitString = stepString.split('-') as any[];
+      authContext.addTx(
+        playersContract.syncSteps(
+          splitString[0],
+          splitString[1],
+          splitString[2],
+          splitString[3],
+          splitString[4],
+          splitString[5]
+        )
+      );
     },
     [playersContract, authContext]
   );
@@ -121,6 +199,10 @@ export function usePlayerContract() {
       shipId: number,
       worldId: number
     ) => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       authContext.addTx(
         playersContract.moveShip(x, y, planetId, shipId, worldId)
       );
@@ -129,6 +211,7 @@ export function usePlayerContract() {
   );
 
   return {
+    reset,
     playerState,
     playerRegister,
     playerSyncSteps,
@@ -142,6 +225,10 @@ export function useNftContract() {
   const [ships, setShips] = useState<IShip[]>([]);
 
   const contract = useAppContracts('Starship', ethersAppContext.chainId);
+
+  const reset = useCallback(() => {
+    setShips([]);
+  }, [setShips]);
 
   const [shipList] = useContractReader(contract, contract?.getShips, []);
 
@@ -163,6 +250,7 @@ export function useNftContract() {
   }, [shipList, ethersAppContext.account]);
 
   return {
+    reset,
     ships,
     connected: !!contract,
   };
@@ -173,6 +261,10 @@ export function useWorldContract() {
   const [planets, setPlanets] = useState<IPlanet[]>([]);
 
   const contract = useAppContracts('WorldMapCreator', ethersAppContext.chainId);
+
+  const reset = useCallback(() => {
+    setPlanets([]);
+  }, [setPlanets]);
 
   const [list] = useContractReader(contract, contract?.getPlanets, [1]);
 
@@ -196,6 +288,7 @@ export function useWorldContract() {
   }, [list, ethersAppContext.account]);
 
   return {
+    reset,
     planets,
     connected: !!contract,
   };

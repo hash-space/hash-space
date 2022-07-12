@@ -1,17 +1,26 @@
 {
   "name": "hash-space",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets, get yield bounties, flying around in a spaceship powered with footsteps.",
   "main": "index.js",
+  "engines": {
+    "node": "16.x",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "node": "turbo run node",
-    "dev": "turbo run dev",
-    "deploy:local": "turbo run deploy:local",
-    "deploy:mumbai": "turbo run deploy:mumbai",
-    "deploy:emerald-test": "turbo run deploy:emerald-test",
-    "deploy:arbitrum-nitro": "turbo run deploy:arbitrum-nitro"
+    "build": "lerna run build --parallel --stream",
+    "test": "lerna run test --stream",
+    "node": "lerna run node --stream",
+    "dev": "lerna run dev --stream",
+    "compile": "lerna run compile --stream",
+    "seed:local": "lerna run seed:local --stream",
+    "seed:mumbai": "lerna run seed:mumbai --stream",
+    "deploy:local": "lerna run deploy:local --stream",
+    "deploy:mumbai": "lerna run deploy:mumbai --stream",
+    "deploy:mumbai-fresh": "lerna run deploy:mumbai-fresh --stream",
+    "deploy:emerald-test": "lerna run deploy:emerald-test --stream",
+    "deploy:arbitrum-nitro": "lerna run deploy:arbitrum-nitro --stream",
+    "clean": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules"
   },
   "repository": {
     "type": "git",
@@ -27,6 +36,7 @@
     "*"
   ],
   "devDependencies": {
-    "turbo": "^1.2.14"
-  }
+    "lerna": "^5.1.4"
+  },
+  "dependencies": {}
 }

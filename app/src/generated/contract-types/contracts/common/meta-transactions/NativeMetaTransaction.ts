@@ -78,11 +78,20 @@ export interface NativeMetaTransactionInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "MetaTransactionExecuted(address,address,bytes)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MetaTransactionExecuted"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface MetaTransactionExecutedEventObject {
   userAddress: string;
@@ -182,6 +191,9 @@ export interface NativeMetaTransaction extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "MetaTransactionExecuted(address,address,bytes)"(
       userAddress?: null,
       relayerAddress?: null,

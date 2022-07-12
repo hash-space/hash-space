@@ -7,8 +7,6 @@ import type {
   BigNumberish,
   BytesLike,
   CallOverrides,
-  ContractTransaction,
-  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -22,22 +20,46 @@ import type {
   OnEvent,
 } from "../../common";
 
-export interface IWorldInterface extends utils.Interface {
-  functions: {
-    "getLocation(uint256,uint256)": FunctionFragment;
+export declare namespace SharedStructs {
+  export type PlanetStruct = {
+    planetID: BigNumberish;
+    worldMapIndex: BigNumberish;
+    xCoord: BigNumberish;
+    yCoord: BigNumberish;
+    planetType: BigNumberish;
+    balance: BigNumberish;
   };
 
-  getFunction(nameOrSignatureOrTopic: "getLocation"): FunctionFragment;
+  export type PlanetStructOutput = [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] & {
+    planetID: BigNumber;
+    worldMapIndex: BigNumber;
+    xCoord: BigNumber;
+    yCoord: BigNumber;
+    planetType: BigNumber;
+    balance: BigNumber;
+  };
+}
+
+export interface IWorldInterface extends utils.Interface {
+  functions: {
+    "getPlanet(uint256)": FunctionFragment;
+  };
+
+  getFunction(nameOrSignatureOrTopic: "getPlanet"): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "getLocation",
-    values: [BigNumberish, BigNumberish]
+    functionFragment: "getPlanet",
+    values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "getLocation",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "getPlanet", data: BytesLike): Result;
 
   events: {};
 }
@@ -69,42 +91,37 @@ export interface IWorld extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    getLocation(
-      _worldId: BigNumberish,
-      _planetId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
-
-  getLocation(
-    _worldId: BigNumberish,
-    _planetId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  callStatic: {
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
+    ): Promise<[SharedStructs.PlanetStructOutput]>;
+  };
+
+  getPlanet(
+    _planetId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<SharedStructs.PlanetStructOutput>;
+
+  callStatic: {
+    getPlanet(
+      _planetId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<SharedStructs.PlanetStructOutput>;
   };
 
   filters: {};
 
   estimateGas: {
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getLocation(
-      _worldId: BigNumberish,
+    getPlanet(
       _planetId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

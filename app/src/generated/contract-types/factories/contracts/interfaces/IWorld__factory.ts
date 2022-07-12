@@ -14,29 +14,51 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_worldId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
         name: "_planetId",
         type: "uint256",
       },
     ],
-    name: "getLocation",
+    name: "getPlanet",
     outputs: [
       {
-        internalType: "uint256",
-        name: "x",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "y",
-        type: "uint256",
+        components: [
+          {
+            internalType: "uint256",
+            name: "planetID",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "worldMapIndex",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "xCoord",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "yCoord",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "planetType",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct SharedStructs.Planet",
+        name: "",
+        type: "tuple",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
 ];

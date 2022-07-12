@@ -1,6 +1,6 @@
 # Hash Space
 
-Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets, get yield bounties, flying around in a spaceship powered with footsteps.
+Hash Space is a DeFi product discovery game where players explore a galaxy of defi planets and get yield bounties, flying around in a spaceship powered with footsteps.
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
@@ -41,6 +41,15 @@ cd hash-space
 npm install
 ```
 
+#### Clean Monorepo
+
+In case you run into package errors. This removes all node_module folders
+
+```sh
+npm run clean
+npm install
+```
+
 #### Deploy contracts
 
 In one terminal:
@@ -63,19 +72,30 @@ npm run deploy:emerald-test
 npm run deploy:arbitrum-nitro
 ```
 
+
+#### Seed world
+After deployting the contract, you can seed a world with planets in the appropriate world as follows:
+
+```sh
+npm run seed:local -- --address <addressOfWorldContract>
+npm run seed:mumbai -- --address <addressOfWorldContract>
+```
+
+
 #### Run front-end
 
 ```sh
 npm run dev
 ```
 
+
 ## How it's made
 
 Our smart contracts were created and deployed using hardhat, with scaffold-eth, chai and waffle used for testing. The primary contracts are for (1) creating planets, (2) defining the world (which inherits the ability to create planets), (3) creating player profiles and and moving their starships and (4) creating NFT starships and tracking their position. All contracts are written in solidity and deployed across Polygon Mumbai, Oasis Emerald Testnet and Arbitrum Nitro. The NFTs are ERC721, and the image and metadata are stored using NFT.storage. The Open Zeppelin SDK is used to define the NFTs.
 
-Each planet type is backed by vaults with different yield-generating protocols. We created integrations using the yearn vaults using the yearn baseStrategy standard and APWine using their SDK and tutorial script. We also attempted the integrations with MakerDAO, Uniswap and Aave.
+Each planet type is backed by vaults with different yield-generating protocols. The Aave integration is live on testnet. We also created integrations using the yearn vaults using the yearn baseStrategy standard and APWine using their SDK and tutorial script. In future, we will add MakerDAO, Uniswap and others.
 
-The front-end is build using a combination of nextJS and reactJS, with a mix of TypeScript and JavaScript. Wallet connection is mediated via a web3modal, which offers Metamask, Wallet Connect, Coinbase Wallet and (not yet fully functional) Unstoppable Domains. Game registration and NFT minting is called from the front-end. Steps are imported into the game via a back-end query to the Google Fit API (enabled by an oauth2 Client). The game itself uses the PIXI js as game-engine to enable movement of ships and rendering of effects and graphics. Finally, we have an EPNS channel to serve users with updates on game events.
+The front-end is build using a combination of nextJS and reactJS, with a mix of TypeScript and JavaScript. Wallet connection is mediated via a web3modal, which offers Metamask, Wallet Connect, Coinbase Wallet and Unstoppable Domains. Game registration and NFT minting is called from the front-end. Steps are imported into the game via a back-end query to the Google Fit API (enabled by an oauth2 Client). The game itself uses PIXI js as game-engine to enable movement of ships and rendering of effects and graphics. Finally, we have an EPNS channel to serve users with updates on game events.
 
 We make heavy use of github actions to automate deployments of smart contracts to the different chains and running of tests. This allows us to iterate fast and build things in parallel at ease.
 
