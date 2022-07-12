@@ -25,13 +25,13 @@ module.exports = {
         ? {}
         : {
             forking: {
-              url: `https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai`,
+              url: `https://rpc-mumbai.maticvigil.com`,
             },
           }),
       gas: 4000000,
     },
     matic: {
-      url: 'https://speedy-nodes-nyc.moralis.io/da30e5537ec1845bb7c5dd72/polygon/mumbai',
+      url: 'https://rpc-mumbai.maticvigil.com',
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
       gas: 4000000,
     },
