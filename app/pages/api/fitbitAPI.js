@@ -3,7 +3,7 @@ import { setCookie, getCookie } from 'cookies-next';
 import { stringify } from 'querystring';
 const { Api, ApiScope } = require('fitbit-api-handler');
 
-const api = new Api(process.env.FITBIT_CLIENT_ID, process.env.FITBIT_CLIENT_SECRET);
+const api = new Api(process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID, process.env.FITBIT_CLIENT_SECRET);
 const returnURL = "http://localhost:3001/api/fitbitAPI";
 const today = new Date();
 const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();

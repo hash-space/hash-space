@@ -283,7 +283,7 @@ export function PlayInstruction() {
                         color="secondary"
                         variant="outlined"
                         onClick={() => {
-                          location.href = ("https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=238H2C&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2FfitbitAPI&scope=activity");
+                          location.href = ("https://www.fitbit.com/oauth2/authorize?response_type=code&client_id="+ process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID +"&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2FfitbitAPI&scope=activity");
                         }}
                         size="small">
                         Sync steps
