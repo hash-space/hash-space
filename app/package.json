@@ -18,6 +18,8 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.86",
     "@mui/material": "^5.7.0",
+    "@uauth/js": "^2.0.0",
+    "@uauth/web3modal": "^2.0.0",
     "@urql/exchange-auth": "^0.1.7",
     "@walletconnect/ethereum-provider": "^1.7.8",
     "cookies": "^0.8.0",
@@ -42,9 +44,7 @@
     "styled-components": "^5.3.5",
     "urql": "^2.2.2",
     "uuid": "^8.3.2",
-    "web3modal": "^1.9.7",
-    "@uauth/js": "^2.0.0",
-    "@uauth/web3modal": "^2.0.0"
+    "web3modal": "^1.9.7"
   },
   "devDependencies": {
     "@types/node": "^17.0.33",

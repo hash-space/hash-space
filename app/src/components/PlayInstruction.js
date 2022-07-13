@@ -6,6 +6,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
+  Box
 } from '@mui/material';
 import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -199,41 +200,104 @@ export function PlayInstruction() {
             smart device and sync them to the blockchain. The more you walk, the
             more distant planets you can reach.
           </Typography>
-          <ol>
-            <li>
-              Download the google fit app{' '}
-              <Link href="http://onelink.to/yrjrzp">
-                <Button size="small" variant="outlined" color="secondary">
-                  here
-                </Button>
-              </Link>
-            </li>
-            <li>Grant permissions to pull your step data</li>
-            <li>
-              Sync your steps into the game{' '}
-              <Button
-                disabled={!registered}
-                color="secondary"
-                variant="outlined"
-                onClick={() => {
-                  const url = new URL('/api/auth', getCallbackUrl());
-                  url.searchParams.set(
-                    'lastSync',
-                    playerContract.playerState.lastQueried
-                  );
-                  url.searchParams.set('redirectUrl', location.href);
-                  location.href = url.href;
-                }}
-                size="small">
-                Sync steps
-              </Button>
-            </li>
-          </ol>
-          {!registered && (
-            <Alert sx={{ marginTop: 1 }} severity="error">
-              Connect your wallet & register first
-            </Alert>
-          )}
+          <Box sx={{ height: 10 }} />
+          <Accordion
+            elevation={10}
+            expanded={expanded == 'panel3'}
+            onChange={handleChange('panel3')}>
+              <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel3bh-content"
+              id="panel3bh-header">
+              <Typography sx={{ width: '10%', flexShrink: 0 }}>1</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>
+                Google Fit
+              </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                  <ol>
+                    <li>
+                      Download the google fit app{' '}
+                      <Link href="http://onelink.to/yrjrzp">
+                        <Button size="small" variant="outlined" color="secondary">
+                          here
+                        </Button>
+                      </Link>
+                    </li>
+                    <li>Grant permissions to pull your step data</li>
+                    <li>
+                      Sync your steps into the game{' '}
+                      <Button
+                        disabled={!registered}
+                        color="secondary"
+                        variant="outlined"
+                        onClick={() => {
+                          const url = new URL('/api/auth', getCallbackUrl());
+                          url.searchParams.set(
+                            'lastSync',
+                            playerContract.playerState.lastQueried
+                          );
+                          url.searchParams.set('redirectUrl', location.href);
+                          location.href = url.href;
+                        }}
+                        size="small">
+                        Sync steps
+                      </Button>
+                    </li>
+                  </ol>
+                  {!registered && (
+                    <Alert sx={{ marginTop: 1 }} severity="error">
+                      Connect your wallet & register first
+                    </Alert>
+                  )}
+                </AccordionDetails>
+           </Accordion>
+           <Accordion
+            elevation={10}
+            expanded={expanded == 'panel3'}
+            onChange={handleChange('panel3')}>
+              <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel3bh-content"
+              id="panel3bh-header">
+              <Typography sx={{ width: '10%', flexShrink: 0 }}>2</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>
+                Fitbit
+              </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                  <ol>
+                    <li>
+                      Download the fitbit app{' '}
+                      <Link href="https://onelink.to/uw5vy2">
+                        <Button size="small" variant="outlined" color="secondary">
+                          here
+                        </Button>
+                      </Link>
+                    </li>
+                    <li>Grant permissions to pull your step data</li>
+                    <li>
+                      Sync your steps into the game{' '}
+                      <Button
+                        disabled={!registered}
+                        color="secondary"
+                        variant="outlined"
+                        onClick={() => {
+                          location.href = ("https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=238H2C&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2FfitbitAPI&scope=activity");
+                        }}
+                        size="small">
+                        Sync steps
+                      </Button>
+                    </li>
+                  </ol>
+                  {!registered && (
+                    <Alert sx={{ marginTop: 1 }} severity="error">
+                      Connect your wallet & register first
+                    </Alert>
+                  )}
+                </AccordionDetails>
+           </Accordion>
+         
         </AccordionDetails>
       </Accordion>
       <Accordion

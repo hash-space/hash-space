@@ -38,5 +38,9 @@
   "devDependencies": {
     "lerna": "^5.1.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cookies-next": "^2.1.1",
+    "fitbit-api-handler": "^8.0.0"
+  }
 }
