@@ -4,7 +4,7 @@ import UAuthSPA from '@uauth/js';
 import * as UAuthWeb3Modal from '@uauth/web3modal';
 
 const uauthOptions: UAuthWeb3Modal.IUAuthOptions = {
-  clientID: '9e670640-3473-4611-a4b4-90f108e50f5b',
+  clientID: '6fa9361b-69ad-4fce-8ee0-97b25b5e57fe',
   redirectUri: `${location.protocol}//${location.host}`, // https://v2.hashspace.quest
   scope: 'openid wallet',
 };
