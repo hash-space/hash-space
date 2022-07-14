@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PageWrapper } from '../src/components/PageWrapper';
 import { Container, Paper, Box } from '@mui/material';
-import { Typography, Button, ButtonGroup, Alert } from '@mui/material';
+import { Typography, Button, ButtonGroup, Alert,Switch } from '@mui/material';
 import { gql, useQuery } from 'urql';
 import { useMemo } from 'react';
 import * as React from 'react';
@@ -59,6 +59,7 @@ export default function challenge() {
 
     const ethersAppContext = useEthersAppContext();
     const account = ethersAppContext.account;
+    // const account = ethersAppContext.account != undefined ? "0x21a1bff1838dcb34bdf75fcfac77a6556cfb84a6" : undefined;
     const [result,_] = useQuery({
         query: QUERY_1,
         requestPolicy: 'network-only',
@@ -139,7 +140,29 @@ export default function challenge() {
                         CHALLENGE 1: Sync your steps
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        You have taken {totalSteps} steps.
+                        You have taken {totalSteps} steps. 
+                        <Switch disabled defaultChecked={totalSteps > 0} onChange={()=>false}/>
+                        {
+                            totalSteps > 0 ? (
+                                <>
+                                    <br/>
+                                    <b><u>Completed.</u></b>
+                                </>
+                            ) : (
+                                <>
+                                    <br/>
+                                    <b>
+                                        <u>
+                                            <i>
+                                            You need to sync your steps to complete this challenge.
+                                            </i>
+                                        </u>
+                                    </b>
+                                </>
+                                
+                            )
+                        }
+                        
                     </Typography>
                 </Paper>
                 <Box sx={{ height: 10 }} />
@@ -149,6 +172,27 @@ export default function challenge() {
                     </Typography>
                      <Typography variant="body1" gutterBottom>
                         You have visited {planetsVisited} steps.
+                        <Switch disabled defaultChecked={planetsVisited >= 3} onChange={()=>false}/>
+                        {
+                            planetsVisited >= 3 ? (
+                                <>
+                                    <br/>
+                                    <b><u>Completed.</u></b>
+                                </>
+                            ) : (
+                                <>
+                                    <br/>
+                                    <b>
+                                        <u>
+                                            <i>
+                                            You need to visit 3 planets. So far, you have visited {planetsVisited} planet{planetsVisited > 1 ? "s" : ""}
+                                            </i>
+                                        </u>
+                                    </b>
+                                </>
+                                
+                            )
+                        }
                     </Typography>
                 </Paper>
                 <Box sx={{ height: 10 }} />

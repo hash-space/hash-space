@@ -8,6 +8,7 @@ import {
   Avatar,
   LinearProgress,
   Box,
+  Switch
 } from '@mui/material';
 import { useEthersAppContext } from 'eth-hooks/context';
 import { useAuthContext } from '../context/auth';
