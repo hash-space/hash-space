@@ -120,7 +120,7 @@ export default function Home() {
           <Typography variant="h5" gutterBottom component="div">
             <b>Play</b>
           </Typography>
-          <Alert severity="warning">Only on Polygon Mumbai Testnet</Alert>
+          <Alert severity="warning">Only on Polygon Testnet</Alert>
           <Box sx={{ height: 10 }} />
           <Typography variant="body1">
             Explore different DeFi planets and earn yield
@@ -133,7 +133,7 @@ export default function Home() {
           <Typography variant="h5" gutterBottom component="div">
             <b>View Game</b>
           </Typography>
-          <Alert severity="warning">Only on Polygon Mumbai Testnet</Alert>
+          <Alert severity="warning">Only on Polygon Testnet</Alert>
           <Box sx={{ height: 10 }} />
           <Typography variant="body1">
             See what other players are up to and discover the galaxy of planets
