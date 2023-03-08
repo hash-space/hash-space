@@ -63,6 +63,7 @@ export default function Home() {
             can. You&apos;ll learn about Yearn Finance, MakerDAO, UniSwap, Aave
             and more!
           </Typography>
+
           {isDebug && (
             <div>
               <hr></hr>
@@ -115,6 +116,13 @@ export default function Home() {
             </div>
           )}
         </Paper>
+
+        <Box sx={{ height: 10 }} />
+        <Alert variant="outlined" severity="warning">
+          NEW SOCIAL CHALLENGE: Challenge your friends to see who can do more steps! Stake 
+          your crypto - and the winner keeps it all. Click here to play.
+        </Alert>
+
         <Box sx={{ height: 10 }} />
         <Paper style={{ padding: '10px' }}>
           <Typography variant="h5" gutterBottom component="div">
